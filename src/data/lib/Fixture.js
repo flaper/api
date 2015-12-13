@@ -83,9 +83,10 @@ export class Fixture {
   //private
   startProcessing() {
     const MODELS = {
-      user: 'users',
-      Role: 'roles',
-      RoleMapping: 'roleMappings',
+      user: 'user',
+      Role: 'role',
+      RoleMapping: 'roleMapping',
+      Story: 'story'
     };
 
     let promises = Object.keys(MODELS).map((modelName) => {

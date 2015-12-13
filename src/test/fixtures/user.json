@@ -19,5 +19,19 @@
     "email": "user3@test.com",
     "password": "test",
     "fullName": "Test User3"
+  },
+  "testAdmin": {
+    "id": "1a1000000000000000001010",
+    "username": "test-admin",
+    "email": "admin@test.com",
+    "password": "test-admin",
+    "fullName": "Test Admin"
+  },
+  "testSuper": {
+    "id": "1a1000000000000000001020",
+    "username": "test-super",
+    "email": "super@test.com",
+    "password": "test-super",
+    "fullName": "Test Super"
   }
 }
