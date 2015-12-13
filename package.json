@@ -1,0 +1,56 @@
+{
+  "name": "FlaperAPI",
+  "version": "0.1.0",
+  "main": "dist/server/server.js",
+  "scripts": {
+    "prestart": "rm dist -fR && cp src dist -r && ./node_modules/.bin/babel src --out-dir dist",
+    "start": "node .",
+    "constants": "node_modules/.bin/babel-node src/server/bin/constants.js",
+    "fixtures": "node_modules/.bin/babel-node src/server/bin/fixtures.js",
+    "reporter": "NODE_ENV=test mocha src/test --opts src/test/mocha.opts --reporter mochawesome  --reporter-options reportDir=../mocha.flaper.org.api,reportName=index ",
+    "test": "NODE_ENV=test mocha src/test --opts src/test/mocha.opts",
+    "t": "jshint src/. && NODE_ENV=test mocha src/test --opts src/test/mocha.opts",
+    "pretest": "jshint src/. && (NODE_ENV=test npm run fixtures & (npm run test-server-stop && npm run test-server) && wait)",
+    "test-server-stop": "NODE_ENV=test node_modules/.bin/babel-node src/server/stop.js",
+    "test-server": "NODE_ENV=test DEBUG=loopback:*,strong-remoting:*,-loopback:connector:* node src/server/server.js >src/test/app.out 2>src/test/app.err &"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "babel-cli": "^6.0.0",
+    "babel-core": "^6.1.21",
+    "babel-plugin-transform-es2015-destructuring": "^6.1.18",
+    "babel-plugin-transform-es2015-literals": "^6.1.18",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.1.20",
+    "babel-plugin-transform-es2015-object-super": "^6.1.18",
+    "babel-plugin-transform-es2015-parameters": "^6.1.18",
+    "compression": "^1.0.3",
+    "cors": "^2.5.2",
+    "debug": "^2.2.0",
+    "errorhandler": "^1.1.1",
+    "fs": "0.0.2",
+    "killport": "^1.0.1",
+    "lodash": "^3.10.1",
+    "loopback": "^2.20.0",
+    "loopback-boot": "^2.6.5",
+    "loopback-connector-mongodb": "^1.13.0",
+    "loopback-datasource-juggler": "^2.40.1",
+    "serve-favicon": "^2.0.1"
+  },
+  "optionalDependencies": {
+    "loopback-component-explorer": "^2.1.1"
+  },
+  "devDependencies": {
+    "chai": "^3.4.0",
+    "jshint": "^2.5.6",
+    "mocha": "^2.3.3",
+    "mochawesome": "^1.2.1",
+    "superagent": "^1.4.0",
+    "superagent-defaults": "^0.1.13",
+    "supertest": "^1.1.0"
+  },
+  "repository": {
+    "type": "",
+    "url": ""
+  },
+  "description": "Flaper.org API"
+}
