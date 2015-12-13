@@ -48,7 +48,7 @@ describe(`/${COLLECTION_URL}/`, function () {
     });
   });
 
-  describe.only('PUT/POST', () => {
+  describe('PUT/POST', () => {
     const NEW_STORY = {
       id: '1a4000000000000000010001',
       title: "New story for test",
@@ -84,14 +84,14 @@ describe(`/${COLLECTION_URL}/`, function () {
       });
     });
 
-    let NEW_TITLE = "NEW TITLE";
-    let NEW_ID = '1a4000000000000000910001';
-    let NEW_CONTENT = 'NEW CONTENT';
+    let newTitle = "NEW TITLE";
+    let newId = '1a4000000000000000910001';
+    let newContent = 'NEW CONTENT';
 
     it('User - deny to update id', () => {
       return user1Promise.then(({agent}) => {
         return agent.put(`${COLLECTION_URL}/${NEW_STORY.id}`)
-          .send({id: NEW_ID})
+          .send({id: newId})
           .expect(400)
       });
     });
@@ -100,20 +100,39 @@ describe(`/${COLLECTION_URL}/`, function () {
       return user1Promise.then(({agent}) => {
         return agent.put(`${COLLECTION_URL}/${NEW_STORY.id}`)
           .send({
-            title: NEW_TITLE,
-            content: NEW_CONTENT,
+            title: newTitle,
+            content: newContent,
             userId: user2.id
           })
           .expect(200)
           .expect((res) => {
             let story = res.body;
             user1.id.should.equal(story.userId);
-            NEW_TITLE.should.equal(story.title);
-            NEW_CONTENT.should.equal(story.content);
+            newTitle.should.equal(story.title);
+            newContent.should.equal(story.content);
+          })
+      });
+    });
+
+    newTitle += 2;
+    it('Admin - allow to update any', () => {
+      return adminPromise.then(({agent}) => {
+        return agent.put(`${COLLECTION_URL}/${NEW_STORY.id}`)
+          .send({
+            title: newTitle,
+            userId: user2.id
+          })
+          .expect(200)
+          .expect((res) => {
+            let story = res.body;
+            user1.id.should.equal(story.userId);
+            newTitle.should.equal(story.title);
+            newContent.should.equal(story.content);
           })
       });
     });
 
     after(()=> Story.deleteById(NEW_STORY.id));
-  })
+  });
+
 });

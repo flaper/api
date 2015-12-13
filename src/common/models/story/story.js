@@ -1,6 +1,11 @@
 import {setCurrentUserId} from '../../behaviors/currentUser'
 
 module.exports = (Story) => {
+  Story.STATUSES = {
+    ACTIVE: 'active',
+    DELETED: 'deleted'
+  };
+
   Story.disableRemoteMethod('createChangeStream', true);
   Story.disableRemoteMethod('upsert', true);
   Story.disableRemoteMethod('updateAll', true);

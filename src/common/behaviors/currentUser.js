@@ -1,6 +1,8 @@
 import {App} from '../services/App';
 import {RoleService} from '../services/roleService.js';
 
+//this will set userId if subject under creating
+//for PUT/UPDATE it will ignore userId
 export function setCurrentUserId(ctx) {
   if (!App.isWebRequest()) {
     return Promise.resolve();
@@ -8,16 +10,12 @@ export function setCurrentUserId(ctx) {
 
   return App.getCurrentUser()
     .then((user) => {
-      return RoleService.isAdmin(user.id)
-        .then((isAdmin) => {
-          if (ctx.instance) {
-            ctx.instance.userId = user.id;
-          } else {
-            //so it is update - admin can set any userId if he wants
-            if (!isAdmin) {
-              ctx.data.userId = user.id;
-            }
-          }
-        });
-    })
+      if (ctx.instance) {
+        //this is adding (POST)
+        ctx.instance.userId = user.id;
+      } else {
+        //so it is update - userId should not be changed
+        delete ctx.data.userId;
+      }
+    });
 }

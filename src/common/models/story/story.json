@@ -6,6 +6,10 @@
     "validateUpsert": true
   },
   "properties": {
+    "status": {
+      "type": "string",
+      "default": "active"
+    },
     "title": {
       "type": "string"
     },
