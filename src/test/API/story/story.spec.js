@@ -1,4 +1,4 @@
-import {api, user1Promise, adminPromise} from '../../helpers/api';
+import {api, user1, user1Promise, user2, user2Promise, adminPromise} from '../../helpers/api';
 import {updateTimeouts} from '../timeout';
 import app from '../../../server/server';
 let should = require('chai').should();
@@ -48,11 +48,13 @@ describe(`/${COLLECTION_URL}/`, function () {
     });
   });
 
-  describe('PUT/POST', () => {
+  describe.only('PUT/POST', () => {
     const NEW_STORY = {
       id: '1a4000000000000000010001',
-      title: "Just created",
-      content: "Nice content"
+      title: "New story for test",
+      content: "Nice content for test",
+      //this userId should be ignored
+      userId: '1a400000000000000001111'
     };
 
     it('Anonymous - deny to add', () => {
@@ -66,7 +68,50 @@ describe(`/${COLLECTION_URL}/`, function () {
         return agent.post(COLLECTION_URL)
           .send(NEW_STORY)
           .expect(200)
+          .expect((res) => {
+            let story = res.body;
+            user1.id.should.equal(story.userId);
+            Story.STATUSES.ACTIVE.should.equal(story.status);
+          })
       })
+    });
+
+    it('User - deny to foreign update', () => {
+      return user2Promise.then(({agent}) => {
+        return agent.put(`${COLLECTION_URL}/${NEW_STORY.id}`)
+          .send({})
+          .expect(401)
+      });
+    });
+
+    let NEW_TITLE = "NEW TITLE";
+    let NEW_ID = '1a4000000000000000910001';
+    let NEW_CONTENT = 'NEW CONTENT';
+
+    it('User - deny to update id', () => {
+      return user1Promise.then(({agent}) => {
+        return agent.put(`${COLLECTION_URL}/${NEW_STORY.id}`)
+          .send({id: NEW_ID})
+          .expect(400)
+      });
+    });
+
+    it('User - allow to update', ()=> {
+      return user1Promise.then(({agent}) => {
+        return agent.put(`${COLLECTION_URL}/${NEW_STORY.id}`)
+          .send({
+            title: NEW_TITLE,
+            content: NEW_CONTENT,
+            userId: user2.id
+          })
+          .expect(200)
+          .expect((res) => {
+            let story = res.body;
+            user1.id.should.equal(story.userId);
+            NEW_TITLE.should.equal(story.title);
+            NEW_CONTENT.should.equal(story.content);
+          })
+      });
     });
 
     after(()=> Story.deleteById(NEW_STORY.id));
