@@ -166,4 +166,11 @@ describe(`/${COLLECTION_URL}/`, function () {
       })
     });
   });
+
+  describe('DELETE', () => {
+    it('Anonymous - deny to delete', () => {
+      return api.del(`${COLLECTION_URL}/${USER1.id}`)
+        .expect(404)
+    });
+  })
 });
