@@ -7,6 +7,8 @@ module.exports = (Story) => {
     DELETED: 'deleted'
   };
 
+  Story.MAX_TAGS = 3;
+
   Story.disableRemoteMethod('createChangeStream', true);
   Story.disableRemoteMethod('upsert', true);
   Story.disableRemoteMethod('updateAll', true);
@@ -14,17 +16,16 @@ module.exports = (Story) => {
 
   Story.disableRemoteMethod('__get__user', false);
   Story.observe('before save', setCurrentUserId);
-  Story.observe('before save', sanitize);
+  Story.observe('before save', Sanitize.observer('title', Sanitize.text));
+  Story.observe('before save', Sanitize.observer('content', Sanitize.html));
+  Story.observe('before save', Sanitize.observer('tags', tagSanitize));
 
-  function sanitize(ctx) {
-    if (ctx.instance) {
-      //this is adding (POST)
-      Sanitize.oText(ctx.instance, 'title');
-      Sanitize.oHtml(ctx.instance, 'content');
-    } else {
-      Sanitize.oText(ctx.data, 'title');
-      Sanitize.oHtml(ctx.data, 'content');
-    }
-    return Promise.resolve();
+
+  function tagSanitize(array) {
+    let a = array.slice(0, Story.MAX_TAGS);
+    a = a.map(s => s.toLocaleLowerCase());
+    a = a.map(i => i.replace(/[^a-z0-9а-яё]/g, ''));
+    //filter empty strings
+    return a.filter(a => a)
   }
 };

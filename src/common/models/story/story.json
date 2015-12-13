@@ -16,7 +16,14 @@
     "content": {
       "type": "string",
       "required": true
-    }
+    },
+    "tags": [
+      {
+        "type": "string",
+        "length": 3,
+        "comment": "actually length not working by default"
+      }
+    ]
   },
   "validations": [],
   "relations": {
