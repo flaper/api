@@ -34,6 +34,7 @@
     "loopback-boot": "^2.6.5",
     "loopback-connector-mongodb": "^1.13.0",
     "loopback-datasource-juggler": "^2.40.1",
+    "sanitize-html": "^1.11.2",
     "serve-favicon": "^2.0.1"
   },
   "optionalDependencies": {
