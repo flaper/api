@@ -168,7 +168,7 @@ describe(`/${COLLECTION_URL}/`, function () {
   });
 
   describe('DELETE', () => {
-    it('Anonymous - deny to delete', () => {
+    it('Route should not exist', () => {
       return api.del(`${COLLECTION_URL}/${USER1.id}`)
         .expect(404)
     });

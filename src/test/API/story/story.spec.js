@@ -135,4 +135,10 @@ describe(`/${COLLECTION_URL}/`, function () {
     after(()=> Story.deleteById(NEW_STORY.id));
   });
 
+  describe('DELETE', () => {
+    it('Route should not exist', () => {
+      return api.del(`${COLLECTION_URL}/${STORY1.id}`)
+        .expect(404)
+    });
+  })
 });
