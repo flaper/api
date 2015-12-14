@@ -10,10 +10,16 @@ let dataSource = app.dataSources.mongo;
  /test/fixtures/ - sample data for tests only
  */
 export class Fixture {
+  /**
+   * @return {string}
+   */
   static TYPE_CONSTANTS() {
     return 'Constants';
   }
 
+  /**
+   * @return {string}
+   */
   static TYPE_ALL() {
     return 'All';
   }
@@ -70,10 +76,10 @@ export class Fixture {
   }
 
   //to apply new indexes and upload new models
-  migrate(singleModelName, pluralModelName) {
+  migrate(singleModelName, fileName) {
     return new Promise((resolve, reject) => {
       dataSource.autoupdate(singleModelName, () => {
-        this.simpleLoad(singleModelName, pluralModelName)
+        this.simpleLoad(singleModelName, fileName)
           .catch(console.error)
           .then(resolve);
       });
@@ -84,14 +90,14 @@ export class Fixture {
   startProcessing() {
     const MODELS = {
       user: 'user',
-      Role: 'role',
-      RoleMapping: 'roleMapping',
+      //Role: 'role',
+      //RoleMapping: 'roleMapping',
       Story: 'story'
     };
 
     let promises = Object.keys(MODELS).map((modelName) => {
-      let pluralName = MODELS[modelName];
-      return this.migrate(modelName, pluralName);
+      let fileName = MODELS[modelName];
+      return this.migrate(modelName, fileName);
     });
     return Promise.all(promises);
   }
@@ -108,14 +114,24 @@ export class Fixture {
     });
   }
 
-  readModels(pluralModelName) {
-    let paths = this.paths();
-    paths = paths.map((path) => __dirname + `/${path}/${pluralModelName}.json`);
+  readModels(fileName) {
+    let ps = this.paths();
+    ps = ps.map((path) => __dirname + `/${path}/${fileName}`);
+    let paths = [];
+    ps.forEach(p => {
+      paths.push(p + '.json');
+      paths.push(p + '.js')
+    });
+
+
     let modelsArrays = paths.map((path) => {
       if (!fs.existsSync(path)) {
         return [];
       }
-      return _.values(require(path));
+      let result = require(path);
+      //depends json or export default
+      result = /js$/.test(path) ? result.default : result;
+      return _.values(result);
     });
     return modelsArrays.reduce((a, b) => a.concat(b))
   }

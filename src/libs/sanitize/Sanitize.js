@@ -39,4 +39,36 @@ export class Sanitize {
     }
     return Promise.resolve();
   }
+
+  static symbolsNumber(data) {
+    let text = Sanitize.text(data);
+    text = text.replace(/[^A-Za-z0-9а-яёА-ЯЁ]/g, '');
+    return text.length;
+  }
+
+  //alphaNumerical length
+  static alphaMinLengthObserver(property, length) {
+    return function (ctx) {
+      let data = ctx.instance ? ctx.instance[property] : ctx.data[property];
+      if (data !== undefined) {
+        let len = Sanitize.symbolsNumber(data);
+        if (len < length) {
+          let error = new Error(`Minimum length of ${property} is ${length}`);
+          error.status = 400;
+          error.code = 'EXCEPTION_MIN_LENGTH';
+          return Promise.reject(error);
+        }
+      }
+      return Promise.resolve();
+    }
+  }
+
+  static fakerIncreaseAlphaLength(str, length) {
+    let repeat = Math.ceil(length / Sanitize.symbolsNumber(str));
+    let result = "";
+    //to prevent right strings be completed removed by e.g. unclosed <script> tag
+    let s = Sanitize.text(str);
+    for (let i = 0; i < repeat; i++) result += s;
+    return result;
+  }
 }

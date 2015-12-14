@@ -3,13 +3,14 @@ import {updateTimeouts} from '../timeout';
 import app from '../../../server/server';
 let should = require('chai').should();
 import STORIES from  '../../fixtures/story';
+import {Sanitize} from '../../../../src/libs/sanitize/Sanitize';
 
 let Story = app.models.Story;
 
 const COLLECTION_URL = 'stories';
 const STORY1 = STORIES.test1;
 
-describe(`/${COLLECTION_URL}/`, function () {
+describe(`/${COLLECTION_URL}/@story`, function () {
   updateTimeouts(this);
 
   describe('GET/HEAD', ()=> {
@@ -52,7 +53,7 @@ describe(`/${COLLECTION_URL}/`, function () {
     const NEW_STORY = {
       id: '1a4000000000000000010001',
       title: "New story for test",
-      content: "Nice content for test",
+      content: STORY1.content,
       //this userId should be ignored
       userId: '1a400000000000000001111'
     };
@@ -87,6 +88,7 @@ describe(`/${COLLECTION_URL}/`, function () {
     let newTitle = "NEW TITLE";
     let newId = '1a4000000000000000910001';
     let newContent = 'NEW CONTENT';
+    newContent = Sanitize.fakerIncreaseAlphaLength(newContent, Story.MIN_CONTENT_LENGTH);
 
     it('User - deny to update id', () => {
       return user1Promise.then(({agent}) => {

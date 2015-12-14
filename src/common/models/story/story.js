@@ -8,6 +8,7 @@ module.exports = (Story) => {
   };
 
   Story.MAX_TAGS = 3;
+  Story.MIN_CONTENT_LENGTH = 1000;
 
   Story.disableRemoteMethod('createChangeStream', true);
   Story.disableRemoteMethod('upsert', true);
@@ -18,6 +19,7 @@ module.exports = (Story) => {
   Story.observe('before save', setCurrentUserId);
   Story.observe('before save', Sanitize.observer('title', Sanitize.text));
   Story.observe('before save', Sanitize.observer('content', Sanitize.html));
+  Story.observe('before save', Sanitize.alphaMinLengthObserver('content', Story.MIN_CONTENT_LENGTH));
   Story.observe('before save', Sanitize.observer('tags', tagSanitize));
 
 

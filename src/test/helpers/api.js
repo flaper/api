@@ -5,7 +5,7 @@ import defaults from 'superagent-defaults';
 const PORT = app.get('port');
 const LOGIN_URL = 'users/login';
 const API_URL = `http://0.0.0.0:${PORT}/api/`;
-const USERS = require('../fixtures/user');
+const USERS = require('../fixtures/allUsers');
 export let api = supertest(API_URL);
 
 function userAgentPromise(user) {
