@@ -4,7 +4,7 @@ import {RoleService} from '../services/roleService.js';
 //this will set userId if subject under creating
 //for PUT/UPDATE it will ignore userId
 export function setCurrentUserId(ctx) {
-  if (!App.isWebRequest()) {
+  if (!App.isWebServer()) {
     return Promise.resolve();
   }
 

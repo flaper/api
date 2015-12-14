@@ -1,11 +1,19 @@
 import {setCurrentUserId} from '../../behaviors/currentUser'
+import {ignoreProperties} from '../../behaviors/ignoreProperties'
 import {Sanitize} from '../../../libs/sanitize/Sanitize';
+import _ from 'lodash';
 
 module.exports = (Story) => {
-  Story.STATUSES = {
+  Story.STATUS = {
     ACTIVE: 'active',
-    DELETED: 'deleted'
+    DELETED: 'deleted',
+    DENIED: 'denied',
+    ERASED: 'erased'
   };
+
+  Story.STATUSES = _.values(Story.STATUS);
+
+  Story.validatesInclusionOf('status', {in: Story.STATUSES});
 
   Story.MAX_TAGS = 3;
   Story.MIN_CONTENT_LENGTH = 1000;
@@ -17,11 +25,11 @@ module.exports = (Story) => {
 
   Story.disableRemoteMethod('__get__user', false);
   Story.observe('before save', setCurrentUserId);
+  Story.observe('before save', ignoreProperties({'status': {newDefault: Story.STATUS.ACTIVE}}));
   Story.observe('before save', Sanitize.observer('title', Sanitize.text));
   Story.observe('before save', Sanitize.observer('content', Sanitize.html));
   Story.observe('before save', Sanitize.alphaMinLengthObserver('content', Story.MIN_CONTENT_LENGTH));
   Story.observe('before save', Sanitize.observer('tags', tagSanitize));
-
 
   function tagSanitize(array) {
     let a = array.slice(0, Story.MAX_TAGS);

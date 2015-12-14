@@ -72,7 +72,7 @@ describe(`/${COLLECTION_URL}/@story`, function () {
           .expect((res) => {
             let story = res.body;
             user1.id.should.equal(story.userId);
-            Story.STATUSES.ACTIVE.should.equal(story.status);
+            Story.STATUS.ACTIVE.should.equal(story.status);
           })
       })
     });

@@ -1,6 +1,8 @@
 let loopback = require('loopback'),
   app = require('../../server/server');
 
+let isWebServer = false;
+
 export class App {
   static setCurrentUser(userId) {
     let ctx = loopback.getCurrentContext();
@@ -9,8 +11,12 @@ export class App {
     }
   }
 
-  static isWebRequest() {
-    return loopback.getCurrentContext() ? true : false;
+  static isWebServer() {
+    if (!isWebServer) {
+      //when we have many observers, context just disappearing sometimes
+      isWebServer = loopback.getCurrentContext() ? true : false;
+    }
+    return isWebServer;
   }
 
   static getCurrentUser() {
