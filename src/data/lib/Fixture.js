@@ -90,8 +90,8 @@ export class Fixture {
   startProcessing() {
     const MODELS = {
       user: 'user',
-      //Role: 'role',
-      //RoleMapping: 'roleMapping',
+      Role: 'role',
+      RoleMapping: 'roleMapping',
       Story: 'story'
     };
 
