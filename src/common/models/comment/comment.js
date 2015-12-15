@@ -24,11 +24,7 @@ module.exports = (Comment) => {
       });
   };
 
-  Comment.disableRemoteMethod('createChangeStream', true);
-  Comment.disableRemoteMethod('upsert', true);
-  Comment.disableRemoteMethod('updateAll', true);
   Comment.disableRemoteMethod('deleteById', true);
-  Comment.disableRemoteMethod('findOne', true);
 
   Comment.disableRemoteMethod('__get__user', false);
   Comment.observe('before save', setCurrentUserId);
