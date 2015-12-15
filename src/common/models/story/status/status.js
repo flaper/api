@@ -3,6 +3,45 @@ import {ERRORS} from '../../../errors/errors';
 
 export function initStatusActions(Story) {
   Story.actionDelete = actionDelete;
+  Story.actionDeny = actionDeny;
+
+  Story.remoteMethod(
+    'actionDeny',
+    {
+      description: `Set '${Story.STATUS.DENIED}' status for a Story`,
+      http: {path: '/:id/status/deny', verb: 'put'},
+      accepts: [
+        {arg: 'id', type: 'string', required: true}
+      ],
+      returns: {root: true}
+    }
+  );
+
+  Story.remoteMethod(
+    'actionDelete',
+    {
+      description: `Set '${Story.STATUS.DELETED}' status for a Story`,
+      http: {path: '/:id/status/delete', verb: 'put'},
+      accepts: [
+        {arg: 'id', type: 'string', required: true}
+      ],
+      returns: {root: true}
+    }
+  );
+
+  function actionDeny(id) {
+    //admin only can call this
+    return Story.findById(id)
+      .then((story) => {
+        if (story.status === Story.STATUS.ACTIVE) {
+          story.status = Story.STATUS.DENIED;
+          return story.save({skipIgnore: {status: true}});
+        } else {
+          throw ERRORS.forbidden('Only active stories can be denied');
+        }
+      });
+  }
+
   function actionDelete(id) {
     //$owner and admin can only call this
     //$owner can from ACTIVE / DENIED status, admin can from DENIED status
@@ -25,15 +64,4 @@ export function initStatusActions(Story) {
   }
 
 
-  Story.remoteMethod(
-    'actionDelete',
-    {
-      description: `Set '${Story.STATUS.DELETED}' status for a Story`,
-      http: {path: '/:id/status/delete', verb: 'put'},
-      accepts: [
-        {arg: 'id', type: 'string', required: true}
-      ],
-      returns: {root: true}
-    }
-  );
 }

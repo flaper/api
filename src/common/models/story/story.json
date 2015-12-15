@@ -73,7 +73,10 @@
       "principalType": "ROLE",
       "principalId": "admin",
       "permission": "ALLOW",
-      "property": "actionDelete"
+      "property": [
+        "actionDelete",
+        "actionDeny"
+      ]
     }
   ],
   "methods": {}
