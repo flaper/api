@@ -2,6 +2,7 @@ import {setCurrentUserId} from '../../behaviors/currentUser'
 import {ignoreProperties} from '../../behaviors/ignoreProperties'
 import {Sanitize} from '../../../libs/sanitize/Sanitize';
 import {initStatusActions} from './status/status';
+import {ERRORS} from '../../errors/errors';
 import _ from 'lodash';
 
 module.exports = (Story) => {
@@ -11,13 +12,22 @@ module.exports = (Story) => {
     DENIED: 'denied',
     ERASED: 'erased'
   };
-
   Story.STATUSES = _.values(Story.STATUS);
 
   Story.validatesInclusionOf('status', {in: Story.STATUSES});
 
   Story.MAX_TAGS = 3;
   Story.MIN_CONTENT_LENGTH = 1000;
+
+  Story.findByIdRequired = (id) => {
+    return Story.findById(id)
+      .then((story) => {
+        if (!story) {
+          throw ERRORS.notFound(`Story with id ${id} not found`);
+        }
+        return story;
+      });
+  };
 
   Story.disableRemoteMethod('createChangeStream', true);
   Story.disableRemoteMethod('upsert', true);

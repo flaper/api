@@ -2,8 +2,9 @@ import {App} from '../../../services/App';
 import {ERRORS} from '../../../errors/errors';
 
 export function initStatusActions(Story) {
-  Story.actionDelete = actionDelete;
   Story.actionDeny = actionDeny;
+  Story.actionDelete = actionDelete;
+  Story.actionActivate = actionActivate;
 
   Story.remoteMethod(
     'actionDeny',
@@ -29,9 +30,26 @@ export function initStatusActions(Story) {
     }
   );
 
+  Story.remoteMethod(
+    'actionActivate',
+    {
+      description: `Set '${Story.STATUS.ACTIVE}' status for denied Story`,
+      http: {path: '/:id/status/activate', verb: 'put'},
+      accepts: [
+        {arg: 'id', type: 'string', required: true}
+      ],
+      returns: {root: true}
+    }
+  );
+  function requireStory(story) {
+    if (!story) {
+      throw ERRORS.notFound('Story with such id not found');
+    }
+  }
+
   function actionDeny(id) {
     //admin only can call this
-    return Story.findById(id)
+    return Story.findByIdRequired(id)
       .then((story) => {
         if (story.status === Story.STATUS.ACTIVE) {
           story.status = Story.STATUS.DENIED;
@@ -48,7 +66,7 @@ export function initStatusActions(Story) {
     let promises = [];
     let story = null;
     let isAdmin;//if not admin - it will be owner, because of ACL
-    promises.push(Story.findById(id)
+    promises.push(Story.findByIdRequired(id)
       .then(s => story = s));
     promises.push(App.isAdmin().then(res => isAdmin = res));
     return Promise.all(promises)
@@ -63,5 +81,19 @@ export function initStatusActions(Story) {
       })
   }
 
+  function actionActivate(id) {
+    //admin only can call this
+    return Story.findByIdRequired(id)
+      .then((story) => {
+        console.log('inside activate');
+        console.log(story);
+        if (story.status === Story.STATUS.DENIED) {
+          story.status = Story.STATUS.ACTIVE;
+          return story.save({skipIgnore: {status: true}});
+        } else {
+          throw ERRORS.forbidden('Only denied stories can be activated again');
+        }
+      });
+  }
 
 }

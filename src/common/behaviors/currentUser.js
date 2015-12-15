@@ -11,8 +11,13 @@ export function setCurrentUserId(ctx) {
   return App.getCurrentUser()
     .then((user) => {
       if (ctx.instance) {
-        //this is adding (POST)
-        ctx.instance.userId = user.id;
+        if (ctx.isNewInstance) {
+          //this is adding (POST) e.g.
+          ctx.instance.userId = user.id;
+        } else {
+          //this of model.save from inside app e.g.
+          ctx.instance.unsetAttribute('userId');
+        }
       } else {
         //so it is update - userId should not be changed
         delete ctx.data.userId;

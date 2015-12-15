@@ -75,7 +75,8 @@
       "permission": "ALLOW",
       "property": [
         "actionDelete",
-        "actionDeny"
+        "actionDeny",
+        "actionActivate"
       ]
     }
   ],
