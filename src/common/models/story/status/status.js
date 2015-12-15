@@ -85,8 +85,6 @@ export function initStatusActions(Story) {
     //admin only can call this
     return Story.findByIdRequired(id)
       .then((story) => {
-        console.log('inside activate');
-        console.log(story);
         if (story.status === Story.STATUS.DENIED) {
           story.status = Story.STATUS.ACTIVE;
           return story.save({skipIgnore: {status: true}});

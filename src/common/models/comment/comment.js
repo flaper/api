@@ -1,5 +1,6 @@
 import {setCurrentUserId} from '../../behaviors/currentUser'
 import {Sanitize} from '../../../libs/sanitize/Sanitize';
+import {initDefaultScope} from './defaultScope/defaultScope';
 import _ from 'lodash';
 
 module.exports = (Comment) => {
@@ -19,4 +20,5 @@ module.exports = (Comment) => {
   Comment.observe('before save', setCurrentUserId);
   Comment.observe('before save', Sanitize.observer('content', Sanitize.text));
 
+  initDefaultScope(Comment);
 };

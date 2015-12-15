@@ -50,10 +50,10 @@
     }
   ],
   "scopes": {
-  },
-  "scope": {
-    "where": {
-      "status": "active"
+    "scopeActive": {
+      "where": {
+        "status": "active"
+      }
     }
   },
   "methods": {}
