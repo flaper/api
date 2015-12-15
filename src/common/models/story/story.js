@@ -34,8 +34,6 @@ module.exports = (Story) => {
   Story.disableRemoteMethod('upsert', true);
   Story.disableRemoteMethod('updateAll', true);
   Story.disableRemoteMethod('deleteById', true);
-  Story.disableRemoteMethod('findOne', true);
-  Story.disableRemoteMethod('find', true);
 
   Story.disableRemoteMethod('__get__user', false);
   Story.observe('before save', setCurrentUserId);

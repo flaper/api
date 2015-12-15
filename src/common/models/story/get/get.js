@@ -1,8 +1,13 @@
 import {App} from '../../../services/App';
 import {ERRORS} from '../../../utils/errors';
 import {objectHasDeepKey} from '../../../utils/object';
+import _ from 'lodash';
 
 export function initGet(Story) {
+  Story.disableRemoteMethod('findOne', true);
+  Story.disableRemoteMethod('find', true);
+  Story.disableRemoteMethod('count', true);
+
   Story.disableRemoteMethod('__get__scopePublic', true);
   Story.disableRemoteMethod('__create__scopePublic', true);
   Story.disableRemoteMethod('__delete__scopePublic', true);
@@ -13,6 +18,7 @@ export function initGet(Story) {
   Story.disableRemoteMethod('__count__scopeActive', true);
 
   Story.customFind = customFind;
+  Story.customCount = customCount;
 
   Story.remoteMethod(
     'customFind',
@@ -28,12 +34,31 @@ export function initGet(Story) {
       returns: {root: true}
     }
   );
+
+  Story.remoteMethod('customCount', {
+    description: 'Count number of stories matched by where',
+    accessType: 'READ',
+    accepts: {arg: 'where', type: 'object', description: 'Criteria to match model instances'},
+    returns: {arg: 'count', type: 'number'},
+    http: {verb: 'get', path: '/count'}
+  });
+
+
   function customFind(filter) {
-    if (!objectHasDeepKey(filter, 'status')) {
+    if (!_.get(filter, 'where') || !objectHasDeepKey(filter.where, 'status')) {
       //be default we return only active stories
       return Story.scopeActive(filter);
     }
     //but it is possible to request active and deleted as well
     return Story.scopePublic(filter);
+  }
+
+  function customCount(where) {
+    if (!objectHasDeepKey(where, 'status')) {
+      //be default we return only active stories
+      return Story.scopeActive.count(where);
+    }
+    //but it is possible to request active and deleted as well
+    return Story.scopePublic.count(where);
   }
 }
