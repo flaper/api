@@ -11,22 +11,22 @@ const COLLECTION_URL = 'comments';
 describe(`CommonModel/scopeAll`, function () {
   updateTimeouts(this);
 
-  it('scopeAll should not exist', () => {
+  it('get should not exist', () => {
     return api.get(`${COLLECTION_URL}/scopeAll`)
       .expect(404)
   });
 
-  it('scopeAll should not exist', () => {
+  it('post should not exist', () => {
     return api.post(`${COLLECTION_URL}/scopeAll`)
       .expect(404)
   });
 
-  it('scopeAll should not exist', () => {
+  it('del should not exist', () => {
     return api.del(`${COLLECTION_URL}/scopeAll`)
       .expect(404)
   });
 
-  it('scopeAll should not exist', () => {
+  it('count should not exist', () => {
     return api.get(`${COLLECTION_URL}/scopeAll/count`)
       .expect(404)
   });
