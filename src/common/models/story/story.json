@@ -80,5 +80,19 @@
       ]
     }
   ],
+  "scopes": {
+    "scopePublic": {
+      "where": {
+        "or": [
+          {
+            "status": "active"
+          },
+          {
+            "status": "denied"
+          }
+        ]
+      }
+    }
+  },
   "methods": {}
 }

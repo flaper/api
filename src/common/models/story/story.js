@@ -2,6 +2,7 @@ import {setCurrentUserId} from '../../behaviors/currentUser'
 import {ignoreProperties} from '../../behaviors/ignoreProperties'
 import {Sanitize} from '../../../libs/sanitize/Sanitize';
 import {initStatusActions} from './status/status';
+import {initGet} from './get/get';
 import {ERRORS} from '../../errors/errors';
 import _ from 'lodash';
 
@@ -33,6 +34,12 @@ module.exports = (Story) => {
   Story.disableRemoteMethod('upsert', true);
   Story.disableRemoteMethod('updateAll', true);
   Story.disableRemoteMethod('deleteById', true);
+  Story.disableRemoteMethod('findOne', true);
+  Story.disableRemoteMethod('find', true);
+  Story.disableRemoteMethod('__get__scopePublic', true);
+  Story.disableRemoteMethod('__create__scopePublic', true);
+  Story.disableRemoteMethod('__delete__scopePublic', true);
+  Story.disableRemoteMethod('__count__scopePublic', true);
 
   Story.disableRemoteMethod('__get__user', false);
   Story.observe('before save', setCurrentUserId);
@@ -51,4 +58,6 @@ module.exports = (Story) => {
   }
 
   initStatusActions(Story);
+  initGet(Story);
+
 };

@@ -42,11 +42,6 @@ describe(`/${COLLECTION_URL}/@story`, function () {
       return api.get(`${COLLECTION_URL}/count`)
         .expect(200);
     });
-
-    it('Anonymous - deny findOne', () => {
-      return api.get(`${COLLECTION_URL}/findOne`)
-        .expect(200);
-    });
   });
 
   describe('PUT/POST', () => {
