@@ -1,5 +1,5 @@
 import {App} from '../../../services/App';
-import {ERRORS} from '../../../errors/errors';
+import {ERRORS} from '../../../utils/errors';
 
 export function initStatusActions(Story) {
   Story.actionDeny = actionDeny;

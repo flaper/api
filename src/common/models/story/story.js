@@ -3,7 +3,7 @@ import {ignoreProperties} from '../../behaviors/ignoreProperties'
 import {Sanitize} from '../../../libs/sanitize/Sanitize';
 import {initStatusActions} from './status/status';
 import {initGet} from './get/get';
-import {ERRORS} from '../../errors/errors';
+import {ERRORS} from '../../utils/errors';
 import _ from 'lodash';
 
 module.exports = (Story) => {
@@ -36,10 +36,6 @@ module.exports = (Story) => {
   Story.disableRemoteMethod('deleteById', true);
   Story.disableRemoteMethod('findOne', true);
   Story.disableRemoteMethod('find', true);
-  Story.disableRemoteMethod('__get__scopePublic', true);
-  Story.disableRemoteMethod('__create__scopePublic', true);
-  Story.disableRemoteMethod('__delete__scopePublic', true);
-  Story.disableRemoteMethod('__count__scopePublic', true);
 
   Story.disableRemoteMethod('__get__user', false);
   Story.observe('before save', setCurrentUserId);

@@ -92,6 +92,11 @@
           }
         ]
       }
+    },
+    "scopeActive": {
+      "where": {
+        "status": "active"
+      }
     }
   },
   "methods": {}

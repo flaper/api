@@ -11,6 +11,17 @@ const COLLECTION_URL = 'stories';
 describe(`/${COLLECTION_URL}/@get`, function () {
   updateTimeouts(this);
 
+  it('Anonymous - should return only active stories by default', () => {
+    return api.get(COLLECTION_URL)
+      .query()
+      .expect(200)
+      .expect((res) => {
+        let stories = res.body;
+        stories.length.should.at.least(1);
+        stories.forEach(story => story.status.should.eq(Story.STATUS.ACTIVE));
+      })
+  });
+
   it('Anonymous - should return only denied stories', () => {
     return api.get(COLLECTION_URL)
       .query({filter: {where: {status: Story.STATUS.DENIED}}})
