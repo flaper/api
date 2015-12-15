@@ -15,6 +15,7 @@ module.exports = (Comment) => {
   Comment.validatesInclusionOf('status', {in: Comment.STATUSES});
 
   Comment.disableRemoteMethod('deleteById', true);
+  Comment.disableRemoteMethod('__get__subject', false);
 
   Comment.disableRemoteMethod('__get__user', false);
   Comment.observe('before save', setCurrentUserId);

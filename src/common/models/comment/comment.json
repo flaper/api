@@ -22,6 +22,10 @@
     "user": {
       "type": "belongsTo",
       "model": "user"
+    },
+    "subject": {
+      "type": "belongsTo",
+      "polymorphic": true
     }
   },
   "acls": [
