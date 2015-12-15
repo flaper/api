@@ -92,7 +92,8 @@ export class Fixture {
       user: 'user',
       Role: 'role',
       RoleMapping: 'roleMapping',
-      Story: 'story'
+      Story: 'story',
+      Comment: 'comment'
     };
 
     let promises = Object.keys(MODELS).map((modelName) => {

@@ -4,7 +4,6 @@ import {objectHasDeepKey} from '../../../utils/object';
 import _ from 'lodash';
 
 export function initGet(Story) {
-  Story.disableRemoteMethod('findOne', true);
   Story.disableRemoteMethod('find', true);
   Story.disableRemoteMethod('count', true);
 

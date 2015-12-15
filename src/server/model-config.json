@@ -5,7 +5,8 @@
       "loopback/server/models",
       "../common/models",
       "../common/models/core",
-      "../common/models/story"
+      "../common/models/story",
+      "../common/models/comment"
     ],
     "mixins": [
       "loopback/common/mixins",
@@ -47,6 +48,10 @@
     "public": true
   },
   "Story": {
+    "dataSource": "mongo",
+    "public": true
+  },
+  "Comment": {
     "dataSource": "mongo",
     "public": true
   }
