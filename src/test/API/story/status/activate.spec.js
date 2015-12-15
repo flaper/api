@@ -4,6 +4,7 @@ import app from '../../../../server/server';
 let should = require('chai').should();
 import STORIES from  '../../../fixtures/story';
 import {Sanitize} from '../../../../../src/libs/sanitize/Sanitize';
+import {returnStatus} from './helper';
 
 let Story = app.models.Story;
 const STORY1 = STORIES.test1;
@@ -45,13 +46,6 @@ describe(`/${COLLECTION_URL}/:id/status/activate`, function () {
             story.status.should.be.eq(Story.STATUS.ACTIVE);
           })
       })
-      .then(() => Story.findById(STORY_DENIED1.id))
-      .then((story) => {
-        story.status = Story.STATUS.DENIED;
-        return story.save({skipIgnore: 'status'});
-      })
-      .then((story) => {
-        story.status.should.be.eq(Story.STATUS.DENIED);
-      })
+      .then(() => returnStatus(STORY_DENIED1.id, Story.STATUS.DENIED));
   });
 });

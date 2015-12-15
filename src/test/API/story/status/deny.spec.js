@@ -4,9 +4,12 @@ import app from '../../../../server/server';
 let should = require('chai').should();
 import STORIES from  '../../../fixtures/story';
 import {Sanitize} from '../../../../../src/libs/sanitize/Sanitize';
+import {returnStatus} from './helper';
 
 let Story = app.models.Story;
 const STORY1 = STORIES.test1;
+const STORY_DELETED1 = STORIES.deleted1;
+const STORY_DENIED1 = STORIES.denied1;
 
 const COLLECTION_URL = 'stories';
 
@@ -20,56 +23,30 @@ describe(`/${COLLECTION_URL}/:id/status/deny`, function () {
     })
   });
 
-
-  describe('ADMIN with active story', () => {
-    const NEW_STORY = {
-      id: '1a4000000000000000010001',
-      title: "New story for test",
-      content: STORY1.content,
-      status: Story.STATUS.ACTIVE,
-      userId: user1.id
-    };
-    before(()=> Story.create(NEW_STORY));
-
-    it('Admin can deny active story', ()=> {
-      return adminPromise.then(({agent}) => {
-        return agent.put(`${COLLECTION_URL}/${NEW_STORY.id}/status/deny`)
+  it('Admin can deny active story', ()=> {
+    return adminPromise.then(({agent}) => {
+        return agent.put(`${COLLECTION_URL}/${STORY1.id}/status/deny`)
           .expect(200)
           .expect((res) => {
             let story = res.body;
             story.status.should.be.eq(Story.STATUS.DENIED);
           })
       })
-    });
-
-    it('Admin cannot deny already denied story', () => {
-      return adminPromise.then(({agent}) => {
-        return agent.put(`${COLLECTION_URL}/${NEW_STORY.id}/status/deny`)
-          .expect(403)
-      })
-    });
-
-    after(()=> Story.deleteById(NEW_STORY.id));
+      .then(() => returnStatus(STORY1.id, Story.STATUS.ACTIVE));
   });
 
-  describe('ADMIN with deleted story', () => {
-    const NEW_STORY = {
-      id: '1a4000000000000000010001',
-      title: "New story for test",
-      content: STORY1.content,
-      status: Story.STATUS.DELETED,
-      userId: user1.id
-    };
+  it('Admin cannot deny already denied story', () => {
+    return adminPromise.then(({agent}) => {
+      return agent.put(`${COLLECTION_URL}/${STORY_DENIED1.id}/status/deny`)
+        .expect(403)
+    })
+  });
 
-    before(()=> Story.create(NEW_STORY));
 
-    it('Admin cannot deny deleted story', ()=> {
-      return adminPromise.then(({agent}) => {
-        return agent.put(`${COLLECTION_URL}/${NEW_STORY.id}/status/deny`)
-          .expect(403)
-      })
-    });
-
-    after(()=> Story.deleteById(NEW_STORY.id));
-  })
+  it('Admin cannot deny deleted story', ()=> {
+    return adminPromise.then(({agent}) => {
+      return agent.put(`${COLLECTION_URL}/${STORY_DELETED1.id}/status/deny`)
+        .expect(403)
+    })
+  });
 });

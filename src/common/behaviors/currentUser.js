@@ -16,7 +16,7 @@ export function setCurrentUserId(ctx) {
           ctx.instance.userId = user.id;
         } else {
           //this of model.save from inside app e.g.
-          ctx.instance.unsetAttribute('userId');
+          //just do nothing, leave userId as it is
         }
       } else {
         //so it is update - userId should not be changed
