@@ -1,18 +1,18 @@
-import {user1Promise, adminPromise} from '../../helpers/api';
-import {updateTimeouts} from '../timeout';
-import app from '../../../server/server';
+import {user1Promise, user1, user2, user2Promise, adminPromise} from '../../../helpers/api';
+import {updateTimeouts} from '../../timeout';
+import app from '../../../../server/server';
 let should = require('chai').should();
-import STORIES from  '../../fixtures/story';
-import {Sanitize} from '../../../../src/libs/sanitize/Sanitize';
+import STORIES from  '../../../fixtures/story';
+import {Sanitize} from '../../../../../src/libs/sanitize/Sanitize';
 
 let Story = app.models.Story;
 const STORY1 = STORIES.test1;
 
 const COLLECTION_URL = 'stories';
 
-describe(`/${COLLECTION_URL}/@status`, function () {
+describe(`/${COLLECTION_URL}/:id/status/active`, function () {
   updateTimeouts(this);
-  describe('Single story', ()=> {
+  describe('ACTIVE status', () => {
     const NEW_STORY = {
       id: '1a4000000000000000010001',
       title: "New story for test",
@@ -44,7 +44,6 @@ describe(`/${COLLECTION_URL}/@status`, function () {
           })
       })
     });
-
     after(()=> Story.deleteById(NEW_STORY.id));
   });
 });

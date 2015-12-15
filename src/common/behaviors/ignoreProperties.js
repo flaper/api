@@ -8,7 +8,9 @@ export function ignoreProperties(descriptions) {
       return Promise.resolve();
     }
 
+    let skipFields = ctx.options.skipIgnore ? Object.keys(ctx.options.skipIgnore) : [];
     let properties = Object.keys(descriptions);
+    properties = _.difference(properties, skipFields);
     if (ctx.instance) {
       properties.forEach((property) => {
         if (descriptions[property].newDefault) {

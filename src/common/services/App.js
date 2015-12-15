@@ -1,5 +1,6 @@
 let loopback = require('loopback'),
   app = require('../../server/server');
+import {RoleService} from './roleService.js';
 
 let isWebServer = false;
 
@@ -19,18 +20,24 @@ export class App {
     return isWebServer;
   }
 
-  static getCurrentUser() {
-    let User = app.models.User;
+  static getCurrentUserId() {
     let context = loopback.getCurrentContext();
     if (!context) {
       //so it is console app.
-      return Promise.resolve(null);
+      return null;
     }
     let accessToken = context.get('accessToken');
-    let userId = accessToken ? accessToken.userId : context.userId;
-    if (!userId) {
-      return Promise.resolve(null);
-    }
-    return User.findById(userId);
+    return accessToken ? accessToken.userId : context.userId;
+  }
+
+  static getCurrentUser() {
+    let User = app.models.User;
+    let userId = App.getCurrentUserId();
+    return userId ? User.findById(userId) : Promise.resolve(null);
+  }
+
+  static isAdmin() {
+    let userId = App.getCurrentUserId();
+    return userId ? RoleService.isAdmin(userId) : Promise.resolve(false);
   }
 }
