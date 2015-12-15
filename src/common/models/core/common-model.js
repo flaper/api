@@ -1,10 +1,21 @@
 import {timestampBehavior} from '../../behaviors/timestamps.js';
+import {ERRORS} from '../../utils/errors';
 
 module.exports = (CommonModel) => {
   CommonModel.observe('before save', timestampBehavior);
   CommonModel.commonInit = (Model) => {
     disableSomeRemotes(Model);
     CommonModel.commonDisableRemoteScope(Model, 'scopeAll');
+  };
+
+  CommonModel.findByIdRequired = function (id) {
+    return this.findById(id)
+      .then((model) => {
+        if (!model) {
+          throw ERRORS.notFound(`Model with id ${id} not found`);
+        }
+        return model;
+      });
   };
 
   function disableSomeRemotes(Model) {

@@ -22,16 +22,6 @@ module.exports = (Story) => {
   Story.MAX_TAGS = 3;
   Story.MIN_CONTENT_LENGTH = 1000;
 
-  Story.findByIdRequired = (id) => {
-    return Story.findById(id)
-      .then((story) => {
-        if (!story) {
-          throw ERRORS.notFound(`Story with id ${id} not found`);
-        }
-        return story;
-      });
-  };
-
   Story.disableRemoteMethod('deleteById', true);
 
   Story.disableRemoteMethod('__get__user', false);

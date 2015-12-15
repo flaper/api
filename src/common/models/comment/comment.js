@@ -1,6 +1,5 @@
 import {setCurrentUserId} from '../../behaviors/currentUser'
 import {Sanitize} from '../../../libs/sanitize/Sanitize';
-import {ERRORS} from '../../utils/errors';
 import _ from 'lodash';
 
 module.exports = (Comment) => {
@@ -13,16 +12,6 @@ module.exports = (Comment) => {
   Comment.STATUSES = _.values(Comment.STATUS);
 
   Comment.validatesInclusionOf('status', {in: Comment.STATUSES});
-
-  Comment.findByIdRequired = (id) => {
-    return Comment.findById(id)
-      .then((story) => {
-        if (!story) {
-          throw ERRORS.notFound(`Story with id ${id} not found`);
-        }
-        return story;
-      });
-  };
 
   Comment.disableRemoteMethod('deleteById', true);
 
