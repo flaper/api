@@ -7,6 +7,8 @@ import {ERRORS} from '../../utils/errors';
 import _ from 'lodash';
 
 module.exports = (Story) => {
+  Story.commonInit(Story);
+
   Story.STATUS = {
     ACTIVE: 'active',
     DELETED: 'deleted',

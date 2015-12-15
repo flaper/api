@@ -4,6 +4,8 @@ import {ERRORS} from '../../utils/errors';
 import _ from 'lodash';
 
 module.exports = (Comment) => {
+  Comment.commonInit(Comment);
+
   Comment.STATUS = {
     ACTIVE: 'active',
     DELETED: 'deleted'

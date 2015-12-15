@@ -10,16 +10,17 @@ let Comment = app.models.Comment;
 const COLLECTION_URL = 'comments';
 //const STORY1 = STORIES.test1;
 
-describe(`/${COLLECTION_URL}/@comment`, function () {
+describe(`/${COLLECTION_URL}/@access`, function () {
   updateTimeouts(this);
 
   describe('GET/HEAD', ()=> {
-    it('Anonymous - allow access to the list', () => {
+    it('Anonymous - allow access to the list (only active)', () => {
       return api.get(COLLECTION_URL)
         .expect(200)
         .expect((res) => {
           let comments = res.body;
           comments.length.should.least(3);
+          comments.forEach(comment => comment.status.should.eq(Comment.STATUS.ACTIVE));
         })
     });
   })

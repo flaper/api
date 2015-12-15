@@ -16,5 +16,8 @@
   "validations": [],
   "relations": {},
   "acls": [],
+  "scopes": {
+    "scopeAll": {}
+  },
   "methods": {}
 }

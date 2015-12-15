@@ -7,14 +7,8 @@ export function initGet(Story) {
   Story.disableRemoteMethod('find', true);
   Story.disableRemoteMethod('count', true);
 
-  Story.disableRemoteMethod('__get__scopePublic', true);
-  Story.disableRemoteMethod('__create__scopePublic', true);
-  Story.disableRemoteMethod('__delete__scopePublic', true);
-  Story.disableRemoteMethod('__count__scopePublic', true);
-  Story.disableRemoteMethod('__get__scopeActive', true);
-  Story.disableRemoteMethod('__create__scopeActive', true);
-  Story.disableRemoteMethod('__delete__scopeActive', true);
-  Story.disableRemoteMethod('__count__scopeActive', true);
+  Story.commonDisableRemoteScope(Story, 'scopePublic');
+  Story.commonDisableRemoteScope(Story, 'scopeActive');
 
   Story.customFind = customFind;
   Story.customCount = customCount;

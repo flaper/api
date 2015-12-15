@@ -10,7 +10,7 @@ let Story = app.models.Story;
 const COLLECTION_URL = 'stories';
 const STORY1 = STORIES.test1;
 
-describe(`/${COLLECTION_URL}/@story`, function () {
+describe(`/${COLLECTION_URL}/@access`, function () {
   updateTimeouts(this);
 
   describe('GET/HEAD', ()=> {
