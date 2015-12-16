@@ -53,10 +53,6 @@ describe(`/${COLLECTION_URL}/GET&HEAD`, function () {
     return adminPromise.then(({agent}) => {
       return agent.get(`${COLLECTION_URL}/${COMMENT_DELETED1.id}`)
         .expect(404)
-      //.expect((res) => {
-      //  let data = res.body;
-      //  console.log(data);
-      //})
     })
   })
 });
