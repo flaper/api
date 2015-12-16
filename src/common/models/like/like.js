@@ -41,6 +41,12 @@ module.exports = (Like) => {
         if (ALLOWED_MODELS.indexOf(subjectType) === -1) {
           throw ERRORS.badRequest(`Likes are not allowed for type '${subjectType}'.`)
         }
+        return idToType.findSubject();
+      })
+      .then(subject => {
+        if (subject.userId.toString() === userId.toString()) {
+          throw ERRORS.badRequest('Cannot like own subject.')
+        }
       })
       //findOne works without implicit and
       .then(() => Like.findOne({where: {subjectId, userId}}))

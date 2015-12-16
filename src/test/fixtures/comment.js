@@ -36,7 +36,7 @@ export default {
     "content": "Удаленный комментарий"
   },
   //2 means second user
-  "without_likes2": {
+  "withoutLikes2": {
     "id": "1a5000000000000000001022",
     "userId": "1a1000000000000000001002",
     "subjectId": "1a4000000000000000001001",
