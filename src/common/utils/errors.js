@@ -10,6 +10,7 @@ export let ERRORS = {
   },
   error: (message, statusCode, code = null) => {
     let error = new Error();
+    error.message = message;
     error.statusCode = error.status = statusCode;
     error.code = code;
     return error;
