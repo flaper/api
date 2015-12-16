@@ -51,7 +51,10 @@
       "principalType": "ROLE",
       "principalId": "$authenticated",
       "permission": "ALLOW",
-      "property": "actionCreate"
+      "property": [
+        "actionCreate",
+        "actionDelete"
+      ]
     }
   ],
   "methods": {

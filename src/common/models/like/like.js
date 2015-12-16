@@ -17,12 +17,25 @@ module.exports = (Like) => {
   Like.disableRemoteMethod('create', true);
 
   Like.actionCreate = actionCreate;
+  Like.actionDelete = actionDelete;
 
   Like.remoteMethod(
     'actionCreate',
     {
       description: `Create a like for subject`,
       http: {path: '/:subjectId', verb: 'post'},
+      accepts: [
+        {arg: 'subjectId', type: 'string', required: true}
+      ],
+      returns: {root: true}
+    }
+  );
+
+  Like.remoteMethod(
+    'actionDelete',
+    {
+      description: `Delete a like for subject`,
+      http: {path: '/:subjectId', verb: 'delete'},
       accepts: [
         {arg: 'subjectId', type: 'string', required: true}
       ],
@@ -55,6 +68,17 @@ module.exports = (Like) => {
           throw ERRORS.badRequest('Like already exists.');
         }
         return Like.create({subjectId, userId, subjectType});
+      });
+  }
+
+  function actionDelete(subjectId) {
+    //userId should exist
+    let userId = App.getCurrentUserId();
+    return Like.findOne({where: {subjectId, userId}})
+      .then((like) => {
+        if (!like) throw  ERRORS.notFound('No such like');
+        //delete works without implicit and
+        return Like.deleteAll({subjectId, userId});
       });
   }
 };

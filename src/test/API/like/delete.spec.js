@@ -1,17 +1,53 @@
-import {api} from '../../helpers/api';
+import {api, user1Promise, user1, user2Promise} from '../../helpers/api';
 import {updateTimeouts} from '../timeout';
 import app from '../../../server/server';
 let should = require('chai').should();
-import LIKES from  '../../fixtures/like';
-const LIKE_STORY1 = LIKES.like_story1;
 let Like = app.models.Like;
+import STORIES from  '../../fixtures/story';
+let STORY_WITHOUT_LIKES2 = STORIES.withoutLikes2;
 
 const COLLECTION_URL = 'likes';
 
 describe(`/${COLLECTION_URL}/delete`, function () {
   updateTimeouts(this);
-  it('Anonymous - no delete by id', () => {
-    return api.del(`${COLLECTION_URL}/${LIKE_STORY1.id}`)
-      .expect(404)
+  it('Anonymous - no allow delete by id', () => {
+    return api.del(`${COLLECTION_URL}/${STORY_WITHOUT_LIKES2.id}`)
+      .expect(401)
   });
+
+  it('User - deny delete if like not exist', () => {
+    return user1Promise.then(({agent}) => {
+      return agent.del(`${COLLECTION_URL}/${STORY_WITHOUT_LIKES2.id}`)
+        .expect(404)
+    })
+  });
+
+  describe("Sample like created", () => {
+    const NEW_LIKE = {
+      subjectId: STORY_WITHOUT_LIKES2.id,
+      subjectType: 'Story',
+      userId: user1.id
+    };
+    before(() => Like.create(NEW_LIKE));
+
+    it("User - deny delete foreign like", () => {
+      return user2Promise.then(({agent}) => {
+        return agent.del(`${COLLECTION_URL}/${STORY_WITHOUT_LIKES2.id}`)
+          .expect(404)
+      })
+    });
+
+    it("User - allow delete", () => {
+      return user1Promise.then(({agent}) => {
+          return agent.del(`${COLLECTION_URL}/${STORY_WITHOUT_LIKES2.id}`)
+            .expect(200)
+        })
+        .then(() => {
+          return Like.findOne({where: NEW_LIKE})
+            .then((like) => {
+              should.not.exist(like);
+            })
+        })
+    })
+  })
 });
