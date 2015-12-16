@@ -1,6 +1,7 @@
 {
   "name": "role",
   "base": "Role",
+  "strict": true,
   "idInjection": true,
   "options": {
     "validateUpsert": true
