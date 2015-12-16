@@ -1,7 +1,6 @@
 {
   "name": "CommonModel",
   "base": "PersistedModel",
-  "idInjection": true,
   "options": {
     "validateUpsert": true
   },

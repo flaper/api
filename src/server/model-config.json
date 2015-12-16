@@ -6,7 +6,8 @@
       "../common/models",
       "../common/models/core",
       "../common/models/story",
-      "../common/models/comment"
+      "../common/models/comment",
+      "../common/models/like"
     ],
     "mixins": [
       "loopback/common/mixins",
@@ -52,6 +53,10 @@
     "public": true
   },
   "Comment": {
+    "dataSource": "mongo",
+    "public": true
+  },
+  "Like": {
     "dataSource": "mongo",
     "public": true
   }
