@@ -1,4 +1,5 @@
 import {setCurrentUserId} from '../../behaviors/currentUser'
+import {applyIdToType} from '../../behaviors/idToType'
 import {ignoreProperties} from '../../behaviors/ignoreProperties'
 import {Sanitize} from '../../../libs/sanitize/Sanitize';
 import {initStatusActions} from './status/status';
@@ -7,6 +8,7 @@ import _ from 'lodash';
 
 module.exports = (Story) => {
   Story.commonInit(Story);
+  applyIdToType(Story);
 
   Story.STATUS = {
     ACTIVE: 'active',
@@ -24,6 +26,7 @@ module.exports = (Story) => {
   Story.disableRemoteMethod('deleteById', true);
 
   Story.disableRemoteMethod('__get__user', false);
+
   Story.observe('before save', setCurrentUserId);
   Story.observe('before save', ignoreProperties({'status': {newDefault: Story.STATUS.ACTIVE}}));
   Story.observe('before save', Sanitize.observer('title', Sanitize.text));

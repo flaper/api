@@ -1,4 +1,5 @@
 import {setCurrentUserId} from '../../behaviors/currentUser'
+import {applyIdToType} from '../../behaviors/idToType'
 import {Sanitize} from '../../../libs/sanitize/Sanitize';
 import {initDefaultScope} from './commonMethods/defaultScope';
 import {initCustomDelete} from './commonMethods/customDelete';
@@ -9,6 +10,7 @@ import _ from 'lodash';
 
 module.exports = (Comment) => {
   Comment.commonInit(Comment);
+  applyIdToType(Comment);
 
   Comment.STATUS = {
     ACTIVE: 'active',

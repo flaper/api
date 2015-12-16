@@ -1,8 +1,10 @@
 import {timestampBehavior} from '../../behaviors/timestamps.js';
+import {applyIdToType} from '../../behaviors/idToType'
 import {RoleService} from '../../services/roleService';
 
 module.exports = (User) => {
   User.observe('before save', timestampBehavior);
+  applyIdToType(User);
   User.disableRemoteMethod('createChangeStream', true);
   User.disableRemoteMethod('deleteById', true);
   User.disableRemoteMethod('updateAll', true);

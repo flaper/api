@@ -40,6 +40,10 @@
     "dataSource": "mongo",
     "public": false
   },
+  "IdToType": {
+    "dataSource": "mongo",
+    "public": false
+  },
   "user": {
     "dataSource": "mongo",
     "public": true
