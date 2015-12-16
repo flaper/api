@@ -1,5 +1,5 @@
 import {timestampBehavior} from '../../behaviors/timestamps.js';
-import {ERRORS} from '../../utils/errors';
+import {findByIdRequired} from './methods/findIdByRequired'
 
 module.exports = (CommonModel) => {
   CommonModel.observe('before save', timestampBehavior);
@@ -11,7 +11,7 @@ module.exports = (CommonModel) => {
       let scopes = Object.keys(Model.settings.scopes);
       scopes.forEach(scopeName => {
         let oldScope = Model[scopeName];
-        oldScope.findByIdRequired = CommonModel.findByIdRequired;
+        oldScope.findByIdRequired = findByIdRequired;
         Object.defineProperty(Model, scopeName, {
           configurable: true,
           get: () => oldScope
@@ -20,15 +20,7 @@ module.exports = (CommonModel) => {
     });
   };
 
-  CommonModel.findByIdRequired = function (id, error = ERRORS.notFound) {
-    return this.findById(id)
-      .then((model) => {
-        if (!model) {
-          throw error(`Model with id ${id} not found`);
-        }
-        return model;
-      });
-  };
+  CommonModel.findByIdRequired = findByIdRequired;
 
   function disableSomeRemotes(Model) {
     Model.disableRemoteMethod('createChangeStream', true);
