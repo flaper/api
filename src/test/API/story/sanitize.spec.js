@@ -55,7 +55,7 @@ describe(`/${COLLECTION_URL}/@sanitize`, function () {
         .expect(200)
         .expect((res) => {
           let story = res.body;
-          story.title.should.eq(' ter x');
+          story.title.should.eq('ter x');
           story.content.should.eq(validContent2);
         })
     })

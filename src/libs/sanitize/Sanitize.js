@@ -6,14 +6,14 @@ export class Sanitize {
     return sanitizeHtml(dirty, {
       allowedTags: [],
       allowedAttributes: []
-    });
+    }).trim();
   }
 
   static text(dirty) {
     return sanitizeHtml(dirty, {
       allowedTags: [],
       allowedAttributes: []
-    });
+    }).trim();
   }
 
   static observer(property, func) {
