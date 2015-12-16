@@ -47,4 +47,16 @@ describe(`/${COLLECTION_URL}/DELETE`, function () {
         .expect(404)
     })
   });
+
+  it('Admin - allow to delete any comment', () => {
+    return adminPromise.then(({agent}) => {
+        return agent.del(`${COLLECTION_URL}/${COMMENT1.id}`)
+          .expect(200)
+          .expect((res) => {
+            let comment = res.body;
+            Comment.STATUS.DELETED.should.equal(comment.status);
+          })
+      })
+      .then(() => returnProperties(Comment, COMMENT1.id, {status: Comment.STATUS.ACTIVE}));
+  });
 });
