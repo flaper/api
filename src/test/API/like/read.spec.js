@@ -8,7 +8,7 @@ let Like = app.models.Like;
 
 const COLLECTION_URL = 'likes';
 
-describe(`/${COLLECTION_URL}/GET&HEAD`, function () {
+describe(`/${COLLECTION_URL}/read`, function () {
   updateTimeouts(this);
 
   it('Anonymous - allow access to the list', () => {

@@ -66,5 +66,17 @@
       }
     }
   },
-  "methods": {}
+  "methods": {},
+  "indexes": {
+    "subjectId_status_created_index": {
+      "subjectId": 1,
+      "status": 1,
+      "created": -1
+    },
+    "userId_status_created_index": {
+      "userId": 1,
+      "status": 1,
+      "created": -1
+    }
+  }
 }

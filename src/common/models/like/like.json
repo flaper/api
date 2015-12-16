@@ -48,5 +48,25 @@
       "permission": "ALLOW"
     }
   ],
-  "methods": {}
+  "methods": {
+  },
+  "indexes": {
+    "subjectId_index": {
+      "subjectId": 1
+    },
+    "userId_subjectType_created_index": {
+      "userId": 1,
+      "subjectType": 1,
+      "created": -1
+    },
+    "userId_subjectId_unique_index": {
+      "keys": {
+        "subjectId": 1,
+        "userId": 1
+      },
+      "options": {
+        "unique": true
+      }
+    }
+  }
 }

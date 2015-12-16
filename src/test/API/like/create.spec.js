@@ -8,10 +8,16 @@ let Like = app.models.Like;
 
 const COLLECTION_URL = 'likes';
 
-describe(`/${COLLECTION_URL}/delete`, function () {
+describe(`/${COLLECTION_URL}/create`, function () {
   updateTimeouts(this);
-  it('Anonymous - no delete by id', () => {
-    return api.del(`${COLLECTION_URL}/${LIKE_STORY1.id}`)
-      .expect(404)
-  });
+
+  //it('Anonymous - allow access to the list', () => {
+  //  return api.get(COLLECTION_URL)
+  //    .expect(200)
+  //    .expect((res) => {
+  //      let likes = res.body;
+  //      likes.length.should.least(4);
+  //    })
+  //});
+
 });

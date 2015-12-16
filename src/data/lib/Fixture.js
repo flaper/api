@@ -1,6 +1,8 @@
 import _ from 'lodash';
 import app from '../../server/server';
 import fs from 'fs';
+import PromiseQueue from "promise-queue"
+import {lowerFirstLetter} from '../../common/utils/string';
 
 let dataSource = app.dataSources.mongo;
 
@@ -72,7 +74,7 @@ export class Fixture {
     let promises = values.map(callback);
     return Promise.all(promises)
       .then(() => console.log(`${pluralModelName}' fixtures are loaded`))
-      .catch((err) => console.error(`Error: ${err}`));
+      .catch((err) => console.error(`Uplodad ${singleModelName} error: ${JSON.stringify(err)}`));
   }
 
   //to apply new indexes and upload new models
@@ -88,20 +90,30 @@ export class Fixture {
 
   //private
   startProcessing() {
-    const MODELS = {
-      user: 'user',
-      Role: 'role',
-      RoleMapping: 'roleMapping',
-      Story: 'story',
-      Comment: 'comment',
-      Like: 'like'
-    };
+    return new Promise((resolve, reject) => {
+      //because e.g. Comments depends on Story to exist
+      const modelGroups = [['user', 'Role', 'RoleMapping', 'Story'], ['Comment'], ['Like']];
+      let queue = new PromiseQueue(1, Infinity);
 
-    let promises = Object.keys(MODELS).map((modelName) => {
-      let fileName = MODELS[modelName];
-      return this.migrate(modelName, fileName);
+      modelGroups.forEach(group => {
+        let nextPromise = () => {
+          let promises = group.map((modelName) => {
+            return this.migrate(modelName, lowerFirstLetter(modelName));
+          });
+          let promisesGroup = Promise.all(promises);
+
+          promisesGroup.then(() => {
+            if (queue.getQueueLength() === 0) {
+              resolve();
+            }
+          }).catch(reject);
+
+          return promisesGroup;
+        };
+
+        queue.add(nextPromise);
+      });
     });
-    return Promise.all(promises);
   }
 
   process() {
