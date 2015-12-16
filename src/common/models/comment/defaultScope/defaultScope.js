@@ -6,16 +6,18 @@ import _ from 'lodash';
 export function initDefaultScope(Comment) {
   Comment.disableRemoteMethod('find', true);
   Comment.disableRemoteMethod('count', true);
+  Comment.disableRemoteMethod('findById', true);
 
   Comment.commonDisableRemoteScope(Comment, 'scopeActive');
 
   Comment.customFind = customFind;
   Comment.customCount = customCount;
+  Comment.customFindById = customFindById;
 
   Comment.remoteMethod(
     'customFind',
     {
-      description: 'Find all comments matched by filter',
+      description: 'Find all comments matched by filter.',
       accessType: 'READ',
       accepts: {
         arg: 'filter',
@@ -28,11 +30,29 @@ export function initDefaultScope(Comment) {
   );
 
   Comment.remoteMethod('customCount', {
-    description: 'Count number of comments matched by where',
+    description: 'Count number of comments matched by where.',
     accessType: 'READ',
     accepts: {arg: 'where', type: 'object', description: 'Criteria to match model instances'},
     returns: {arg: 'count', type: 'number'},
     http: {verb: 'get', path: '/count'}
+  });
+
+  Comment.remoteMethod('customFindById', {
+    description: 'Find a comment by id.',
+    accessType: 'READ',
+    accepts: [
+      {
+        arg: 'id', type: 'any', description: 'Comment id', required: true,
+        http: {source: 'path'}
+      },
+      {
+        arg: 'filter', type: 'object',
+        description: 'Filter defining fields and include'
+      }
+    ],
+    returns: {arg: 'data', type: 'Comment', root: true},
+    http: {verb: 'get', path: '/:id'},
+    rest: {after: ERRORS.convertNullToNotFoundError}
   });
 
 
@@ -42,5 +62,9 @@ export function initDefaultScope(Comment) {
 
   function customCount(where) {
     return Comment.scopeActive.count(where);
+  }
+
+  function customFindById(id, filter) {
+    return Comment.scopeActive.findById(id, filter);
   }
 }

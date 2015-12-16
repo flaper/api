@@ -3,6 +3,10 @@ import {updateTimeouts} from '../timeout';
 import app from '../../../server/server';
 let should = require('chai').should();
 import {Sanitize} from '../../../../src/libs/sanitize/Sanitize';
+import COMMENTS from  '../../fixtures/comment';
+
+const COMMENT1 = COMMENTS.comment1;
+const COMMENT_DELETED1 = COMMENTS.deleted1;
 
 let Comment = app.models.Comment;
 
@@ -39,5 +43,20 @@ describe(`/${COLLECTION_URL}/GET&HEAD`, function () {
         data.count.should.eq(0);
       })
   });
-  //read deleted comment
+
+  it('Anonymous - allow access to active by id', () => {
+    return api.get(`${COLLECTION_URL}/${COMMENT1.id}`)
+      .expect(200)
+  });
+
+  it('Admin - cannot read deleted comment', () => {
+    return adminPromise.then(({agent}) => {
+      return agent.get(`${COLLECTION_URL}/${COMMENT_DELETED1.id}`)
+        .expect(404)
+      //.expect((res) => {
+      //  let data = res.body;
+      //  console.log(data);
+      //})
+    })
+  })
 });
