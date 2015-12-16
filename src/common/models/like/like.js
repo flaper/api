@@ -1,10 +1,11 @@
-import {setCurrentUserId} from '../../behaviors/currentUser'
+import {App} from '../../services/App';
 import {ignoreProperties} from '../../behaviors/ignoreProperties'
 import {ERRORS} from '../../utils/errors';
 
 import _ from 'lodash';
 
 module.exports = (Like) => {
+  const ALLOWED_MODELS = ['Story', 'Comment'];
   Like.commonInit(Like);
 
   Like.disableRemoteMethod('updateAttributes', false);
@@ -13,26 +14,41 @@ module.exports = (Like) => {
   Like.disableRemoteMethod('exists', true);
   Like.disableRemoteMethod('findById', true);
   Like.disableRemoteMethod('deleteById', true);
+  Like.disableRemoteMethod('create', true);
 
-  Like.observe('before save', setCurrentUserId);
-  //Like.observe('before save', subjectObserver);
-  //Like.observe('before save', ignoreProperties({
-  //  subjectType: {newDefault: 'story'}
-  //}));
+  Like.actionCreate = actionCreate;
 
-  let ignoreSubjectId = ignoreProperties({subjectId: {}});
+  Like.remoteMethod(
+    'actionCreate',
+    {
+      description: `Create a like for subject`,
+      http: {path: '/:subjectId', verb: 'post'},
+      accepts: [
+        {arg: 'subjectId', type: 'string', required: true}
+      ],
+      returns: {root: true}
+    }
+  );
 
-  //function subjectObserver(ctx) {
-  //  let Story = Like.app.models.Story;
-  //  if (!(ctx.instance && ctx.isNewInstance)) {
-  //    return ignoreSubjectId(ctx);
-  //  }
-  //
-  //  let subjectId = ctx.instance.subjectId;
-  //  if (!subjectId) {
-  //    return Promise.reject(ERRORS.badRequest("SubjectId should exist"));
-  //  }
-  //  return Story.findByIdRequired(subjectId, ERRORS.badRequest);
-  //}
-
+  function actionCreate(subjectId) {
+    //userId should exist
+    let userId = App.getCurrentUserId();
+    let IdToType = Like.app.models.IdToType;
+    let subjectType;
+    return IdToType.findByIdRequired(subjectId)
+      .then(idToType => {
+        subjectType = idToType.type;
+        if (ALLOWED_MODELS.indexOf(subjectType) === -1) {
+          throw ERRORS.badRequest(`Likes are not allowed for type '${subjectType}'.`)
+        }
+      })
+      //findOne works without implicit and
+      .then(() => Like.findOne({where: {subjectId, userId}}))
+      .then((like) => {
+        if (like) {
+          throw ERRORS.badRequest('Like already exists.');
+        }
+        return Like.create({subjectId, userId, subjectType});
+      });
+  }
 };

@@ -3,31 +3,31 @@
     "id": "1a6000000000000000001001",
     "userId": "1a1000000000000000001002",
     "subjectId": "1a4000000000000000001001",
-    "subjectType": "story"
+    "subjectType": "Story"
   },
   "like_story2": {
     "userId": "1a1000000000000000001002",
     "subjectId": "1a4000000000000000001002",
-    "subjectType": "story"
+    "subjectType": "Story"
   },
   "like_story3": {
     "userId": "1a1000000000000000001001",
     "subjectId": "1a4000000000000000001003",
-    "subjectType": "story"
+    "subjectType": "Story"
   },
   "like_comment1": {
     "userId": "1a1000000000000000001002",
     "subjectId": "1a5000000000000000001001",
-    "subjectType": "comment"
+    "subjectType": "Comment"
   },
   "like_comment2": {
     "userId": "1a1000000000000000001002",
     "subjectId": "1a5000000000000000001002",
-    "subjectType": "comment"
+    "subjectType": "Comment"
   },
   "like_comment3": {
     "userId": "1a1000000000000000001001",
     "subjectId": "1a5000000000000000001003",
-    "subjectType": "comment"
+    "subjectType": "Comment"
   }
 }
