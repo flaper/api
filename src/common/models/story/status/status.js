@@ -41,11 +41,6 @@ export function initStatusActions(Story) {
       returns: {root: true}
     }
   );
-  function requireStory(story) {
-    if (!story) {
-      throw ERRORS.notFound('Story with such id not found');
-    }
-  }
 
   function actionDeny(id) {
     //admin only can call this

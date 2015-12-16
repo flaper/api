@@ -8,11 +8,11 @@ module.exports = (CommonModel) => {
     CommonModel.commonDisableRemoteScope(Model, 'scopeAll');
   };
 
-  CommonModel.findByIdRequired = function (id) {
+  CommonModel.findByIdRequired = function (id, error = ERRORS.notFound) {
     return this.findById(id)
       .then((model) => {
         if (!model) {
-          throw ERRORS.notFound(`Model with id ${id} not found`);
+          throw error(`Model with id ${id} not found`);
         }
         return model;
       });

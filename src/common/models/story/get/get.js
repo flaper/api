@@ -1,5 +1,4 @@
 import {App} from '../../../services/App';
-import {ERRORS} from '../../../utils/errors';
 import {objectHasDeepKey} from '../../../utils/object';
 import _ from 'lodash';
 

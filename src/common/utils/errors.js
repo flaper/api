@@ -1,4 +1,10 @@
 export let ERRORS = {
+  badRequest: (message = "Bad request") => {
+    let error = new Error();
+    error.status = 400;
+    error.message = message;
+    return error;
+  },
   forbidden: (message = "Action not allowed") => {
     let error = new Error();
     error.status = 403;

@@ -3,7 +3,6 @@ import {ignoreProperties} from '../../behaviors/ignoreProperties'
 import {Sanitize} from '../../../libs/sanitize/Sanitize';
 import {initStatusActions} from './status/status';
 import {initGet} from './get/get';
-import {ERRORS} from '../../utils/errors';
 import _ from 'lodash';
 
 module.exports = (Story) => {

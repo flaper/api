@@ -3,6 +3,7 @@ import {updateTimeouts} from '../timeout';
 import app from '../../../server/server';
 let should = require('chai').should();
 import {Sanitize} from '../../../../src/libs/sanitize/Sanitize';
+import _ from 'lodash';
 
 let Comment = app.models.Comment;
 
@@ -23,6 +24,22 @@ describe(`/${COLLECTION_URL}/POST&PUT`, function () {
       .expect(401)
   });
 
+  it('User - subjectId should be provided', () => {
+    return user1Promise.then(({agent}) => {
+      return agent.post(COLLECTION_URL)
+        .send(_.omit(NEW_COMMENT, 'subjectId'))
+        .expect(400)
+    })
+  });
+
+  it('User - subjectId should exist', () => {
+    return user1Promise.then(({agent}) => {
+      return agent.post(COLLECTION_URL)
+        .send(_.assign({}, NEW_COMMENT, {subjectId: "wrongId"}))
+        .expect(400)
+    })
+  });
+
   it('User - allow to add', () => {
     return user1Promise.then(({agent}) => {
       return agent.post(COLLECTION_URL)
@@ -31,6 +48,8 @@ describe(`/${COLLECTION_URL}/POST&PUT`, function () {
         .expect((res) => {
           let comment = res.body;
           user1.id.should.equal(comment.userId);
+          NEW_COMMENT.subjectId.should.eq(comment.subjectId);
+          'story'.should.eq(comment.subjectType);
           Comment.STATUS.ACTIVE.should.equal(comment.status);
         })
     })
@@ -43,4 +62,6 @@ describe(`/${COLLECTION_URL}/POST&PUT`, function () {
         .expect(404)
     })
   });
+
+  after(()=> Comment.deleteById(NEW_COMMENT.id));
 });
