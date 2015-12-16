@@ -1,6 +1,7 @@
 import {setCurrentUserId} from '../../behaviors/currentUser'
 import {Sanitize} from '../../../libs/sanitize/Sanitize';
-import {initDefaultScope} from './defaultScope/defaultScope';
+import {initDefaultScope} from './commonMethods/defaultScope';
+import {initCustomDelete} from './commonMethods/customDelete';
 import {ignoreProperties} from '../../behaviors/ignoreProperties'
 import {ERRORS} from '../../utils/errors';
 
@@ -17,7 +18,6 @@ module.exports = (Comment) => {
 
   Comment.validatesInclusionOf('status', {in: Comment.STATUSES});
 
-  Comment.disableRemoteMethod('deleteById', true);
   Comment.disableRemoteMethod('updateAttributes', false);
   Comment.disableRemoteMethod('__get__subject', false);
 
@@ -31,6 +31,7 @@ module.exports = (Comment) => {
   Comment.observe('before save', Sanitize.observer('content', Sanitize.text));
 
   initDefaultScope(Comment);
+  initCustomDelete(Comment);
 
   let ignoreSubjectId = ignoreProperties({subjectId: {}});
 

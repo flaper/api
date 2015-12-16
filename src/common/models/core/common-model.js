@@ -6,6 +6,18 @@ module.exports = (CommonModel) => {
   CommonModel.commonInit = (Model) => {
     disableSomeRemotes(Model);
     CommonModel.commonDisableRemoteScope(Model, 'scopeAll');
+    Model.on('attached', () => {
+      //now scopes attached to the Model
+      let scopes = Object.keys(Model.settings.scopes);
+      scopes.forEach(scopeName => {
+        let oldScope = Model[scopeName];
+        oldScope.findByIdRequired = CommonModel.findByIdRequired;
+        Object.defineProperty(Model, scopeName, {
+          configurable: true,
+          get: () => oldScope
+        });
+      })
+    });
   };
 
   CommonModel.findByIdRequired = function (id, error = ERRORS.notFound) {

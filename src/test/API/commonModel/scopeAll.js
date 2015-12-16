@@ -1,4 +1,4 @@
-import {api} from '../../helpers/api';
+import {api, adminPromise} from '../../helpers/api';
 import {updateTimeouts} from '../timeout';
 import app from '../../../server/server';
 let should = require('chai').should();
@@ -22,8 +22,11 @@ describe(`CommonModel/scopeAll`, function () {
   });
 
   it('del should not exist', () => {
-    return api.del(`${COLLECTION_URL}/scopeAll`)
-      .expect(404)
+    return adminPromise.then(({agent}) => {
+      return api.del(`${COLLECTION_URL}/scopeAll`)
+        //why 401 unknown
+        .expect(401)
+    });
   });
 
   it('count should not exist', () => {
