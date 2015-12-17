@@ -46,6 +46,22 @@ describe(`/${COLLECTION_URL}/@access`, function () {
     });
   });
 
+  describe('GET by slug', () => {
+    it('Anonymous - allow access to any by slug', () => {
+      return api.get(`${COLLECTION_URL}/slug/${encodeURIComponent(STORY1.slugLowerCase)}`)
+        .expect(200)
+        .expect((res) => {
+          let story = res.body;
+          story.id.should.eq(STORY1.id);
+        })
+    });
+
+    it('Anonymous - wrong slug should return 404', () => {
+      return api.get(`${COLLECTION_URL}/slug/wrong_slug`)
+        .expect(404)
+    });
+  });
+
   describe('PUT/POST', () => {
     const NEW_STORY = {
       id: '1a4000000000000000010001',

@@ -1,5 +1,6 @@
 import {Sanitize} from "../../libs/sanitize/Sanitize"
 import moment from 'moment-timezone';
+import {ERRORS} from '../utils/errors'
 
 //mixin suppose that Model have 'status' property and 'active' status
 module.exports = (Model, options) => {
@@ -15,6 +16,19 @@ module.exports = (Model, options) => {
     return generateSlugDate(model, model.title);
   });
 
+  Model.actionFindBySlug = actionFindBySlug;
+  Model.remoteMethod(
+    'actionFindBySlug',
+    {
+      description: `Find an active model instance by slug`,
+      http: {path: '/slug/:slug', verb: 'get'},
+      accepts: [
+        {arg: 'slug', type: 'string', required: true}
+      ],
+      returns: {root: true},
+      rest: {after: ERRORS.convertNullToNotFoundError}
+    }
+  );
   //we need to call slugObserver when creating new Model and activating status
   //another example maybe - when title has been changed (maybe after save hook
   function slugObserver(ctx) {
@@ -75,5 +89,15 @@ module.exports = (Model, options) => {
           return nextIteration();
         })
     }
+  }
+
+  function actionFindBySlug(slug) {
+    let query = {where: {slugLowerCase: slug.toLocaleLowerCase(), status: 'active'}};
+    return Model.findOne(query)
+      .then(res => {
+        console.log(res);
+        console.log('res');
+        return res;
+      })
   }
 };
