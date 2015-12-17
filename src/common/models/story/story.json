@@ -5,6 +5,9 @@
   "options": {
     "validateUpsert": true
   },
+  "mixins": {
+    "Sluggable": {}
+  },
   "properties": {
     "status": {
       "type": "string",
