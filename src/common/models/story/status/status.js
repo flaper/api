@@ -55,6 +55,7 @@ export function initStatusActions(Story) {
       });
   }
 
+  //to improve - should be no ACL check in action
   function actionDelete(id) {
     //$owner and admin can only call this
     //$owner can from ACTIVE / DENIED status, admin can from DENIED status
@@ -78,15 +79,20 @@ export function initStatusActions(Story) {
 
   function actionActivate(id) {
     //admin only can call this
+    let story;
     return Story.findByIdRequired(id)
-      .then((story) => {
+      .then((s) => {
+        story = s;
         if (story.status === Story.STATUS.DENIED) {
-          story.status = Story.STATUS.ACTIVE;
-          return story.save({skipIgnore: {status: true}});
+          return Story.notifyObserversOf('before activate', story);
         } else {
           throw ERRORS.forbidden('Only denied stories can be activated again');
         }
-      });
+      })
+      .then(() => {
+        story.status = Story.STATUS.ACTIVE;
+        return story.save({skipIgnore: {status: true}});
+      })
   }
 
 }

@@ -8,6 +8,9 @@ module.exports = (Model, options) => {
   Model.settings.hidden.push('slugLowerCase');
 
   Model.observe('before save', slugObserver);
+  Model.observe('before activate', (model)=> {
+    return generateSlugDate(model, model.title);
+  });
 
   //we need to call slugObserver when creating new Model and activating status
   //another example maybe - when title has been changed (maybe after save hook

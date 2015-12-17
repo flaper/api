@@ -2,22 +2,19 @@ import {user1Promise, user1, user2, user2Promise, adminPromise} from '../../../h
 import app from '../../../../server/server';
 let should = require('chai').should();
 import STORIES from  '../../../fixtures/story';
-import {Sanitize} from '../../../../../src/libs/sanitize/Sanitize';
 import moment from 'moment-timezone';
 
 let Story = app.models.Story;
 const STORY1 = STORIES.test1;
 
-const COLLECTION_URL = 'stories';
-
 describe(`Sluggable/Story`, function () {
   //start of the slug
   let slug1 = 'для_теста_slug';
-  const NEW_DELETED_STORY = {
+  const NEW_DENIED_STORY = {
     id: '1a4000000000000000010001',
     title: "Для теста slug",
     content: STORY1.content,
-    status: Story.STATUS.DELETED
+    status: Story.STATUS.DENIED
   };
   const NEW_ACTIVE_STORY1 = {
     id: '1a4000000000000000010002',
@@ -53,32 +50,24 @@ describe(`Sluggable/Story`, function () {
     status: Story.STATUS.ACTIVE
   };
 
-  const NEW_ACTIVE_STORY6 = {
-    id: '1a4000000000000000010007',
-    title: "Для теста slug",
-    content: STORY1.content,
-    status: Story.STATUS.ACTIVE
-  };
-
-  let ids = [NEW_DELETED_STORY.id, NEW_ACTIVE_STORY1.id, NEW_ACTIVE_STORY2.id, NEW_ACTIVE_STORY3.id,
-    NEW_ACTIVE_STORY4.id, NEW_ACTIVE_STORY5.id, NEW_ACTIVE_STORY6.id];
+  let ids = [NEW_DENIED_STORY.id, NEW_ACTIVE_STORY1.id, NEW_ACTIVE_STORY2.id, NEW_ACTIVE_STORY3.id,
+    NEW_ACTIVE_STORY4.id, NEW_ACTIVE_STORY5.id];
   let m = moment().tz('Europe/Moscow');
   let year = m.year();
   let month = m.month() + 1;
   let date = m.date();
 
   before(() => {
-    return Story.create(NEW_DELETED_STORY)
+    return Story.create(NEW_DENIED_STORY)
       .then(() => Story.create(NEW_ACTIVE_STORY1))
       .then(() => Story.create(NEW_ACTIVE_STORY2))
       .then(() => Story.create(NEW_ACTIVE_STORY3))
       .then(() => Story.create(NEW_ACTIVE_STORY4))
       .then(() => Story.create(NEW_ACTIVE_STORY5))
-      .then(() => Story.create(NEW_ACTIVE_STORY6))
   });
 
   it('Delete slug', () => {
-    return Story.findById(NEW_DELETED_STORY.id)
+    return Story.findById(NEW_DENIED_STORY.id)
       .then((story) => {
         //it is not required, just current logic - slug will be generated, although it will not influence others
         story.slugLowerCase.should.eq(slug1);
@@ -120,9 +109,10 @@ describe(`Sluggable/Story`, function () {
       })
   });
 
-  it('Active slug6', () => {
-    return Story.findById(NEW_ACTIVE_STORY6.id)
+  it('After active deleted', () => {
+    return Story.actionActivate(NEW_DENIED_STORY.id)
       .then((story) => {
+        story.status.should.eq(Story.STATUS.ACTIVE);
         story.slugLowerCase.should.eq(`${slug1}_${year}_${month}_${date}_3`);
       })
   });
