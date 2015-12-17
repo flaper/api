@@ -1,11 +1,14 @@
 import {Sanitize} from "../../libs/sanitize/Sanitize"
 import moment from 'moment-timezone';
 
+//mixin suppose that Model have 'status' property and 'active' status
 module.exports = (Model, options) => {
   Model.defineProperty('slug', {type: "string", required: false});
   Model.defineProperty('slugLowerCase', {type: "string", required: false});
   if (Model.settings.hidden === undefined) Model.settings.hidden = [];
   Model.settings.hidden.push('slugLowerCase');
+  if (Model.settings.indexes === undefined) Model.settings.indexes = {};
+  Model.settings.indexes.slug_index = {slugLowerCase: 1, status: 1};
 
   Model.observe('before save', slugObserver);
   Model.observe('before activate', (model)=> {
