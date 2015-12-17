@@ -20,6 +20,8 @@ describe(`/${COLLECTION_URL}/@access`, function () {
         .expect((res) => {
           let stories = res.body;
           stories.length.should.least(2);
+          let story = stories[0];
+          should.not.exist(story.slugLowerCase);
         })
     });
 

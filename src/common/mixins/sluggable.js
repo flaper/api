@@ -4,6 +4,8 @@ import moment from 'moment-timezone';
 module.exports = (Model, options) => {
   Model.defineProperty('slug', {type: "string", required: false});
   Model.defineProperty('slugLowerCase', {type: "string", required: false});
+  if (Model.settings.hidden === undefined) Model.settings.hidden = [];
+  Model.settings.hidden.push('slugLowerCase');
 
   Model.observe('before save', slugObserver);
 
