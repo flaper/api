@@ -3,7 +3,9 @@
     "sources": [
       "loopback/common/models",
       "loopback/server/models",
+      "loopback-component-passport/lib/models",
       "../common/models",
+      "../common/models/auth",
       "../common/models/core",
       "../common/models/story",
       "../common/models/comment",
@@ -15,6 +17,18 @@
       "../common/mixins",
       "./mixins"
     ]
+  },
+  "role": {
+    "dataSource": "mongo",
+    "public": true
+  },
+  "userCredential": {
+    "dataSource": "mongo",
+    "public": false
+  },
+  "userIdentity": {
+    "dataSource": "mongo",
+    "public": false
   },
   "User": {
     "dataSource": "mongo",
@@ -45,10 +59,6 @@
     "public": false
   },
   "user": {
-    "dataSource": "mongo",
-    "public": true
-  },
-  "role": {
     "dataSource": "mongo",
     "public": true
   },

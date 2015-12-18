@@ -1,6 +1,9 @@
 {
   "restApiRoot": "/api",
   "host": "0.0.0.0",
+  "webApp": {
+    "url": "http://localhost:5000"
+  },
   "port": 4000,
   "remoting": {
     "rest": {
@@ -20,5 +23,43 @@
       "disableStackTrace": false
     }
   },
-  "legacyExplorer": false
+  "legacyExplorer": false,
+  "passport": {
+    "facebook-login": {
+      "provider": "facebook",
+      "module": "passport-facebook",
+      "clientID": "1678862478992184",
+      "clientSecret": "fakeSecret",
+      "callbackURL": "/auth/facebook/callback",
+      "authPath": "/auth/facebook",
+      "callbackPath": "/auth/facebook/callback",
+      "profileFields": [
+        "id",
+        "birthday",
+        "displayName",
+        "email",
+        "first_name",
+        "gender",
+        "last_name"
+      ],
+      "scope": [
+        "email"
+      ]
+    },
+    "google-login": {
+      "provider": "google",
+      "module": "passport-google-oauth",
+      "strategy": "OAuth2Strategy",
+      "clientID": "478934736469-vm7ejsff0v9uj42fq9rgq0rgi0rmjufr.apps.googleusercontent.com",
+      "clientSecret": "fakeSecret",
+      "callbackURL": "/auth/google/callback",
+      "authPath": "/auth/google",
+      "callbackPath": "/auth/google/callback",
+      "scope": [
+        "email",
+        "profile"
+      ],
+      "failureFlash": true
+    }
+  }
 }

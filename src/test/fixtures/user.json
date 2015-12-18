@@ -4,34 +4,34 @@
     "username": "user1",
     "email": "user1@test.com",
     "password": "test",
-    "fullName": "Test User1"
+    "displayName": "Test User1"
   },
   "user2": {
     "id": "1a1000000000000000001002",
     "username": "user2",
     "email": "user2@test.com",
     "password": "test",
-    "fullName": "Test User2"
+    "displayName": "Test User2"
   },
   "user3": {
     "id": "1a1000000000000000001003",
     "username": "user3",
     "email": "user3@test.com",
     "password": "test",
-    "fullName": "Test User3"
+    "displayName": "Test User3"
   },
   "testAdmin": {
     "id": "1a1000000000000000001010",
     "username": "test-admin",
     "email": "admin@test.com",
     "password": "test-admin",
-    "fullName": "Test Admin"
+    "displayName": "Test Admin"
   },
   "testSuper": {
     "id": "1a1000000000000000001020",
     "username": "test-super",
     "email": "super@test.com",
     "password": "test-super",
-    "fullName": "Test Super"
+    "displayName": "Test Super"
   }
 }

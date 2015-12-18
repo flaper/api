@@ -1,4 +1,4 @@
-import {api, superPromise, adminPromise, user1Promise} from '../../helpers/api';
+import {api, superPromise, adminPromise, user1Promise, superUser} from '../../helpers/api';
 import {updateTimeouts} from '../timeout';
 import app from '../../../server/server';
 
@@ -69,6 +69,12 @@ describe(`/${COLLECTION_URL}/`, function () {
       return api.post(`${COLLECTION_URL}/login`)
         .send(_.assign({}, STAS, {password: 'wrong'}))
         .expect(401);
+    });
+
+    it('Super can login as well', () => {
+      return api.post(`${COLLECTION_URL}/login`)
+        .send(superUser)
+        .expect(200);
     });
   });
 
@@ -158,13 +164,13 @@ describe(`/${COLLECTION_URL}/`, function () {
       })
     });
 
-    after(() => {
-      return superPromise.then(({agent}) => {
-        return agent.put(`${COLLECTION_URL}/${USER1.id}`)
-          .send({password: USER1.password})
-          .expect(200)
-      })
-    });
+    //after(() => {
+    //  return superPromise.then(({agent}) => {
+    //    return agent.put(`${COLLECTION_URL}/${USER1.id}`)
+    //      .send({password: USER1.password})
+    //      .expect(200)
+    //  })
+    //});
   });
 
   describe('DELETE', () => {
