@@ -41,6 +41,22 @@
         "friends"
       ]
     },
+    "odnoklassniki-login": {
+      "provider": "odnoklassniki",
+      "module": "passport-odnoklassniki",
+      "clientID": "1238414080",
+      "clientPublic": "CBAELBNKEBABABABA",
+      "clientSecret": "fakeSecret",
+      "callbackURL": "/auth/odnoklassniki/callback",
+      "authPath": "/auth/odnoklassniki",
+      "callbackPath": "/auth/odnoklassniki/callback",
+      "profileFields": [
+        "email"
+      ],
+      "scope": [
+        "GET_EMAIL"
+      ]
+    },
     "facebook-login": {
       "provider": "facebook",
       "module": "passport-facebook",
