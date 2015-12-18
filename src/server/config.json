@@ -25,6 +25,22 @@
   },
   "legacyExplorer": false,
   "passport": {
+    "vk-login": {
+      "provider": "vk",
+      "module": "passport-vkontakte",
+      "clientID": "5193174",
+      "clientSecret": "fakeSecret",
+      "callbackURL": "/auth/vk/callback",
+      "authPath": "/auth/vk",
+      "callbackPath": "/auth/vk/callback",
+      "profileFields": [
+        "email"
+      ],
+      "scope": [
+        "email",
+        "friends"
+      ]
+    },
     "facebook-login": {
       "provider": "facebook",
       "module": "passport-facebook",
