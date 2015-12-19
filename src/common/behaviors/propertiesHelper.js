@@ -1,6 +1,14 @@
 import {App} from '../services/App';
-import {RoleService} from '../services/roleService.js';
 import _ from 'lodash';
+
+export function setProperty(ctx, property, value) {
+  if (ctx.instance) {
+    ctx.instance[property] = value;
+  } else {
+    ctx.data[property] = value;
+  }
+  return Promise.resolve();
+}
 
 export function ignoreProperties(descriptions) {
   return (ctx) => {

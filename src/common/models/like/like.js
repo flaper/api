@@ -1,5 +1,5 @@
 import {App} from '../../services/App';
-import {ignoreProperties} from '../../behaviors/ignoreProperties'
+import {ignoreProperties} from '../../behaviors/propertiesHelper'
 import {ERRORS} from '../../utils/errors';
 
 import _ from 'lodash';

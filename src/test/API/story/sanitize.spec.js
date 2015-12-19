@@ -8,7 +8,7 @@ import {Sanitize} from '../../../../src/libs/sanitize/Sanitize';
 let Story = app.models.Story;
 
 const COLLECTION_URL = 'stories';
-
+//can be out for API test folder
 describe(`/${COLLECTION_URL}/@sanitize`, function () {
   updateTimeouts(this);
   const NEW_STORY = {

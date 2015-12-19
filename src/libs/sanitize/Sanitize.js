@@ -28,16 +28,18 @@ export class Sanitize {
       if (obj[property] !== undefined) {
         obj[property] = func(obj[property]);
       }
+      return obj[property]
     };
 
+    let value = null;
     if (ctx.instance) {
       //this is adding (POST)
-      wrapper(ctx.instance);
+      value = wrapper(ctx.instance);
     } else {
       //this is updating
-      wrapper(ctx.data);
+      value = wrapper(ctx.data);
     }
-    return Promise.resolve();
+    return Promise.resolve(value);
   }
 
   static symbolsNumber(data) {
@@ -65,10 +67,10 @@ export class Sanitize {
 
   static fakerIncreaseAlphaLength(str, length) {
     let repeat = Math.ceil(length / Sanitize.symbolsNumber(str));
-    let result = "";
     //to prevent right strings be completed removed by e.g. unclosed <script> tag
     let s = Sanitize.text(str);
-    for (let i = 0; i < repeat; i++) result += s;
+    let result = s;
+    for (let i = 1; i < repeat; i++) result += '\n' + s;
     return result;
   }
 }

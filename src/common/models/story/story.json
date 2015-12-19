@@ -22,6 +22,9 @@
       "type": "string",
       "required": true
     },
+    "contentHTML": {
+      "type": "string"
+    },
     "tags": [
       {
         "type": "string",

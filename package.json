@@ -35,6 +35,7 @@
     "loopback-component-passport": "^1.6.0",
     "loopback-connector-mongodb": "^1.13.0",
     "loopback-datasource-juggler": "^2.40.1",
+    "marked": "^0.3.5",
     "moment-timezone": "^0.4.1",
     "passport-facebook": "^2.0.0",
     "passport-google-oauth": "^0.2.0",

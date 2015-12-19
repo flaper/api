@@ -3,7 +3,7 @@ import {applyIdToType} from '../../behaviors/idToType'
 import {Sanitize} from '../../../libs/sanitize/Sanitize';
 import {initDefaultScope} from './commonMethods/defaultScope';
 import {initCustomDelete} from './commonMethods/customDelete';
-import {ignoreProperties} from '../../behaviors/ignoreProperties'
+import {ignoreProperties} from '../../behaviors/propertiesHelper'
 import {ERRORS} from '../../utils/errors';
 
 import _ from 'lodash';

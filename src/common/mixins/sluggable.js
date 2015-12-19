@@ -93,11 +93,6 @@ module.exports = (Model, options) => {
 
   function actionFindBySlug(slug) {
     let query = {where: {slugLowerCase: slug.toLocaleLowerCase(), status: 'active'}};
-    return Model.findOne(query)
-      .then(res => {
-        console.log(res);
-        console.log('res');
-        return res;
-      })
+    return Model.findOne(query);
   }
 };
