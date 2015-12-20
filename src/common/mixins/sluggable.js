@@ -4,6 +4,9 @@ import {ERRORS} from '../utils/errors'
 
 //mixin suppose that Model have 'status' property and 'active' status
 module.exports = (Model, options) => {
+  const SLUG_SEPARATOR = '-';
+  const MULTIPLE_SEPARATORS_REGEX = /-{2,}/g;
+
   Model.defineProperty('slug', {type: "string", required: false});
   Model.defineProperty('slugLowerCase', {type: "string", required: false});
   if (Model.settings.hidden === undefined) Model.settings.hidden = [];
@@ -51,9 +54,11 @@ module.exports = (Model, options) => {
   function generateSlug(model, str, adds = []) {
 
     let baseSlug = Sanitize.text(str)
+      .replace(/_/g, SLUG_SEPARATOR)
       .replace(/[^A-Za-z0-9а-яёА-ЯЁ_\-\s]/g, '')
-      .replace(/[\s]/g, '_')
-      .replace(/_{2,}/g, '_');
+      .replace(/[\s]/g, SLUG_SEPARATOR)
+      .replace(MULTIPLE_SEPARATORS_REGEX, SLUG_SEPARATOR);
+
     let slug = baseSlug;
     let slugLowerCase = baseSlug.toLocaleLowerCase();
     let postfix = 1;
@@ -69,11 +74,11 @@ module.exports = (Model, options) => {
 
     function nextSlug() {
       if (adds.length) {
-        baseSlug += '_' + adds.shift();
+        baseSlug += SLUG_SEPARATOR + adds.shift();
         slug = baseSlug;
       } else {
         ++postfix;
-        slug = baseSlug + '_' + postfix
+        slug = baseSlug + SLUG_SEPARATOR + postfix
       }
       slugLowerCase = slug.toLocaleLowerCase();
     }

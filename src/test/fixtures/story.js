@@ -10,7 +10,7 @@ let stories = {
     "userId": "1a1000000000000000001001",
     "title": "Заголовок для теста",
     //this slug actually will be generated anyway, it just to use in test
-    "slugLowerCase": "заголовок_для_теста",
+    "slugLowerCase": "заголовок-для-теста",
     "content": "Тестовое содержимое"
   },
   "test2": {

@@ -9,7 +9,7 @@ const STORY1 = STORIES.test1;
 
 describe(`Sluggable/Story`, function () {
   //start of the slug
-  let slug1 = 'для_теста_slug';
+  let slug1 = 'для-теста-slug';
   const NEW_DENIED_STORY = {
     id: '1a4000000000000000010001',
     title: "Для теста slug",
@@ -84,28 +84,28 @@ describe(`Sluggable/Story`, function () {
   it('Active slug2', () => {
     return Story.findById(NEW_ACTIVE_STORY2.id)
       .then((story) => {
-        story.slugLowerCase.should.eq(`${slug1}_${year}`);
+        story.slugLowerCase.should.eq(`${slug1}-${year}`);
       })
   });
 
   it('Active slug3', () => {
     return Story.findById(NEW_ACTIVE_STORY3.id)
       .then((story) => {
-        story.slugLowerCase.should.eq(`${slug1}_${year}_${month}`);
+        story.slugLowerCase.should.eq(`${slug1}-${year}-${month}`);
       })
   });
 
   it('Active slug4', () => {
     return Story.findById(NEW_ACTIVE_STORY4.id)
       .then((story) => {
-        story.slugLowerCase.should.eq(`${slug1}_${year}_${month}_${date}`);
+        story.slugLowerCase.should.eq(`${slug1}-${year}-${month}-${date}`);
       })
   });
 
   it('Active slug5', () => {
     return Story.findById(NEW_ACTIVE_STORY5.id)
       .then((story) => {
-        story.slugLowerCase.should.eq(`${slug1}_${year}_${month}_${date}_2`);
+        story.slugLowerCase.should.eq(`${slug1}-${year}-${month}-${date}-2`);
       })
   });
 
@@ -113,7 +113,7 @@ describe(`Sluggable/Story`, function () {
     return Story.actionActivate(NEW_DENIED_STORY.id)
       .then((story) => {
         story.status.should.eq(Story.STATUS.ACTIVE);
-        story.slugLowerCase.should.eq(`${slug1}_${year}_${month}_${date}_3`);
+        story.slugLowerCase.should.eq(`${slug1}-${year}-${month}-${date}-3`);
       })
   });
   after(()=> Story.deleteAll({id: {inq: ids}}));
