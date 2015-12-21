@@ -13,14 +13,21 @@ describe(`/${COLLECTION_URL}/@get`, function () {
 
   describe('GET', () => {
 
-    it('Anonymous - should return only active stories by default', () => {
+    it('Anonymous - should return active stories by default with ordering "created DESC"', () => {
       return api.get(COLLECTION_URL)
         .query()
         .expect(200)
         .expect((res) => {
           let stories = res.body;
           stories.length.should.at.least(1);
-          stories.forEach(story => story.status.should.eq(Story.STATUS.ACTIVE));
+          let created = new Date();
+          stories.forEach(story => {
+            story.status.should.eq(Story.STATUS.ACTIVE);
+            //check default ordering
+            let date = new Date(story.created);
+            date.should.most(created);
+            created = date;
+          });
         })
     });
 

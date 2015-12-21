@@ -37,6 +37,10 @@ export function initGet(Story) {
 
 
   function customFind(filter) {
+    filter = filter ? filter : {};
+    if (!filter['order']) {
+      filter['order'] = 'created DESC';
+    }
     if (!_.get(filter, 'where') || !objectHasDeepKey(filter.where, 'status')) {
       //be default we return only active stories
       return Story.scopeActive(filter);
