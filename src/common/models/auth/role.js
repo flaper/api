@@ -1,4 +1,3 @@
-import {timestampBehavior} from '../../behaviors/timestamps.js';
 import {RoleService} from '../../services/roleService';
 
 module.exports = (Role) => {
