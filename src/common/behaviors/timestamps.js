@@ -1,3 +1,4 @@
+import {App} from '../services/App';
 //if used as mixins for common-model inheritance create double call for this method
 //seems loopback doesn't handle mixins inheritance properly
 export function timestampBehavior(ctx) {
@@ -5,7 +6,12 @@ export function timestampBehavior(ctx) {
     ctx.instance.updated = new Date();
     //notNewInstance if model.save() inside app, not from API call
     if (ctx.isNewInstance) {
-      ctx.instance.created = new Date();
+      if (App.isWebServer()) {
+        ctx.instance.created = new Date();
+      } else {
+        //fixtures migration
+        ctx.instance.created = ctx.instance.created ? ctx.instance.created : new Date();
+      }
     }
   } else {
     //updateAttributes / REST call
