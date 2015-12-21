@@ -55,9 +55,11 @@ export class Sanitize {
       if (data !== undefined) {
         let len = Sanitize.symbolsNumber(data);
         if (len < length) {
-          let error = new Error(`Minimum length of ${property} is ${length}`);
+          let message = `Минимальная длина ${length} значимых символов.`;
+
+          let error = new Error(message);
           error.status = 400;
-          error.code = 'EXCEPTION_MIN_LENGTH';
+          error.code = `MIN_LENGTH_${property}`;
           return Promise.reject(error);
         }
       }
