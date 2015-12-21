@@ -15,7 +15,11 @@ function userAgentPromise(user) {
     api.post(LOGIN_URL)
       .send(user)
       .then((res) => {
-        request.set('Authorization', res.body.id);
+        let body = res.body;
+        if (body.error){
+          return reject(`Authentication failed for ${user.id}`);
+        }
+        request.set('Authorization', body.id);
         //we need to wrap request in {} as it has then method which will not be resolved
         resolve({agent: request});
       }, reject);

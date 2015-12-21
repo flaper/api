@@ -123,6 +123,8 @@ describe(`/${COLLECTION_URL}/`, function () {
             .send(_.assign({}, USER1, {password: NEW_PASSWORD}))
             .expect(200);
         })
+        .then(() => User.findById(USER1.id))
+        .then((user) => user.updateAttributes({password: USER1.password}))
     });
 
     it('Anonymous - deny to update account', () => {
@@ -158,19 +160,13 @@ describe(`/${COLLECTION_URL}/`, function () {
 
     it('Super - allow to update anyone', () => {
       return superPromise.then(({agent}) => {
-        return agent.put(`${COLLECTION_URL}/${USER1.id}`)
-          .send({password: NEW_PASSWORD})
-          .expect(200)
-      })
+          return agent.put(`${COLLECTION_URL}/${USER1.id}`)
+            .send({password: NEW_PASSWORD})
+            .expect(200)
+        })
+        .then(() => User.findById(USER1.id))
+        .then((user) => user.updateAttributes({password: USER1.password}))
     });
-
-    //after(() => {
-    //  return superPromise.then(({agent}) => {
-    //    return agent.put(`${COLLECTION_URL}/${USER1.id}`)
-    //      .send({password: USER1.password})
-    //      .expect(200)
-    //  })
-    //});
   });
 
   describe('DELETE', () => {

@@ -7,6 +7,12 @@
     "validateUpsert": true
   },
   "properties": {
+    "created": {
+      "type": "date"
+    },
+    "updated": {
+      "type": "date"
+    },
     "displayName": {
       "type": "string"
     }
