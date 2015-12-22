@@ -13,6 +13,7 @@ module.exports = (Image) => {
   Image.disableRemoteMethod('deleteById', true);
   Image.disableRemoteMethod('updateAttributes', false);
   Image.disableRemoteMethod('__get__object', false);
+  Image.disableRemoteMethod('__get__user', false);
 
   Image.observe('before save', setCurrentUserId);
 
