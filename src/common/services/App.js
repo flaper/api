@@ -30,9 +30,9 @@ export class App {
     return accessToken ? accessToken.userId : context.userId;
   }
 
-  static getCurrentUser() {
+  static getCurrentUser(workaroundUserId) {
     let User = app.models.User;
-    let userId = App.getCurrentUserId();
+    let userId = workaroundUserId ? workaroundUserId : App.getCurrentUserId();
     return userId ? User.findById(userId) : Promise.resolve(null);
   }
 

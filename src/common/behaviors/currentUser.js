@@ -1,14 +1,16 @@
 import {App} from '../services/App';
 import {RoleService} from '../services/roleService.js';
+import _ from 'lodash';
 
 //this will set userId if subject under creating
 //for PUT/UPDATE it will ignore userId
 export function setCurrentUserId(ctx) {
-  if (!App.isWebServer()) {
+  //this is workaround, as sometimes we just lose loopback.getCurrentContext()
+  let userId = _.get(ctx, 'options.currentUserId', null);
+  if (!userId && !App.isWebServer()) {
     return Promise.resolve();
   }
-
-  return App.getCurrentUser()
+  return App.getCurrentUser(userId)
     .then((user) => {
       if (ctx.instance) {
         if (ctx.isNewInstance) {

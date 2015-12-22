@@ -24,6 +24,11 @@
     }
   },
   "legacyExplorer": false,
+  "aws": {
+    "region": "eu-central-1",
+    "accessKeyId": "AKIAIDYF5EK6XUFAUKTA",
+    "secretAccessKey": "access-key-secret"
+  },
   "passport": {
     "vk-login": {
       "provider": "vk",

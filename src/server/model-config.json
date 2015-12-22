@@ -62,6 +62,10 @@
     "dataSource": "mongo",
     "public": true
   },
+  "Image": {
+    "dataSource": "mongo",
+    "public": true
+  },
   "Story": {
     "dataSource": "mongo",
     "public": true
