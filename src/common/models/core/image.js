@@ -1,6 +1,7 @@
 import {setCurrentUserId} from '../../behaviors/currentUser'
 import {ImageService} from '../../services/ImageService.js'
 import {App} from '../../services/App';
+import {ERRORS} from '../../utils/errors';
 
 //const ALLOWED_MODELS = ['Business'];
 const ALLOWED_TYPES = ['create-story'];
@@ -40,12 +41,12 @@ module.exports = (Image) => {
     //  throw "objectType and objectId fields are required";
     //}
     if (ALLOWED_TYPES.indexOf(type) === -1) {
-      throw `Type "${type}" is not allowed`;
+      throw ERRORS.badRequest(`Type "${type}" is not allowed`);
     }
 
     let file = req.file;
     if (!file) {
-      throw "File is required";
+      throw ERRORS.badRequest("File is required");
     }
 
     //workaround as lwip inside cropImage was breaking loopback.getCurrentContext as Dec 2015
