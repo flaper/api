@@ -47,7 +47,7 @@ module.exports = (Comment) => {
     if (!subjectId) {
       return Promise.reject(ERRORS.badRequest("SubjectId should exist"));
     }
-    return Story.findByIdRequired(subjectId, ERRORS.badRequest);
+    return Story.findByIdRequired(subjectId, null, ERRORS.badRequest);
   }
 
 };
