@@ -11,7 +11,7 @@ export class ImageService {
   //static getImageUrl(image) {
   //  let bucket = ImageService.getBucketName(image);
   //  let path = ImageService.getServerPath(image);
-  //  return `https://s3-us-west-2.amazonaws.com/${bucket}/${path}`;
+  //  return `https://s3.eu-central-1.amazonaws.com/${bucket}/${path}`;
   //}
 
   static getBucketName() {
