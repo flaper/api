@@ -27,6 +27,21 @@ describe(`/users/:id/roles`, function () {
     });
   });
 
+  describe('GET', () => {
+    it('Anonymous - include roles for user', () => {
+      return api.get(`${COLLECTION_URL}/${ADMIN.id}`)
+        .query({filter: {include: 'roles'}})
+        .expect(200)
+        .expect((res) => {
+          let user = res.body;
+          let roles = user.roles;
+          should.exist(roles);
+          roles.length.should.eq(1);
+          'admin'.should.eq(roles[0]);
+        })
+    });
+  });
+
   describe('POST', () => {
     it('User - deny to link new role for him', () => {
       return user1Promise.then(({agent}) => {

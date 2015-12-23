@@ -1,4 +1,5 @@
 import {RoleService} from '../../../../services/roleService';
+import _ from 'lodash';
 
 export function initRoles(User) {
   User.disableRemoteMethod('__create__roles', false);
@@ -9,6 +10,16 @@ export function initRoles(User) {
   User.disableRemoteMethod('__findById__roles', false);
   User.disableRemoteMethod('__updateById__roles', false);
   User.disableRemoteMethod('__get__roles', false);
+
+  User.observe('loaded', rolesToStringArray);
+
+  function rolesToStringArray(ctx) {
+    let array = _.get(ctx, 'instance.__data.roles');
+    if (array) {
+      ctx.instance.__data.roles = array.map(value => value.name);
+    }
+    return Promise.resolve();
+  }
 
   User.afterRemote('*.__delete__roles', function (ctx, inst, next) {
     //we need to refresh our cash
