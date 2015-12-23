@@ -5,11 +5,8 @@ import {RoleService} from './roleService.js';
 let isWebServer = false;
 
 export class App {
-  static setCurrentUser(userId) {
-    let ctx = loopback.getCurrentContext();
-    if (ctx) {
-      ctx.userId = userId;
-    }
+  static env() {
+    return process.env.NODE_ENV || 'development';
   }
 
   static isWebServer() {

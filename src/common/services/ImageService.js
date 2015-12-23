@@ -1,21 +1,21 @@
 let AWS = require('aws-sdk');
 let lwip = require('lwip');
-let loopback = require('loopback');
+import {App} from './App';
 
 export class ImageService {
   static getServerPath(image) {
-    return `${image.type}/${image.userId}/${image.id}.jpg`
+    let id = (App.env() !== 'test') ? image.id : 'test_image';
+    return `${image.type}/${image.userId}/${id}.jpg`
   }
 
-  static getImageUrl(image) {
-    let bucket = ImageService.getBucketName(image);
-    let path = ImageService.getServerPath(image);
-    return `https://s3-us-west-2.amazonaws.com/${bucket}/${path}`;
-  }
+  //static getImageUrl(image) {
+  //  let bucket = ImageService.getBucketName(image);
+  //  let path = ImageService.getServerPath(image);
+  //  return `https://s3-us-west-2.amazonaws.com/${bucket}/${path}`;
+  //}
 
-  static getBucketName(image) {
-    let env = process.env.NODE_ENV || "development";
-    let type = image.type.toLowerCase();
+  static getBucketName() {
+    let env = App.env();
     return `flaper.${env}.images`;
   }
 
@@ -37,7 +37,7 @@ export class ImageService {
   static uploadToAmazon(imageObject, buffer) {
     return new Promise((resolve, reject) => {
       let path = ImageService.getServerPath(imageObject);
-      let bucket = new AWS.S3({params: {Bucket: ImageService.getBucketName(imageObject)}});
+      let bucket = new AWS.S3({params: {Bucket: ImageService.getBucketName()}});
       bucket.upload({Key: path, Body: buffer}, (err, data) => {
         if (err) {
           return reject(`amazon uploading error ${err}`);
