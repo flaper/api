@@ -6,6 +6,7 @@ let User, Role, RoleMapping;
 let adminsPromise, supersPromise;
 let adminIds, superIds;
 let rolesToIds = {};
+let roleIdToName = {};
 
 //this class is used to hold roles in the memory to fast checking roles like 'admin' (isAdmin)
 export class RoleService {
@@ -78,7 +79,11 @@ export class RoleService {
       superIds = ids;
       adminIds = adminIds.concat(ids);
     });
-    Role.find().then(roles => rolesToIds = _.indexBy(roles, 'name'))
+    Role.find().then(roles => {
+      rolesToIds = _.indexBy(roles, 'name');
+      roleIdToName = _.indexBy(roles, 'id');
+      roleIdToName = _.mapValues(roleIdToName, value => value.name);
+    })
   }
 
 
@@ -87,6 +92,10 @@ export class RoleService {
     Role = app.models.Role;
     RoleMapping = app.models.RoleMapping;
     RoleService.updateVariables();
+  }
+
+  static getRoleNameById(id) {
+    return roleIdToName[id];
   }
 }
 

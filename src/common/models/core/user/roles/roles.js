@@ -1,23 +1,6 @@
-import {timestampBehavior} from '../../behaviors/timestamps.js';
-import {applyIdToType} from '../../behaviors/idToType'
-import {RoleService} from '../../services/roleService';
+import {RoleService} from '../../../../services/roleService';
 
-module.exports = (User) => {
-  User.observe('before save', timestampBehavior);
-  applyIdToType(User);
-  User.disableRemoteMethod('createChangeStream', true);
-  User.disableRemoteMethod('deleteById', true);
-  User.disableRemoteMethod('updateAll', true);
-  User.disableRemoteMethod('upsert', true);
-
-  User.disableRemoteMethod('__count__accessTokens', false);
-  User.disableRemoteMethod('__create__accessTokens', false);
-  User.disableRemoteMethod('__delete__accessTokens', false);
-  User.disableRemoteMethod('__destroyById__accessTokens', false);
-  User.disableRemoteMethod('__findById__accessTokens', false);
-  User.disableRemoteMethod('__get__accessTokens', false);
-  User.disableRemoteMethod('__updateById__accessTokens', false);
-
+export function initRoles(User) {
   User.disableRemoteMethod('__create__roles', false);
   User.disableRemoteMethod('__link__roles', false);
   User.disableRemoteMethod('__unlink__roles', false);
@@ -25,12 +8,34 @@ module.exports = (User) => {
   User.disableRemoteMethod('__destroyById__roles', false);
   User.disableRemoteMethod('__findById__roles', false);
   User.disableRemoteMethod('__updateById__roles', false);
+  User.disableRemoteMethod('__get__roles', false);
 
   User.afterRemote('*.__delete__roles', function (ctx, inst, next) {
     //we need to refresh our cash
     RoleService.updateVariables();
     next();
   });
+
+  User.getRoles = getRoles;
+
+  function getRoles(id) {
+    let RoleMapping = User.app.models['RoleMapping'];
+    return User.findByIdRequired(id)
+      .then((user) => RoleMapping.find({where: {principalId: user.id}}))
+      .then((mappings) => mappings.map(roleMapping => RoleService.getRoleNameById(roleMapping.roleId)))
+  }
+
+  User.remoteMethod(
+    'getRoles',
+    {
+      description: 'Get roles for a user',
+      http: {path: '/:id/roles', verb: 'get'},
+      accepts: [
+        {arg: 'id', type: 'string', required: true},
+      ],
+      returns: {root: true}
+    }
+  );
 
   User.setRole = setRole;
   function setRole(id, role) {
@@ -49,4 +54,4 @@ module.exports = (User) => {
       returns: {root: true}
     }
   );
-};
+}

@@ -16,11 +16,14 @@ const COLLECTION_URL = 'users';
 describe(`/users/:id/roles`, function () {
   updateTimeouts(this);
   describe('GET', () => {
-    it('Admin - allow access to the list', () => {
-      return adminPromise.then(({agent}) => {
-        return agent.get(`${COLLECTION_URL}/${USER1.id}/roles`)
-          .expect(200)
-      })
+    it('Anonymous - allow access to the list', () => {
+      return api.get(`${COLLECTION_URL}/${ADMIN.id}/roles`)
+        .expect(200)
+        .expect((res) => {
+          let roles = res.body;
+          roles.length.should.eq(1);
+          'admin'.should.eq(roles[0]);
+        })
     });
   });
 
@@ -43,10 +46,10 @@ describe(`/users/:id/roles`, function () {
 
     it('Duplicated roles should be ignored', () => {
       return superPromise.then(({agent}) => {
-        return agent.post(`${COLLECTION_URL}/${USER1.id}/roles`)
-          .send({role: 'super'})
-          .expect(200)
-      })
+          return agent.post(`${COLLECTION_URL}/${USER1.id}/roles`)
+            .send({role: 'super'})
+            .expect(200)
+        })
         .then(() => {
           return superPromise.then(({agent}) => {
             return agent.get(`${COLLECTION_URL}/${USER1.id}/roles/count`)
@@ -58,10 +61,10 @@ describe(`/users/:id/roles`, function () {
 
     it('Super - allow to link new role', () => {
       return superPromise.then(({agent}) => {
-        return agent.post(`${COLLECTION_URL}/${USER1.id}/roles`)
-          .send({role: 'super'})
-          .expect(200)
-      })
+          return agent.post(`${COLLECTION_URL}/${USER1.id}/roles`)
+            .send({role: 'super'})
+            .expect(200)
+        })
         .then(() => {
           //Former regular user now can update his role
           return user1Promise.then(({agent}) => {

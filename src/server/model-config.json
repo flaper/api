@@ -5,8 +5,9 @@
       "loopback/server/models",
       "loopback-component-passport/lib/models",
       "../common/models",
-      "../common/models/auth",
       "../common/models/core",
+      "../common/models/core/user",
+      "../common/models/auth",
       "../common/models/story",
       "../common/models/comment",
       "../common/models/like"
