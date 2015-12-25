@@ -2,10 +2,10 @@ import {setCurrentUserId} from '../../behaviors/currentUser'
 import {applyIdToType} from '../../behaviors/idToType'
 import {ignoreProperties, setProperty} from '../../behaviors/propertiesHelper'
 import {Sanitize} from '../../../libs/sanitize/Sanitize';
+import {FlaperMark} from '../../../libs/markdown/markdown'
 import {initStatusActions} from './status/status';
 import {initGet} from './get/get';
 import _ from 'lodash';
-import marked from 'marked';
 
 module.exports = (Story) => {
   Story.commonInit(Story);
@@ -42,13 +42,7 @@ module.exports = (Story) => {
     return sanitizeContent(ctx)
       .then((value) => {
         if (value) {
-          //to remove auto ids for headers
-          let renderer = new marked.Renderer();
-          renderer.heading = function (text, level) {
-            return `<h${level}>${text}</h${level}>`;
-          };
-          marked.setOptions({renderer});
-          let html = marked(value);
+          let html = FlaperMark.toHTML(value);
 
           setProperty(ctx, 'contentHTML', html);
         }

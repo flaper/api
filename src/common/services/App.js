@@ -9,6 +9,10 @@ export class App {
     return process.env.NODE_ENV || 'development';
   }
 
+  static isTestEnv() {
+    return App.env() !== 'test';
+  }
+
   static isWebServer() {
     if (!isWebServer) {
       //when we have many observers, context just disappearing sometimes

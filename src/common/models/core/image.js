@@ -35,7 +35,7 @@ module.exports = (Image) => {
     }
   );
 
-  function upload(type, req, cb) {
+  function upload(type, req) {
     type = req.type;
     //if (!objectType || !objectId) {
     //  throw "objectType and objectId fields are required";
@@ -56,9 +56,14 @@ module.exports = (Image) => {
     return ImageService.cropImage(file)
       .then((buffer) => {
         return new Promise((resolve, reject) => {
+          let image;
           Image.create({type}, {currentUserId: currentUserId})
-            .then((data) => ImageService.uploadToAmazon(data, buffer))
-            .then(resolve, reject);
+            .then((data) => {
+              image = data;
+              ImageService.uploadToS3(data, buffer)
+
+            })
+            .then(s3Response => resolve(image), reject);
         })
       })
       .catch((error) => {

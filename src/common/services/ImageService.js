@@ -2,17 +2,25 @@ let AWS = require('aws-sdk');
 let lwip = require('lwip');
 import {App} from './App';
 
+const S3_DOMAIN = 's3.eu-central-1.amazonaws.com';
+
+export const TEST_IMAGE_ID = '1abc0000fffffff';
+
 export class ImageService {
-  static getServerPath(image) {
-    let id = (App.env() !== 'test') ? image.id : 'test_image';
-    return `${image.type}/${image.userId}/${id}.jpg`
+  static getPathAfterBucketById(imageId) {
+    let id =  App.isTestEnv()? imageId : TEST_IMAGE_ID;
+    return `${id}.jpg`
   }
 
-  //static getImageUrl(image) {
-  //  let bucket = ImageService.getBucketName(image);
-  //  let path = ImageService.getServerPath(image);
-  //  return `https://s3.eu-central-1.amazonaws.com/${bucket}/${path}`;
-  //}
+  static getBucketPath() {
+    return `https://${S3_DOMAIN}/${this.getBucketName()}/`;
+  }
+
+  static getImageUrlById(id) {
+    let bucket = ImageService.getBucketPath();
+    let path = ImageService.getPathAfterBucketById(id);
+    return `${bucket}${path}`;
+  }
 
   static getBucketName() {
     let env = App.env();
@@ -34,9 +42,9 @@ export class ImageService {
     });
   }
 
-  static uploadToAmazon(imageObject, buffer) {
+  static uploadToS3(imageObject, buffer) {
     return new Promise((resolve, reject) => {
-      let path = ImageService.getServerPath(imageObject);
+      let path = ImageService.getPathAfterBucketById(imageObject.id);
       let bucket = new AWS.S3({params: {Bucket: ImageService.getBucketName()}});
       bucket.upload({Key: path, Body: buffer}, (err, data) => {
         if (err) {

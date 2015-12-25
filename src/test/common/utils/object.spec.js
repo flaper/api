@@ -1,5 +1,5 @@
 let should = require('chai').should();
-import {objectHasDeepKey} from '../../common/utils/object';
+import {objectHasDeepKey} from '../../../common/utils/object';
 
 describe('object', () => {
   it('objectHasDeepKey', () => {
