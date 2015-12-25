@@ -12,21 +12,24 @@ let stories = {
     //this slug actually will be generated anyway, it just to use in test
     "slugLowerCase": "заголовок-для-теста",
     "content": "Тестовое содержимое",
-    "created": 1450716334311
+    "created": 1450716334311,
+    "updated": 1450716334311
   },
   "test2": {
     "id": "1a4000000000000000001002",
     "userId": "1a1000000000000000001001",
     "title": "Заголовок для теста2",
     "content": "Тестовое содержимое2",
-    "created": 1450718334311
+    "created": 1450718334311,
+    "updated": 1450718334311
   },
   "test3": {
     "id": "1a4000000000000000001003",
     "userId": "1a1000000000000000001002",
     "title": "Заголовок для теста3",
     "content": "Тестовое содержимое3",
-    "created": 1450718934311
+    "created": 1450718934311,
+    "updated": 1450718934311
   },
   "denied1": {
     "id": "1a4000000000000000001010",
@@ -47,7 +50,8 @@ let stories = {
     "userId": "1a1000000000000000001001",
     "title": "Статья без id в фикстурах",
     "content": "Содержимое статьи без id в фикстурах.",
-    "created": 1450718934311
+    "created": 1450718934311,
+    "updated": 1450718934311
   },
   //2 means second user
   "withoutLikes2":{
