@@ -12,3 +12,12 @@ export function objectHasDeepKey(obj, key) {
   });
   return res;
 }
+
+export function getOwnPropertiesNamesFilter(object, filter) {
+  let lowerCaseFilter = filter.toLowerCase();
+  let names = Object.getOwnPropertyNames(object);
+  return names.filter(name => {
+    let lowerCaseName = name.toLowerCase();
+    return lowerCaseName.indexOf(lowerCaseFilter) > -1;
+  })
+}
