@@ -5,13 +5,12 @@ export function timestampBehavior(ctx) {
   if (ctx.instance) {
     //notNewInstance if model.save() inside app, not from API call
     if (ctx.isNewInstance) {
-      if (App.isWebServer()) {
-        ctx.instance.created = new Date();
-        ctx.instance.updated = new Date();
-      } else {
-        //fixtures migration
+      if (App.isFixturesLoading()) {
         ctx.instance.created = ctx.instance.created ? ctx.instance.created : new Date();
         ctx.instance.updated = ctx.instance.updated ? ctx.instance.updated : new Date();
+      } else {
+        ctx.instance.created = new Date();
+        ctx.instance.updated = new Date();
       }
     } else {
       //!isNewInstance

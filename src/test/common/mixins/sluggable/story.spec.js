@@ -58,15 +58,16 @@ describe(`Sluggable/Story`, function () {
   let date = m.date();
 
   before(() => {
-    return Story.create(NEW_DENIED_STORY)
-      .then(() => Story.create(NEW_ACTIVE_STORY1))
-      .then(() => Story.create(NEW_ACTIVE_STORY2))
-      .then(() => Story.create(NEW_ACTIVE_STORY3))
-      .then(() => Story.create(NEW_ACTIVE_STORY4))
-      .then(() => Story.create(NEW_ACTIVE_STORY5))
+    let options = {skipIgnore: {status: true}};
+    return Story.create(NEW_DENIED_STORY, options)
+      .then(() => Story.create(NEW_ACTIVE_STORY1, options))
+      .then(() => Story.create(NEW_ACTIVE_STORY2, options))
+      .then(() => Story.create(NEW_ACTIVE_STORY3, options))
+      .then(() => Story.create(NEW_ACTIVE_STORY4, options))
+      .then(() => Story.create(NEW_ACTIVE_STORY5, options))
   });
 
-  it('Delete slug', () => {
+  it('Denied slug', () => {
     return Story.findById(NEW_DENIED_STORY.id)
       .then((story) => {
         //it is not required, just current logic - slug will be generated, although it will not influence others

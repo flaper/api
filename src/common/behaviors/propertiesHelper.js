@@ -12,7 +12,7 @@ export function setProperty(ctx, property, value) {
 
 export function ignoreProperties(descriptions) {
   return (ctx) => {
-    if (!App.isWebServer()) {
+    if (App.isFixturesLoading()) {
       return Promise.resolve();
     }
 
@@ -32,4 +32,25 @@ export function ignoreProperties(descriptions) {
     }
     return Promise.resolve();
   };
+}
+
+export function ignoreUpdatedIfNoChanges(fields) {
+  return (ctx) => {
+    let Model = ctx.Model;
+
+    if (ctx.data && ctx.where && ctx.where.id) {
+      return Model.findById(ctx.where.id)
+        .then(model => {
+          let changes = false;
+          fields.forEach(field => {
+            changes = changes || ( (ctx.data[field] !== undefined) && (ctx.data[field] !== model[field]))
+          });
+          if (changes) {
+            return Promise.resolve();
+          }
+          ctx.data.updated = model.updated;
+        })
+    }
+    return Promise.resolve();
+  }
 }

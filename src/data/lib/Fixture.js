@@ -3,6 +3,7 @@ import app from '../../server/server';
 import fs from 'fs';
 import PromiseQueue from "promise-queue"
 import {lowerFirstLetter} from '../../common/utils/string';
+import {App} from '../../common/services/App';
 
 let dataSource = app.dataSources.mongo;
 
@@ -121,7 +122,12 @@ export class Fixture {
       let object = this;
 
       function call() {
-        object.startProcessing().then(resolve).catch(reject);
+        App.fixturesStart();
+        object.startProcessing()
+          .then(() => {
+            App.fixturesStop();
+            resolve()
+          }).catch(reject);
       }
 
       let res = dataSource.connected ? call() : dataSource.once('connected', call);

@@ -3,6 +3,7 @@ let loopback = require('loopback'),
 import {RoleService} from './roleService.js';
 
 let isWebServer = false;
+let fixturesLoading = false;
 
 export class App {
   static env() {
@@ -40,5 +41,18 @@ export class App {
   static isAdmin() {
     let userId = App.getCurrentUserId();
     return userId ? RoleService.isAdmin(userId) : Promise.resolve(false);
+  }
+
+  ///fixtures
+  static isFixturesLoading() {
+    return fixturesLoading;
+  }
+
+  static fixturesStart() {
+    fixturesLoading = true;
+  }
+
+  static fixturesStop() {
+    fixturesLoading = false;
   }
 }

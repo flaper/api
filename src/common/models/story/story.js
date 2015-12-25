@@ -1,6 +1,6 @@
 import {setCurrentUserId} from '../../behaviors/currentUser'
 import {applyIdToType} from '../../behaviors/idToType'
-import {ignoreProperties, setProperty} from '../../behaviors/propertiesHelper'
+import {ignoreUpdatedIfNoChanges, ignoreProperties, setProperty} from '../../behaviors/propertiesHelper'
 import {Sanitize} from '../../../libs/sanitize/Sanitize';
 import {FlaperMark} from '../../../libs/markdown/markdown'
 import {initStatusActions} from './status/status';
@@ -28,13 +28,13 @@ module.exports = (Story) => {
 
   Story.disableRemoteMethod('__get__user', false);
 
+  Story.observe('before save', ignoreUpdatedIfNoChanges(['title', 'content']));
   Story.observe('before save', setCurrentUserId);
   Story.observe('before save', ignoreProperties({status: {newDefault: Story.STATUS.ACTIVE}, contentHTML: {}}));
   Story.observe('before save', Sanitize.observer('title', Sanitize.text));
   Story.observe('before save', contentObserver);
   Story.observe('before save', Sanitize.alphaMinLengthObserver('content', Story.MIN_CONTENT_LENGTH));
   Story.observe('before save', Sanitize.observer('tags', tagSanitize));
-
 
   let sanitizeContent = Sanitize.observer('content', Sanitize.html);
 
@@ -59,5 +59,4 @@ module.exports = (Story) => {
 
   initStatusActions(Story);
   initGet(Story);
-
 };
