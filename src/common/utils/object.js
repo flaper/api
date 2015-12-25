@@ -14,10 +14,25 @@ export function objectHasDeepKey(obj, key) {
 }
 
 export function getOwnPropertiesNamesFilter(object, filter) {
-  let lowerCaseFilter = filter.toLowerCase();
   let names = Object.getOwnPropertyNames(object);
+  return filterNames(names, filter);
+}
+
+export function propertiesFilter(object, filter) {
+  let names = [];
+  for (let name in object) {
+    //noinspection JSUnfilteredForInLoop
+    names.push(name);
+  }
+  return filterNames(names, filter);
+}
+
+function filterNames(names, filter) {
+  let lowerCaseFilter = filter.toLowerCase();
+
   return names.filter(name => {
     let lowerCaseName = name.toLowerCase();
     return lowerCaseName.indexOf(lowerCaseFilter) > -1;
   })
 }
+
