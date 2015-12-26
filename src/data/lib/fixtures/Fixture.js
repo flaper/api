@@ -1,9 +1,10 @@
 import _ from 'lodash';
-import app from '../../server/server';
+import app from '../../../server/server';
 import fs from 'fs';
 import PromiseQueue from "promise-queue"
-import {lowerFirstLetter} from '../../common/utils/string';
-import {App} from '../../common/services/App';
+import {lowerFirstLetter} from '../../../common/utils/string';
+import {App} from '../../../common/services/App';
+import {countNumberOfLikes} from './Like'
 
 let dataSource = app.dataSources.mongo;
 
@@ -90,7 +91,7 @@ export class Fixture {
   }
 
   //private
-  startProcessing() {
+  uploadAllModels() {
     return new Promise((resolve, reject) => {
       //because e.g. Comments depends on Story to exist
       const modelGroups = [['IdToType'], ['user', 'Role', 'RoleMapping', 'Story', 'Image'], ['Comment'], ['Like']];
@@ -115,6 +116,12 @@ export class Fixture {
         queue.add(nextPromise);
       });
     });
+  }
+
+  //private
+  startProcessing() {
+    return this.uploadAllModels()
+      .then(countNumberOfLikes);
   }
 
   process() {
@@ -159,19 +166,22 @@ export class Fixture {
   paths() {
     switch (this.type) {
       case Fixture.TYPE_CONSTANTS():
-        return ['../constants'];
+        return ['../../constants'];
       case Fixture.TYPE_ALL():
-        return ['../constants', this.pathToFixtures()];
+        return ['../../constants', Fixture.PathToFixtures()];
     }
     throw 'Wrong type';
   }
 
-  pathToFixtures() {
+  /**
+   * @return {string}
+   */
+  static PathToFixtures() {
     switch (process.env.NODE_ENV) {
       case 'test':
-        return '../../test/fixtures';
+        return '../../../test/fixtures';
       default:
-        return '../../server/fixtures';
+        return '../../../server/fixtures';
     }
   }
 }
