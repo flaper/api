@@ -93,7 +93,7 @@ export class Fixture {
   startProcessing() {
     return new Promise((resolve, reject) => {
       //because e.g. Comments depends on Story to exist
-      const modelGroups = [['IdToType'], ['user', 'Role', 'RoleMapping', 'Story'], ['Comment'], ['Like']];
+      const modelGroups = [['IdToType'], ['user', 'Role', 'RoleMapping', 'Story', 'Image'], ['Comment'], ['Like']];
       let queue = new PromiseQueue(1, Infinity);
 
       modelGroups.forEach(group => {

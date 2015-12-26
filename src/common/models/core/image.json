@@ -4,6 +4,11 @@
   "idInjection": true,
   "strict": true,
   "properties": {
+    "status": {
+      "type": "string",
+      "required": "true",
+      "default": "active"
+    },
     "type": {
       "type": "string",
       "required": true
@@ -36,5 +41,21 @@
       "property": "upload"
     }
   ],
-  "methods": []
+  "methods": [],
+  "indexes": {
+    "status_type_created_index": {
+      "status": 1,
+      "type": 1,
+      "created": -1
+    },
+    "status_created_index": {
+      "status": 1,
+      "created": -1
+    },
+    "status_userId_created_index": {
+      "status": 1,
+      "userId": 1,
+      "created": -1
+    }
+  }
 }

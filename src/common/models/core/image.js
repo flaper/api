@@ -57,6 +57,7 @@ module.exports = (Image) => {
       .then((buffers) => {
         return new Promise((resolve, reject) => {
           let image;
+          //options for setCurrentUserId observer
           Image.create({type}, {currentUserId: currentUserId})
             .then((data) => {
               image = data;
