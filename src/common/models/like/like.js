@@ -34,8 +34,21 @@ module.exports = (Like) => {
       .then(() => count);
   };
 
+  Like.actionToggle = actionToggle;
   Like.actionCreate = actionCreate;
   Like.actionDelete = actionDelete;
+
+  Like.remoteMethod(
+    'actionToggle',
+    {
+      description: `Toggle like for subject`,
+      http: {path: '/toggle/:subjectId', verb: 'post'},
+      accepts: [
+        {arg: 'subjectId', type: 'string', required: true}
+      ],
+      returns: {root: true}
+    }
+  );
 
   Like.remoteMethod(
     'actionCreate',
@@ -61,9 +74,30 @@ module.exports = (Like) => {
     }
   );
 
+  function actionToggle(subjectId) {
+    //userId should exist
+    let userId = App.getCurrentUserId();
+    //findOne works without implicit and
+    return Like.findOne({where: {subjectId, userId}})
+      .then((like) => {
+        return like ? actionInternalDelete(subjectId, userId) : actionInternalCreate(subjectId, userId);
+      });
+  }
+
   function actionCreate(subjectId) {
     //userId should exist
     let userId = App.getCurrentUserId();
+    //findOne works without implicit and
+    return Like.findOne({where: {subjectId, userId}})
+      .then((like) => {
+        if (like) {
+          throw ERRORS.badRequest('Like already exists.');
+        }
+        return actionInternalCreate(subjectId, userId);
+      });
+  }
+
+  function actionInternalCreate(subjectId, userId) {
     let IdToType = Like.app.models.IdToType;
     let subjectType;
     return IdToType.findByIdRequired(subjectId)
@@ -79,14 +113,7 @@ module.exports = (Like) => {
           throw ERRORS.badRequest('Cannot like own subject.')
         }
       })
-      //findOne works without implicit and
-      .then(() => Like.findOne({where: {subjectId, userId}}))
-      .then((like) => {
-        if (like) {
-          throw ERRORS.badRequest('Like already exists.');
-        }
-        return Like.create({subjectId, userId, subjectType});
-      })
+      .then(() => Like.create({subjectId, userId, subjectType}))
       .then(() => Like.updateSubject(subjectType, subjectId))
       .then((count) => {
         return {
@@ -97,17 +124,24 @@ module.exports = (Like) => {
   }
 
   function actionDelete(subjectId) {
+    //userId should exist
+    let userId = App.getCurrentUserId();
+    //findOne works without implicit and
+    return Like.findOne({where: {subjectId, userId}})
+      .then((like) => {
+        if (!like) {
+          if (!like) throw  ERRORS.notFound('No such like');
+        }
+        return actionInternalDelete(subjectId, userId);
+      });
+  }
+
+  function actionInternalDelete(subjectId, userId) {
     let IdToType = Like.app.models.IdToType;
 
     let subjectType;
-    //userId should exist
-    let userId = App.getCurrentUserId();
-    return Like.findOne({where: {subjectId, userId}})
-      .then((like) => {
-        if (!like) throw  ERRORS.notFound('No such like');
-        //delete works without implicit and
-        return Like.deleteAll({subjectId, userId});
-      })
+    //delete works without implicit and
+    return Like.deleteAll({subjectId, userId})
       .then(() => IdToType.findByIdRequired(subjectId))
       .then((idToType) => {
         subjectType = idToType.type;

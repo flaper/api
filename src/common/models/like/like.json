@@ -52,6 +52,7 @@
       "principalId": "$authenticated",
       "permission": "ALLOW",
       "property": [
+        "actionToggle",
         "actionCreate",
         "actionDelete"
       ]
