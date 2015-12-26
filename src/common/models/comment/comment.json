@@ -78,5 +78,8 @@
       "status": 1,
       "created": -1
     }
+  },
+  "scope": {
+    "order": "created DESC"
   }
 }
