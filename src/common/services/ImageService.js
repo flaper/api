@@ -16,17 +16,21 @@ export const IMAGE_FORMAT = {
 };
 
 export class ImageService {
-  static getPathAfterBucketById(imageId, imageFormat) {
-    let id = App.isTestEnv() ? imageId.toString() : TEST_IMAGE_ID;
-    if (!imageFormat || !IMAGE_FORMAT[imageFormat]) throw `Unknown Image Format '${imageFormat}'`;
-
+  static idToPath(id) {
     //once a ~ 0.5 year
     let p1 = id.substr(0, 2);
     //once a ~ 0.75 day
     let p2 = id.substr(2, 2);
     let p3 = id.substr(4);
+    return `${p1}/${p2}/${p3}`;
+  }
 
-    return `${p1}/${p2}/${p3}_${imageFormat}.jpg`
+  static getPathAfterBucketById(imageId, imageFormat) {
+    let id = App.isTestEnv() ? imageId.toString() : TEST_IMAGE_ID;
+    if (!imageFormat || !IMAGE_FORMAT[imageFormat]) throw `Unknown Image Format '${imageFormat}'`;
+    let prefix = ImageService.idToPath(id);
+
+    return `${prefix}_${imageFormat}.jpg`
   }
 
   static getBucketPath() {
