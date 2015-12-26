@@ -37,3 +37,5 @@ export let user1 = USERS.user1;
 export let user1Promise = userAgentPromise(user1);
 export let user2 = USERS.user2;
 export let user2Promise = userAgentPromise(user2);
+export let user3 = USERS.user3;
+export let user3Promise = userAgentPromise(user3);

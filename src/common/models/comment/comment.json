@@ -6,6 +6,9 @@
   "options": {
     "validateUpsert": true
   },
+  "mixins": {
+    "Likable": {}
+  },
   "properties": {
     "status": {
       "type": "string",

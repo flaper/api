@@ -10,6 +10,7 @@ export function setProperty(ctx, property, value) {
   return Promise.resolve();
 }
 
+//ignore updates called via Model.updatedAttributes or Model.create
 export function ignoreProperties(descriptions) {
   return (ctx) => {
     if (App.isFixturesLoading()) {
@@ -20,14 +21,22 @@ export function ignoreProperties(descriptions) {
     let properties = Object.keys(descriptions);
     properties = _.difference(properties, skipFields);
     if (ctx.instance) {
-      properties.forEach((property) => {
-        if (descriptions[property].newDefault) {
-          ctx.instance[property] = descriptions[property].newDefault;
-        } else {
-          ctx.instance.unsetAttribute(property);
-        }
-      });
+      if (ctx.isNewInstance) {
+        properties.forEach((property) => {
+          if (descriptions[property].newDefault) {
+            ctx.instance[property] = descriptions[property].newDefault;
+          } else {
+            ctx.instance.unsetAttribute(property);
+          }
+        });
+      } else {
+        /*When model.save called from inside app e.g.
+         *just do nothing, leave everything as it is.
+         * Otherwise, calling instance.unsetAttribute remove already saved property from db
+         */
+      }
     } else {
+      //Model.updateAll && model.updateAttributes goes here
       properties.forEach(property => delete ctx.data[property]);
     }
     return Promise.resolve();

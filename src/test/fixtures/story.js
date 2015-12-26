@@ -52,10 +52,10 @@ let stories = {
     "content": "Содержимое статьи без id в фикстурах."
   },
   //2 means second user
-  "withoutLikes2": {
+  "withoutLikesUser3": {
     "id": "1a4000000000000000001030",
     "status": Story.STATUS.ACTIVE,
-    "userId": "1a1000000000000000001002",
+    "userId": "1a1000000000000000001003",
     "title": "Статья без лайков",
     "content": "Содержимое статьи без лайков."
   }

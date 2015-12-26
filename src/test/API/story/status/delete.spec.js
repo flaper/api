@@ -29,6 +29,9 @@ describe(`/${COLLECTION_URL}/:id/status/delete`, function () {
             .expect((res) => {
               let story = res.body;
               story.status.should.be.eq(Story.STATUS.DELETED);
+              //there was bug numberOfLikes disappeared, so let's check it too
+              should.exist(story.content);
+              should.exist(story.numberOfLikes);
             })
         })
         .then(() => returnStatus(STORY1.id, Story.STATUS.ACTIVE));

@@ -1,8 +1,10 @@
 import {App} from '../../services/App';
 import {ignoreProperties} from '../../behaviors/propertiesHelper'
 import {ERRORS} from '../../utils/errors';
+import {propertiesFilter} from '../../utils/object';
 
 import _ from 'lodash';
+
 
 module.exports = (Like) => {
   const ALLOWED_MODELS = ['Story', 'Comment'];
@@ -15,6 +17,22 @@ module.exports = (Like) => {
   Like.disableRemoteMethod('findById', true);
   Like.disableRemoteMethod('deleteById', true);
   Like.disableRemoteMethod('create', true);
+
+  Like.RETURN_STATUS = {
+    CREATED: 'created',
+    DELETED: 'deleted'
+  };
+
+  Like.updateSubject = (subjectType, id) => {
+    let Model = Like.app.models[subjectType];
+    let count;
+    return Like.count({subjectId: id})
+      .then((c) => {
+        count = c;
+        return Model.updateAll({id: id}, {numberOfLikes: count}, {skipIgnore: {numberOfLikes: true}})
+      })
+      .then(() => count);
+  };
 
   Like.actionCreate = actionCreate;
   Like.actionDelete = actionDelete;
@@ -68,10 +86,20 @@ module.exports = (Like) => {
           throw ERRORS.badRequest('Like already exists.');
         }
         return Like.create({subjectId, userId, subjectType});
-      });
+      })
+      .then(() => Like.updateSubject(subjectType, subjectId))
+      .then((count) => {
+        return {
+          status: Like.RETURN_STATUS.CREATED,
+          count: count
+        }
+      })
   }
 
   function actionDelete(subjectId) {
+    let IdToType = Like.app.models.IdToType;
+
+    let subjectType;
     //userId should exist
     let userId = App.getCurrentUserId();
     return Like.findOne({where: {subjectId, userId}})
@@ -79,6 +107,17 @@ module.exports = (Like) => {
         if (!like) throw  ERRORS.notFound('No such like');
         //delete works without implicit and
         return Like.deleteAll({subjectId, userId});
-      });
+      })
+      .then(() => IdToType.findByIdRequired(subjectId))
+      .then((idToType) => {
+        subjectType = idToType.type;
+        return Like.updateSubject(subjectType, subjectId);
+      })
+      .then((count) => {
+        return {
+          status: Like.RETURN_STATUS.DELETED,
+          count: count
+        }
+      })
   }
 };
