@@ -21,7 +21,8 @@ export function setCurrentUserId(ctx) {
           //just do nothing, leave userId as it is
         }
       } else {
-        //so it is update - userId should not be changed
+        //Model.updateAll && model.updateAttributes goes here
+        //userId should not be changed
         delete ctx.data.userId;
       }
     });
