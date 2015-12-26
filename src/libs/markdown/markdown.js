@@ -1,5 +1,5 @@
 import marked from 'marked';
-import {ImageService} from '../../common/services/ImageService';
+import {ImageService, IMAGE_FORMAT} from '../../common/services/ImageService';
 
 //to remove auto ids for headers
 let renderer = new marked.Renderer();
@@ -13,7 +13,7 @@ renderer.heading = function (text, level) {
 renderer.image = function (href, title, text) {
   let parentImageMethod = marked.Renderer.prototype.image.bind(this);
   let isLocalLink = /^[0-9a-f]+$/.test(href);
-  href = isLocalLink ? ImageService.getImageUrlById(href) : href;
+  href = isLocalLink ? ImageService.getImageUrlById(href, IMAGE_FORMAT.middle) : href;
   return parentImageMethod(href, title, text);
 };
 
@@ -32,11 +32,11 @@ function imagesToSeparateBlock(markdown) {
 function responsiveImages(html) {
   //future notes, we can remove <p></p> wrapper from images in future
   /**
-   * capture group from 1 to 4 images
+   * capture group from 1 to + images
    *  ?: means not-capturing group
    * @type {RegExp}
    */
-  let imgGroupRegex = /((?:<img [^>]+"> *(?:<br>)? *){1,4})/g;
+  let imgGroupRegex = /((?:<img [^>]+"> *(?:<br>)? *)+)/g;
 
   //Right now we have to place each image inside a block element due to a
   //Firefox quirk with scaling flexbox images; hopefully this will be fixed soon.

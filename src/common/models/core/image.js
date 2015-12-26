@@ -53,14 +53,14 @@ module.exports = (Image) => {
     let currentUserId = App.getCurrentUserId();
 
     // obtain an image object:
-    return ImageService.cropImage(file)
-      .then((buffer) => {
+    return ImageService.makeImages(file)
+      .then((buffers) => {
         return new Promise((resolve, reject) => {
           let image;
           Image.create({type}, {currentUserId: currentUserId})
             .then((data) => {
               image = data;
-              ImageService.uploadToS3(data, buffer)
+              ImageService.uploadToS3(data, buffers)
 
             })
             .then(s3Response => resolve(image), reject);
