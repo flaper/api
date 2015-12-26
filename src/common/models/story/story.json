@@ -113,7 +113,7 @@
       "status": 1,
       "created": -1
     },
-    "status_tag_created_index": {
+    "tag_status_created_index": {
       "tag": 1,
       "status": 1,
       "created": -1
@@ -122,6 +122,11 @@
       "userId": 1,
       "status": 1,
       "created": -1
+    },
+    "status_created_likes_index": {
+      "status": 1,
+      "created": -1,
+      "likes": -1
     }
   }
 }
