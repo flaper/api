@@ -14,5 +14,10 @@
   "validations": [],
   "relations": {},
   "acls": [],
-  "methods": {}
+  "methods": {},
+  "indexes": {
+    "type_index": {
+      "type": 1
+    }
+  }
 }
