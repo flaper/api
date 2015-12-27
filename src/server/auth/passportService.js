@@ -60,9 +60,6 @@ function customCallbackWrapper({strategy, opts, passport, app}) {
           return next(err);
         }
         if (!user) {
-          console.log(err);
-          console.log(user);
-          console.log(info);
           console.error('user not returned for passport.js');
           return res.redirect(WEB_APP_URL);
         }
