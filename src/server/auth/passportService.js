@@ -75,11 +75,32 @@ function customCallbackWrapper({strategy, opts, passport, app}) {
 
 function updateUserWithInfo(user, info) {
   let changed = false;
-  if (_.has(info, 'identity.profile.displayName')) {
-    user.displayName = info.identity.profile.displayName;
-    changed = true;
+  if (_.has(info, 'identity')) {
+    let identity = info.identity;
+    updateField('displayName', 'identity.profile.displayName');
+    //actually always should be true
+    switch (info.identity.provider) {
+      case 'facebook-login':
+        user.photo = `http://graph.facebook.com/${identity.externalId}/picture?type=square`;
+        user.photoLarge = `http://graph.facebook.com/${identity.externalId}/picture?type=large`;
+        break;
+      default:
+        //vk
+        updateField('photo', 'identity.profile.photos[0].value');
+        break;
+    }
+
+    if (changed) {
+      return user.save();
+    }
   }
-  if (changed) {
-    return user.save();
+
+
+  function updateField(field, path) {
+    let value = _.get(info, path);
+    if (value) {
+      user[field] = value;
+      changed = true;
+    }
   }
 }

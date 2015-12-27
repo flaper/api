@@ -7,6 +7,12 @@
     "validateUpsert": true
   },
   "properties": {
+    "photo": {
+      "type": "string"
+    },
+    "photoLarge": {
+      "type": "string"
+    },
     "created": {
       "type": "date"
     },
