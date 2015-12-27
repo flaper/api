@@ -2,6 +2,7 @@ import {timestampBehavior} from '../../../behaviors/timestamps.js';
 import {applyIdToType} from '../../../behaviors/idToType'
 import {findByIdRequired} from '../methods/findIdByRequired'
 import {initRoles} from './roles/roles'
+import {initPhotos} from './photo/photo'
 
 module.exports = (User) => {
   User.observe('before save', timestampBehavior);
@@ -22,4 +23,5 @@ module.exports = (User) => {
   User.disableRemoteMethod('__updateById__accessTokens', false);
 
   initRoles(User);
+  initPhotos(User);
 };
