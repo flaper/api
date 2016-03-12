@@ -30,7 +30,12 @@ module.exports = (Story) => {
 
   Story.observe('before save', ignoreUpdatedIfNoChanges(['title', 'content']));
   Story.observe('before save', setCurrentUserId);
-  Story.observe('before save', ignoreProperties({status: {newDefault: Story.STATUS.ACTIVE}, contentHTML: {}}));
+  Story.observe('before save', ignoreProperties({
+    status: {newDefault: Story.STATUS.ACTIVE},
+    contentHTML: {},
+    views: {},
+    viewsRecent: {}
+  }));
   Story.observe('before save', Sanitize.observer('title', Sanitize.text));
   Story.observe('before save', contentObserver);
   Story.observe('before save', Sanitize.alphaMinLengthObserver('content', Story.MIN_CONTENT_LENGTH));

@@ -15,6 +15,7 @@ export function initGet(Story) {
   Story.remoteMethod(
     'customFind',
     {
+      http: {path: '/', verb: 'get'},
       description: `Find all stories matched by filter, by default with '${Story.STATUS.ACTIVE}' status.`,
       accessType: 'READ',
       accepts: {
@@ -22,17 +23,16 @@ export function initGet(Story) {
         type: 'object',
         description: 'Filter defining fields, where, include, order, offset, and limit'
       },
-      http: {path: '/', verb: 'get'},
       returns: {root: true}
     }
   );
 
   Story.remoteMethod('customCount', {
+    http: {verb: 'get', path: '/count'},
     description: 'Count number of stories matched by where',
     accessType: 'READ',
     accepts: {arg: 'where', type: 'object', description: 'Criteria to match model instances'},
-    returns: {arg: 'count', type: 'number'},
-    http: {verb: 'get', path: '/count'}
+    returns: {arg: 'count', type: 'number'}
   });
 
 

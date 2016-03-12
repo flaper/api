@@ -26,6 +26,14 @@
     "contentHTML": {
       "type": "string"
     },
+    "views": {
+      "type": "number",
+      "default": 0
+    },
+    "viewsRecent": {
+      "type": "number",
+      "default": 0
+    },
     "tags": [
       {
         "type": "string",

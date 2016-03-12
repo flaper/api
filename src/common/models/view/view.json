@@ -1,0 +1,7 @@
+{
+  "name": "View",
+  "base": "CommonModel",
+  "idInjection": true,
+  "validations": [],
+  "methods": {}
+}

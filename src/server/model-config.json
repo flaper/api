@@ -12,7 +12,8 @@
       "../common/models/comment",
       "../common/models/like",
       "../common/models/money/transaction",
-      "../common/models/money/account"
+      "../common/models/money/account",
+      "../common/models/view"
     ],
     "mixins": [
       "loopback/common/mixins",
@@ -86,6 +87,10 @@
     "public": true
   },
   "Account": {
+    "dataSource": "mongo",
+    "public": true
+  },
+  "View": {
     "dataSource": "mongo",
     "public": true
   }

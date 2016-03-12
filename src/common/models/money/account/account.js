@@ -17,15 +17,15 @@ module.exports = (Account) => {
 
   Account.payment = payment;
   Account.remoteMethod('payment', {
+    http: {verb: 'post', path: '/payment'},
     description: 'Make payment from id to id',
     accessType: 'WRITE',
     accepts: [
-      {arg: 'fromId', type: 'objectId', description: 'From Id'},
-      {arg: 'toId', type: 'objectId', description: 'To Id'},
-      {arg: 'amount', type: 'number', description: 'Amount'}
+      {arg: 'fromId', type: 'objectId', description: 'From Id', required: true},
+      {arg: 'toId', type: 'objectId', description: 'To Id', required: true},
+      {arg: 'amount', type: 'number', description: 'Amount', required: true}
     ],
-    returns: {arg: 'accounts', type: 'object'},
-    http: {verb: 'post', path: '/payment'}
+    returns: {arg: 'accounts', type: 'object'}
   });
 
   function payment(fromId, toId, amount) {
