@@ -21,4 +21,6 @@ module.exports = (Transaction) => {
   Transaction.disableRemoteMethod('findById', true);
   Transaction.disableRemoteMethod('deleteById', true);
   Transaction.disableRemoteMethod('create', true);
+  Transaction.disableRemoteMethod('count', true);
+  Transaction.disableRemoteMethod('find', true);
 };

@@ -46,14 +46,6 @@
       "principalType": "ROLE",
       "principalId": "$authenticated",
       "permission": "ALLOW"
-    },
-    {
-      "principalType": "ROLE",
-      "principalId": "$admin",
-      "permission": "ALLOW",
-      "property": [
-        "create"
-      ]
     }
   ],
   "methods": {
