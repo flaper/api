@@ -80,8 +80,8 @@ export class RoleService {
       adminIds = adminIds.concat(ids);
     });
     Role.find().then(roles => {
-      rolesToIds = _.indexBy(roles, 'name');
-      roleIdToName = _.indexBy(roles, 'id');
+      rolesToIds = _.keyBy(roles, 'name');
+      roleIdToName = _.keyBy(roles, 'id');
       roleIdToName = _.mapValues(roleIdToName, value => value.name);
     })
   }

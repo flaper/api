@@ -6,7 +6,7 @@ export function countNumberOfLikes() {
   return Like.find({fields: {subjectId: true, subjectType: true}})
     .then(result => {
       console.log('Count Likes started');
-      let map = _.indexBy(result, 'subjectId');
+      let map = _.keyBy(result, 'subjectId');
       //unique now
       let ids = Object.keys(map);
       let promises = ids.map(id => Like.updateSubject(map[id].subjectType, id));
