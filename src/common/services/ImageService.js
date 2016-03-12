@@ -26,7 +26,7 @@ export class ImageService {
   }
 
   static getPathAfterBucketById(imageId, imageFormat) {
-    let id = App.isTestEnv() ? imageId.toString() : TEST_IMAGE_ID;
+    let id = App.isTestEnv() ? TEST_IMAGE_ID : imageId.toString();
     if (!imageFormat || !IMAGE_FORMAT[imageFormat]) throw `Unknown Image Format '${imageFormat}'`;
     let prefix = ImageService.idToPath(id);
 

@@ -1,0 +1,82 @@
+{
+  "name": "Transaction",
+  "base": "CommonModel",
+  "idInjection": false,
+  "strict": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "fromId": {
+      "type": "string",
+      "required": true
+    },
+    "toId": {
+      "type": "string",
+      "required": true
+    },
+    "amount":{
+      "type": "number",
+      "required": true
+    },
+    "operatorId": {
+      "type": "string",
+      "required": true
+    },
+    "type": {
+      "type": "number",
+      "required": true
+    },
+    "details": {
+      "type": "object"
+    },
+    "updated": false
+  },
+  "validations": [],
+  "relations": {
+  },
+  "acls": [
+    {
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "DENY"
+    },
+    {
+      "accessType": "READ",
+      "principalType": "ROLE",
+      "principalId": "$authenticated",
+      "permission": "ALLOW"
+    },
+    {
+      "principalType": "ROLE",
+      "principalId": "$admin",
+      "permission": "ALLOW",
+      "property": [
+        "create"
+      ]
+    }
+  ],
+  "methods": {
+  },
+  "indexes": {
+    "formId_index": {
+      "fromId": 1,
+      "type": 1,
+      "created": -1
+    },
+    "toId_index": {
+      "toId": 1,
+      "type": 1,
+      "created": -1
+    },
+    "operatorId_index": {
+      "operatorId": 1,
+      "type": 1,
+      "created": -1
+    },
+    "type": {
+      "type": 1,
+      "created": -1
+    }
+  }
+}

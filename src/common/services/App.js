@@ -11,7 +11,7 @@ export class App {
   }
 
   static isTestEnv() {
-    return App.env() !== 'test';
+    return App.env() === 'test';
   }
 
   static isWebServer() {

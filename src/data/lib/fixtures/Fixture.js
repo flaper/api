@@ -93,8 +93,11 @@ export class Fixture {
   //private
   uploadAllModels() {
     return new Promise((resolve, reject) => {
-      //because e.g. Comments depends on Story to exist
-      const modelGroups = [['IdToType', 'AccessToken', 'userIdentity'],
+      /**
+       * one group will be created in parallel.
+       * because e.g. Comments depends on Story to exist
+      */
+      const modelGroups = [['IdToType', 'AccessToken', 'userIdentity', 'Account', 'Transaction'],
         ['user', 'Role', 'RoleMapping', 'Story', 'Image'], ['Comment'], ['Like']];
       let queue = new PromiseQueue(1, Infinity);
 

@@ -1,8 +1,9 @@
 {
   "mongo": {
+    "host": "localhost",
     "database": "flaper-test",
     "name": "mongo",
-    "host": "localhost",
-    "connector": "mongodb"
+    "connector": "mongodb",
+    "allowExtendedOperators": true
   }
 }

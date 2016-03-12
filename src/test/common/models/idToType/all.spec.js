@@ -8,7 +8,7 @@ import COMMENTS from  '../../../fixtures/comment';
 let STORY1 = STORIES.test1;
 let COMMENT1 = COMMENTS.comment1;
 
-describe('IdToType', function () {
+describe('models/IdToType', function () {
   it('Story should have idToType', () => {
     return IdToType.findByIdRequired(STORY1.id);
   });

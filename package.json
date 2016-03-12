@@ -31,11 +31,11 @@
     "fs": "0.0.2",
     "killport": "^1.0.1",
     "lodash": "^3.10.1",
-    "loopback": "^2.20.0",
+    "loopback": "^2.27.0",
     "loopback-boot": "^2.6.5",
     "loopback-component-passport": "^1.6.0",
-    "loopback-connector-mongodb": "^1.13.0",
-    "loopback-datasource-juggler": "^2.40.1",
+    "loopback-connector-mongodb": "1.13.2",
+    "loopback-datasource-juggler": "^2.45.2",
     "lwip": "0.0.8",
     "marked": "^0.3.5",
     "moment-timezone": "^0.4.1",
@@ -46,7 +46,6 @@
     "passport-vkontakte": "sklyukin/passport-vkontakte",
     "promise-queue": "^2.2.0",
     "sanitize-html": "^1.11.2",
-    "serve-favicon": "^2.0.1",
     "url": "^0.11.0"
   },
   "optionalDependencies": {
