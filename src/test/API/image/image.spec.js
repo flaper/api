@@ -3,7 +3,7 @@ import {updateTimeouts} from '../timeout';
 import app from '../../../server/server';
 let should = require('chai').should();
 
-let Image = app.models.Comment;
+let Image = app.models.Image;
 const COLLECTION_URL = 'images';
 const IMAGE_PATH = './src/test/media/sample_image.jpg';
 
