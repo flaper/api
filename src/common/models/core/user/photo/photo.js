@@ -1,6 +1,6 @@
 let app = require('../../../../../server/server');
 let serverUrl = app.get('webApp').url;
-const DEFAULT_PHOTO = `${serverUrl}/img/user/blue.png`;
+const DEFAULT_PHOTO = `${serverUrl}/assets/img/user/blue.png`;
 const DEFAULT_PHOTO_LARGE = DEFAULT_PHOTO;
 
 export function initPhotos(User) {
