@@ -1,6 +1,5 @@
 import {api, user1Promise,user2Promise, user1} from '../../helpers/api';
 import {updateTimeouts} from '../timeout';
-import app from '../../../server/server';
 let should = require('chai').should();
 import STORIES from  '../../fixtures/story';
 const STORY1 = STORIES.test1;

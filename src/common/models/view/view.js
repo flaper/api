@@ -44,7 +44,7 @@ module.exports = (View) => {
         let data = {
           id: id,
           ip: req.ip,
-          xhr: req.xhr ? 1 : 0,
+          //xhr: req.xhr ? 1 : 0,
           agent: req.get('User-Agent'),
           referer: req.get('Referer'),
           userId: userId

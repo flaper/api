@@ -14,18 +14,31 @@ module.exports = (Account) => {
   Account.disableRemoteMethod('create', true);
   Account.disableRemoteMethod('count', true);
   Account.disableRemoteMethod('find', true);
+  Account.disableRemoteMethod('findById', true);
 
   Account.payment = payment;
+  Account.getAccountById = getAccountById;
+
   Account.remoteMethod('payment', {
     http: {verb: 'post', path: '/payment'},
     description: 'Make payment from id to id',
     accessType: 'WRITE',
     accepts: [
-      {arg: 'fromId', type: 'objectId', description: 'From Id', required: true},
-      {arg: 'toId', type: 'objectId', description: 'To Id', required: true},
+      {arg: 'fromId', type: 'string', description: 'From Id', required: true},
+      {arg: 'toId', type: 'string', description: 'To Id', required: true},
       {arg: 'amount', type: 'number', description: 'Amount', required: true}
     ],
     returns: {arg: 'accounts', type: 'object'}
+  });
+
+  Account.remoteMethod('getAccountById', {
+    http: {verb: 'get', path: '/:id'},
+    description: 'Get account',
+    accessType: 'READ',
+    accepts: [
+      {arg: 'id', type: 'string', description: 'Id', required: true}
+    ],
+    returns: {arg: 'amount', type: 'object'}
   });
 
   function payment(fromId, toId, amount) {
@@ -48,5 +61,10 @@ module.exports = (Account) => {
         return Promise.all([p1, p2]);
       })
       .then(() =>  Account.find({id: {inq: [fromId, toId]}}));
+  }
+
+  function getAccountById(id) {
+    return Account.findById(id)
+      .then(account => account ? account.amount : 0)
   }
 };
