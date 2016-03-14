@@ -2,14 +2,15 @@ import app from '../../../../server/server';
 let should = require('chai').should();
 import STORIES from  '../../../fixtures/story';
 import {Sanitize} from '../../../../../src/libs/sanitize/Sanitize';
+import sanitizeHtml from 'sanitize-html';
 
 let Story = app.models.Story;
 
 
-describe(`models/story/@markdown`, function () {
+describe(`models/story/@sanitize`, function () {
   const NEW_STORY = {
     id: '1a4000000000000000010001',
-    title: "New story for test",
+    title: "Title 'with' \"quotes\" <a>inside tag</a>",
     content: "# Header\n" +
     "Second line."
   };
@@ -19,11 +20,10 @@ describe(`models/story/@markdown`, function () {
     return Story.create(NEW_STORY);
   });
 
-  it("Should create H1", () => {
+  it("Should allow quotes in title", () => {
     return Story.findByIdRequired(NEW_STORY.id)
       .then(story => {
-        let strings = story.contentHTML.split('\n');
-        strings[0].should.eq('<h1>Header</h1><p>Second line.</p>');
+        story.title.should.eq("Title 'with' \"quotes\" inside tag");
       })
   });
 
