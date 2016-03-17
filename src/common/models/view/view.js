@@ -47,7 +47,9 @@ module.exports = (View) => {
           //xhr: req.xhr ? 1 : 0,
           agent: req.get('User-Agent'),
           referer: req.get('Referer'),
-          userId: userId
+          userId: userId,
+          subjectUserId: subject.userId,
+          subjectType: subjectType
         };
         ViewService.logView(data);
         return subject.updateAttributes({$inc: {viewsRecent: 1}})
