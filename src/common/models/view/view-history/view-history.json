@@ -1,0 +1,41 @@
+{
+  "name": "ViewHistory",
+  "base": "CommonModel",
+  "properties": {
+    "subjectType": {
+      "type": "string",
+      "required": true
+    },
+    "subjectId": {
+      "type": "string",
+      "required": true
+    },
+    "periodType": {
+      "type": "string",
+      "required": true
+    },
+    "period": {
+      "type": "string",
+      "required": true
+    },
+    "values": {
+      "type": "object",
+      "required": true
+    }
+  },
+  "validations": [],
+  "methods": {},
+  "indexes": {
+    "view-history-id": {
+      "keys": {
+        "subjectType": 1,
+        "subjectId": 1,
+        "periodType": 1,
+        "period": 1
+      },
+      "options": {
+        "unique": true
+      }
+    }
+  }
+}

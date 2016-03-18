@@ -11,6 +11,7 @@ npm install
 To upload required constant to database
 
 `npm run constants`
+(this only add new constants, indexes, doesn't remove anything, so this can be used for production db)
 
 ## Running
 `npm start`

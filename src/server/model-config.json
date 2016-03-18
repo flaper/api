@@ -13,7 +13,8 @@
       "../common/models/like",
       "../common/models/money/transaction",
       "../common/models/money/account",
-      "../common/models/view"
+      "../common/models/view/view",
+      "../common/models/view/view-history"
     ],
     "mixins": [
       "loopback/common/mixins",
@@ -91,6 +92,10 @@
     "public": true
   },
   "View": {
+    "dataSource": "mongo",
+    "public": true
+  },
+  "ViewHistory": {
     "dataSource": "mongo",
     "public": true
   }

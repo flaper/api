@@ -97,7 +97,7 @@ export class Fixture {
        * one group will be created in parallel.
        * because e.g. Comments depends on Story to exist
       */
-      const modelGroups = [['IdToType', 'AccessToken', 'userIdentity', 'Account', 'Transaction'],
+      const modelGroups = [['IdToType', 'AccessToken', 'userIdentity', 'Account', 'Transaction', 'ViewHistory'],
         ['user', 'Role', 'RoleMapping', 'Story', 'Image'], ['Comment'], ['Like']];
       let queue = new PromiseQueue(1, Infinity);
 

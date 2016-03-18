@@ -1,6 +1,6 @@
-import {App} from '../../services/App';
-import {ERRORS} from '../../utils/errors';
-import {ViewService} from '../../services/ViewService';
+import {App} from '../../../services/App';
+import {ERRORS} from '../../../utils/errors';
+import {ViewService} from '../../../services/ViewService';
 
 module.exports = (View) => {
   const ALLOWED_MODELS = ['Story'];
