@@ -41,9 +41,9 @@ module.exports = (ViewHistory) => {
 
     let year = day.match(/^\d{4}/)[0];
     var exec = require('child_process').execFileSync;
-    exec('aws', ['s3', 'cp', `s3://flaper.views/data/${year}/${day}.zip`, '~/views.zip', '--region', 'eu-central-1']);
-    exec('unzip', ['-o', '~/views.zip', '-d', '~/']);
-    let content = fs.readFileSync('~/views.json', 'UTF8');
+    exec('aws', ['s3', 'cp', `s3://flaper.views/data/${year}/${day}.zip`, 'tmp/views.zip', '--region', 'eu-central-1']);
+    exec('unzip', ['-o', 'tmp/views.zip', '-d', '~/']);
+    let content = fs.readFileSync('tmp/views.json', 'UTF8');
     let data;
     try {
       data = JSON.parse(content);
