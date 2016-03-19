@@ -90,8 +90,9 @@ module.exports = (Account) => {
           }
         }
       ], (err, data) => {
+        let total = data.length === 1 ? data[0].total : 0;
         if (err) return reject(err);
-        return resolve(data[0].total);
+        return resolve(total);
       });
     })
   }
