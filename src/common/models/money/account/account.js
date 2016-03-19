@@ -90,8 +90,6 @@ module.exports = (Account) => {
           }
         }
       ], (err, data) => {
-        console.log(data);
-        console.log(data[0].total);
         if (err) return reject(err);
         return resolve(data[0].total);
       });
