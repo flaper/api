@@ -64,7 +64,37 @@ module.exports = (Account) => {
   }
 
   function getAccountById(id) {
+    let amount = null;
     return Account.findById(id)
-      .then(account => account ? account.amount : 0)
+      .then(account => {
+        amount = account ? account.amount : 0
+      })
+      .then(() => countRecentViewsMoney(id))
+      .then(total => {
+        let res = total + amount;
+        return Math.round(res * 100) / 100
+      })
+  }
+
+  function countRecentViewsMoney(userId) {
+    let ViewHistory = Account.app.models.ViewHistory;
+    let collection = ViewHistory.dataSource.connector.collection('ViewHistory');
+    let match = {subjectType: 'user', subjectId: userId, periodType: ViewHistory.PERIOD_TYPES.day};
+    return new Promise((resolve, reject) => {
+      collection.aggregate([
+        {$match: match},
+        {
+          $group: {
+            _id: null,
+            total: {$sum: "$values.money"}
+          }
+        }
+      ], (err, data) => {
+        console.log(data);
+        console.log(data[0].total);
+        if (err) return reject(err);
+        return resolve(data[0].total);
+      });
+    })
   }
 };

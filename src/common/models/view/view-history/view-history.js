@@ -6,6 +6,9 @@ import * as _ from 'lodash';
 module.exports = (ViewHistory) => {
   //const ALLOWED_MODELS = ['Story'];
 
+  ViewHistory.PERIOD_TYPES = {
+    day: 'day'
+  };
   ViewHistory.commonInit(ViewHistory);
   ViewHistory.disableRemoteMethod('updateAttributes', false);
   ViewHistory.disableRemoteMethod('__get__subject', false);
@@ -86,7 +89,7 @@ module.exports = (ViewHistory) => {
       return {
         subjectType: type,
         subjectId: row.id,
-        periodType: 'day',
+        periodType: ViewHistory.PERIOD_TYPES.day,
         period: period,
         values: _.pick(row, valuesFields)
       };
