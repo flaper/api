@@ -15,6 +15,7 @@
 .DS_Store
 .idea
 .project
+.tmp/*
 .strong-pm
 coverage
 node_modules
