@@ -1,0 +1,16 @@
+{
+  "identity1": {
+    "provider": "google-login",
+    "externalId": "116923822909679391954",
+    "profile": {
+    },
+    "userId": "1a1000000000000000001001"
+  },
+  "identity2": {
+    "provider": "facebook-login",
+    "externalId": "10153863566704446",
+    "profile": {
+    },
+    "userId": "1a1000000000000000001001"
+  }
+}
