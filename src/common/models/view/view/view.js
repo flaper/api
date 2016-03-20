@@ -6,15 +6,7 @@ module.exports = (View) => {
   const ALLOWED_MODELS = ['Story'];
 
   View.commonInit(View);
-  View.disableRemoteMethod('updateAttributes', false);
-  View.disableRemoteMethod('__get__subject', false);
-  View.disableRemoteMethod('__get__user', false);
-  View.disableRemoteMethod('exists', true);
-  View.disableRemoteMethod('deleteById', true);
-  View.disableRemoteMethod('findById', true);
-  View.disableRemoteMethod('create', true);
-  View.disableRemoteMethod('count', true);
-  View.disableRemoteMethod('find', true);
+  View.disableAllRemotesExcept(View);
 
   View.registerView = registerView;
   View.remoteMethod('registerView', {

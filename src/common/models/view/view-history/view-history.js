@@ -10,15 +10,7 @@ module.exports = (ViewHistory) => {
     day: 'day'
   };
   ViewHistory.commonInit(ViewHistory);
-  ViewHistory.disableRemoteMethod('updateAttributes', false);
-  ViewHistory.disableRemoteMethod('__get__subject', false);
-  ViewHistory.disableRemoteMethod('__get__user', false);
-  ViewHistory.disableRemoteMethod('exists', true);
-  ViewHistory.disableRemoteMethod('deleteById', true);
-  ViewHistory.disableRemoteMethod('findById', true);
-  ViewHistory.disableRemoteMethod('create', true);
-  ViewHistory.disableRemoteMethod('count', true);
-  ViewHistory.disableRemoteMethod('find', true);
+  ViewHistory.disableAllRemotesExcept(ViewHistory);
 
   ViewHistory.processDay = processDay;
   ViewHistory.remoteMethod('processDay', {

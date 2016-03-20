@@ -1,9 +1,31 @@
 import {timestampBehavior} from '../../behaviors/timestamps.js';
 import {findByIdRequired} from './methods/findIdByRequired'
+import _ from 'lodash';
 
 module.exports = (CommonModel) => {
   CommonModel.observe('before save', timestampBehavior);
-  CommonModel.commonInit = (Model) => {
+  CommonModel.commonInit = commonInit;
+  CommonModel.disableAllRemotesExcept = disableAllRemotesExcept;
+
+  function disableAllRemotesExcept(Model, except = []) {
+    let remotes = {
+      updateAttributes: false,
+      exists: true,
+      deleteById: true,
+      findById: true,
+      create: true,
+      count: true,
+      find: true
+    };
+
+    _.forOwn(remotes, (value, key) => {
+      if (except.indexOf(key) === -1) {
+        Model.disableRemoteMethod(key, value);
+      }
+    });
+  }
+
+  function commonInit(Model) {
     disableSomeRemotes(Model);
     CommonModel.commonDisableRemoteScope(Model, 'scopeAll');
     Model.on('attached', () => {
@@ -18,7 +40,7 @@ module.exports = (CommonModel) => {
         });
       })
     });
-  };
+  }
 
   CommonModel.findByIdRequired = findByIdRequired;
 

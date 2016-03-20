@@ -7,6 +7,7 @@
       "../common/models",
       "../common/models/core",
       "../common/models/core/user",
+      "../common/models/core/user-settings",
       "../common/models/auth",
       "../common/models/story",
       "../common/models/comment",
@@ -64,6 +65,10 @@
     "public": false
   },
   "user": {
+    "dataSource": "mongo",
+    "public": true
+  },
+  "UserSettings": {
     "dataSource": "mongo",
     "public": true
   },

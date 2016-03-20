@@ -5,16 +5,7 @@ import _ from 'lodash';
 
 module.exports = (Account) => {
   Account.commonInit(Account);
-
-  Account.disableRemoteMethod('updateAttributes', false);
-  Account.disableRemoteMethod('__get__subject', false);
-  Account.disableRemoteMethod('__get__user', false);
-  Account.disableRemoteMethod('exists', true);
-  Account.disableRemoteMethod('deleteById', true);
-  Account.disableRemoteMethod('create', true);
-  Account.disableRemoteMethod('count', true);
-  Account.disableRemoteMethod('find', true);
-  Account.disableRemoteMethod('findById', true);
+  Account.disableAllRemotesExcept(Account);
 
   Account.payment = payment;
   Account.getAccountById = getAccountById;
