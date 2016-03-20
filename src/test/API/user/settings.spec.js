@@ -66,5 +66,7 @@ describe(`/user/:id/settings`, function () {
           .expect(400)
       })
     });
+
+    after(() => UserSettings.deleteAll())
   });
 });
