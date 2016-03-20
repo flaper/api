@@ -85,11 +85,16 @@
       "property": "__delete__roles"
     },
     {
-      "accessType": "EXECUTE",
       "principalType": "ROLE",
       "principalId": "super",
       "permission": "ALLOW",
       "property": "setRole"
+    },
+    {
+      "principalType": "ROLE",
+      "principalId": "$owner",
+      "permission": "ALLOW",
+      "property": "saveSettings"
     }
   ],
   "methods": {},

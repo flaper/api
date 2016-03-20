@@ -15,7 +15,7 @@ module.exports = (ViewHistory) => {
   ViewHistory.processDay = processDay;
   ViewHistory.remoteMethod('processDay', {
     http: {verb: 'post', path: '/processDay'},
-    description: 'Register a view',
+    description: 'Process day',
     accessType: 'WRITE',
     accepts: [
       {arg: 'day', type: 'string', description: 'day', required: true}

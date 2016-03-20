@@ -1,8 +1,9 @@
 import {timestampBehavior} from '../../../behaviors/timestamps.js';
 import {applyIdToType} from '../../../behaviors/idToType'
-import {findByIdRequired} from '../methods/findIdByRequired'
+import {findByIdRequired} from '../methods/findMethods'
 import {initRoles} from './roles/roles'
 import {initPhotos} from './photo/photo'
+import {initSettings} from './settings/settings'
 
 module.exports = (User) => {
   User.observe('before save', timestampBehavior);
@@ -24,4 +25,5 @@ module.exports = (User) => {
 
   initRoles(User);
   initPhotos(User);
+  initSettings(User);
 };

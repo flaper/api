@@ -1,5 +1,5 @@
 import {timestampBehavior} from '../../behaviors/timestamps.js';
-import {findByIdRequired} from './methods/findIdByRequired'
+import {findByIdRequired, findOneRequired} from './methods/findMethods'
 import _ from 'lodash';
 
 module.exports = (CommonModel) => {
@@ -43,6 +43,7 @@ module.exports = (CommonModel) => {
   }
 
   CommonModel.findByIdRequired = findByIdRequired;
+  CommonModel.findOneRequired = findOneRequired;
 
   function disableSomeRemotes(Model) {
     Model.disableRemoteMethod('createChangeStream', true);

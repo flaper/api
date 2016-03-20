@@ -1,10 +1,9 @@
 import {api, superPromise, adminPromise, user1Promise} from '../../helpers/api';
 import {updateTimeouts} from '../timeout';
 import app from '../../../server/server';
-
-const USERS = require('../../fixtures/allUsers');
 import _ from 'lodash';
 let should = require('chai').should();
+const USERS = require('../../fixtures/allUsers');
 
 let User = app.models.User;
 
