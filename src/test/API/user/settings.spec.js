@@ -53,7 +53,7 @@ describe(`/user/:id/settings`, function () {
                 should.exist(settings);
                 let setting = settings[UserSettings.NAMES.SHOW_SOCIAL_LINKS];
                 should.exist(setting);
-                setting.should.eq('false');
+                setting.should.eq(false);
               })
           })
         })

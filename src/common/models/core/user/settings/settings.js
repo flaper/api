@@ -34,7 +34,15 @@ export function initSettings(User) {
       .then((rows) => {
         let res = {};
         rows.forEach((row) => {
-          res[row.name] = row.value;
+          let value = row.value;
+          try {
+            //let's parse if possible
+            value = JSON.parse(value);
+          }
+          catch (e) {
+
+          }
+          res[row.name] = value;
         });
         return res;
       })
