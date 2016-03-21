@@ -39,7 +39,8 @@
       "authPath": "/auth/vk",
       "callbackPath": "/auth/vk/callback",
       "profileFields": [
-        "email"
+        "email",
+        "photo_200_orig"
       ],
       "scope": [
         "email",

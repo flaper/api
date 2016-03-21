@@ -84,9 +84,14 @@ function updateUserWithInfo(user, info) {
         user.photo = `http://graph.facebook.com/${identity.externalId}/picture?type=square`;
         user.photoLarge = `http://graph.facebook.com/${identity.externalId}/picture?type=large`;
         break;
+      case 'odnoklassniki-login':
+        updateField('photo', 'identity.profile.photos[0].value');
+        updateField('photoLarge', 'identity.profile.photos[1].value');
+        break;
       default:
         //vk
         updateField('photo', 'identity.profile.photos[0].value');
+        updateField('photoLarge', 'identity.profile.photos[0].value');
         break;
     }
 
