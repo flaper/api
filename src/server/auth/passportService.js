@@ -86,7 +86,7 @@ function updateUserWithInfo(user, info) {
         break;
       case 'vk-login':
         let photos = _.get(identity, 'profile.photos');
-        if (photos){
+        if (photos) {
           let photosIndex = _.keyBy(photos, 'type');
           updateField('photo', 'photo.value', photosIndex);
           updateField('photoLarge', 'photo_200_orig.value', photosIndex);
@@ -96,8 +96,13 @@ function updateUserWithInfo(user, info) {
         updateField('photo', 'identity.profile.photos[0].value');
         updateField('photoLarge', 'identity.profile.photos[1].value');
         break;
+      case 'google-login':
+        let value = updateField('photo', 'identity.profile.photos[0].value');
+        if (value) {
+          user.photoLarge = value.replace('?sz=50', '');
+        }
+        break;
       default:
-        //vk
         updateField('photo', 'identity.profile.photos[0].value');
         updateField('photoLarge', 'identity.profile.photos[0].value');
         break;
@@ -116,5 +121,6 @@ function updateUserWithInfo(user, info) {
       user[field] = value;
       changed = true;
     }
+    return value;
   }
 }
