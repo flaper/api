@@ -84,6 +84,14 @@ function updateUserWithInfo(user, info) {
         user.photo = `http://graph.facebook.com/${identity.externalId}/picture?type=square`;
         user.photoLarge = `http://graph.facebook.com/${identity.externalId}/picture?type=large`;
         break;
+      case 'vk-login':
+        let photos = _.get(identity, 'profile.photos');
+        if (photos){
+          let photosIndex = _.keyBy(photos, 'type');
+          updateField('photo', 'photo.value', photosIndex);
+          updateField('photoLarge', 'photo_200_orig.value', photosIndex);
+        }
+        break;
       case 'odnoklassniki-login':
         updateField('photo', 'identity.profile.photos[0].value');
         updateField('photoLarge', 'identity.profile.photos[1].value');
@@ -101,8 +109,9 @@ function updateUserWithInfo(user, info) {
   }
 
 
-  function updateField(field, path) {
-    let value = _.get(info, path);
+  function updateField(field, path, data = null) {
+    data = data ? data : info;
+    let value = _.get(data, path);
     if (value) {
       user[field] = value;
       changed = true;
