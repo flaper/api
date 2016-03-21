@@ -15,10 +15,9 @@ export function initIdentities(User) {
   });
 
   function getIdentities(id) {
-    console.log('get Identities');
     let UserIdentity = User.app.models.userIdentity;
     return User.findByIdRequired(id)
-      .then(() => UserIdentity.find({userId: id}))
+      .then(() => UserIdentity.find({where: {userId: id}}))
       .then((identities) => {
         return identities.map((row) => {
           let provider = row.provider.replace('-login', '');
@@ -33,13 +32,12 @@ export function initIdentities(User) {
               break;
             case 'vk':
             case 'odnoklassniki':
-              identity['url'] = row['profileUrl'];
+              identity['url'] = row.profile.profileUrl;
               break;
             default:
-              identity['url'] = row['profileUrl'];
+              identity['url'] = row.profile.profileUrl;
               break;
           }
-          console.log('identity', identity);
           return identity;
         });
       })
