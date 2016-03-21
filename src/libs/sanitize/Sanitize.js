@@ -10,7 +10,10 @@ export class Sanitize {
   static html(dirty) {
     return sanitizeHtml(dirty, {
       allowedTags: [],
-      allowedAttributes: []
+      allowedAttributes: [],
+      textFilter: function(text) {
+        return text.replace(/&quot;/g, '\"');
+      }
     }).trim();
   }
 
