@@ -1,8 +1,8 @@
 module.exports = (UserSettings) => {
   UserSettings.commonInit(UserSettings);
   UserSettings.NAMES = {
-    SHOW_SOCIAL_LINKS: 'SHOW_SOCIAL_LINKS',
-    SHOW_POINTS: 'SHOW_POINTS'
+    HIDE_SOCIAL_LINKS: 'HIDE_SOCIAL_LINKS',
+    HIDE_POINTS: 'HIDE_POINTS'
   };
 
   UserSettings.updateSetting = updateSetting;

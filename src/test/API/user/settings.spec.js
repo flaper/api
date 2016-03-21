@@ -27,7 +27,7 @@ describe(`/user/:id/settings`, function () {
   describe('POST', () => {
     it('User - deny to update another\'s settings', () => {
       return adminPromise.then(({agent}) => {
-        return agent.post(_url(USER1.id) + '/' + UserSettings.NAMES.SHOW_SOCIAL_LINKS)
+        return agent.post(_url(USER1.id) + '/' + UserSettings.NAMES.HIDE_SOCIAL_LINKS)
           .send({value: false})
           .expect(401)
       })
@@ -35,7 +35,7 @@ describe(`/user/:id/settings`, function () {
 
     it('User - allow to update my settings', () => {
       return user1Promise.then(({agent}) => {
-          return agent.post(_url(USER1.id) + '/' + UserSettings.NAMES.SHOW_SOCIAL_LINKS)
+          return agent.post(_url(USER1.id) + '/' + UserSettings.NAMES.HIDE_SOCIAL_LINKS)
             .send({value: false})
             .expect(200)
             .expect((res) => {
@@ -51,7 +51,7 @@ describe(`/user/:id/settings`, function () {
               .expect((res) => {
                 let settings = res.body;
                 should.exist(settings);
-                let setting = settings[UserSettings.NAMES.SHOW_SOCIAL_LINKS];
+                let setting = settings[UserSettings.NAMES.HIDE_SOCIAL_LINKS];
                 should.exist(setting);
                 setting.should.eq(false);
               })

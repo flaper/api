@@ -30,7 +30,7 @@ export function initSettings(User) {
   function getSettingsByUser(id) {
     let UserSettings = User.app.models.UserSettings;
     return User.findByIdRequired(id)
-      .then(() => UserSettings.find({userId: id}))
+      .then(() => UserSettings.find({where: {userId: id}}))
       .then((rows) => {
         let res = {};
         rows.forEach((row) => {
