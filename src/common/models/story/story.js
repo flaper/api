@@ -33,6 +33,7 @@ module.exports = (Story) => {
   Story.observe('before save', ignoreProperties({
     status: {newDefault: Story.STATUS.ACTIVE},
     contentHTML: {},
+    shortInline: {},
     views: {},
     viewsRecent: {}
   }));
@@ -48,8 +49,10 @@ module.exports = (Story) => {
       .then((value) => {
         if (value) {
           let html = FlaperMark.toHTML(value);
+          let shortInline = FlaperMark.shortInline(value);
 
           setProperty(ctx, 'contentHTML', html);
+          setProperty(ctx, 'shortInline', shortInline);
         }
       })
   }

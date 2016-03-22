@@ -26,6 +26,9 @@
     "contentHTML": {
       "type": "string"
     },
+    "shortInline":{
+      "type": "string"
+    },
     "views": {
       "type": "number",
       "default": 0
