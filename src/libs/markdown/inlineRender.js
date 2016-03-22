@@ -23,6 +23,10 @@ renderer.listitem = (string) => {
   return ' ' + string;
 };
 
+renderer.link = (href, title, text) => {
+  return text;
+};
+
 marked.setOptions({
   renderer: renderer,
   breaks: false

@@ -16,8 +16,10 @@ export function shortInline(value, linesNumber = 4) {
     console.log('shortInline exception', e);
   }
 
-  let lines = res.split('\n').slice(0, linesNumber);//number of lines equal to linesNumber at max
-  return lines.join('\n');
+  //tag can be broken here, so currently commented out
+  //let lines = res.split('\n').slice(0, linesNumber);//number of lines equal to linesNumber at max
+  //return lines.join('\n');
+  return res;
 }
 
 
@@ -40,6 +42,7 @@ export function cutInlineHtml(html, limit) {
     return ' \t\n.,!'.indexOf(c) > -1;
   }
 
+  //doesn't support tags with attributes, e.g. <a href="">something</a>
   function takeNext(depth) {
     let res = '';
     let j = i;
