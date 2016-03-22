@@ -27,6 +27,11 @@ renderer.link = (href, title, text) => {
   return text;
 };
 
+renderer.hr = () => {
+  return '\n';
+};
+
+
 marked.setOptions({
   renderer: renderer,
   breaks: false

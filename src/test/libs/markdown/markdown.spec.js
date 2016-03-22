@@ -59,14 +59,15 @@ describe('/markdown', () => {
       text.should.eq(result);
     });
 
-    it('List', () => {
+    it('List, hr', () => {
       let source = 'List:\n' +
         '* Item1\n' +
         '* Item2\n' +
         '* Item3\n' +
+        '_________\n' +
         'Next line';
       let text = FlaperMark.toInline(source);
-      let result = 'List:\n Item1 Item2 Item3\n' +
+      let result = 'List:\n Item1 Item2 Item3\n\n' +
         'Next line';
       text.should.eq(result);
     });
