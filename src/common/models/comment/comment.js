@@ -32,6 +32,25 @@ module.exports = (Comment) => {
   }));
   Comment.observe('before save', Sanitize.observer('content', Sanitize.text));
 
+  Comment.observe('after save', syncSubject);
+
+  Comment.updateSubject = (subjectType, id) => {
+    let Model = Comment.app.models[subjectType];
+    let count;
+    let query = {subjectId: id, status: Comment.STATUS.ACTIVE};
+    return Comment.count(query)
+      .then((c) => {
+        count = c;
+        return Comment.findOne({where: query, order: 'created DESC'})
+      })
+      .then((comment) => {
+        let lastActive = comment ? comment.created : 0;
+        return Model.updateAll({id: id}, {commentsNumber: count, lastActive: lastActive},
+          {skipIgnore: {commentsNumber: true, lastActive: true}})
+      })
+      .then(() => count);
+  };
+
   initDefaultScope(Comment);
   initCustomDelete(Comment);
 
@@ -48,6 +67,14 @@ module.exports = (Comment) => {
       return Promise.reject(ERRORS.badRequest("SubjectId should exist"));
     }
     return Story.findByIdRequired(subjectId, null, ERRORS.badRequest);
+  }
+
+  function syncSubject(ctx) {
+    if (!(ctx.instance && ctx.isNewInstance)) {
+      return Promise.resolve();
+    }
+
+    return Comment.updateSubject('Story', ctx.instance.subjectId);
   }
 
 };

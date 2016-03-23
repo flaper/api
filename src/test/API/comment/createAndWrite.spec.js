@@ -6,10 +6,11 @@ import {Sanitize} from '../../../../src/libs/sanitize/Sanitize';
 import _ from 'lodash';
 
 let Comment = app.models.Comment;
+let Story = app.models.Story;
 
 const COLLECTION_URL = 'comments';
 
-describe(`/${COLLECTION_URL}/POST&PUT`, function () {
+describe.only(`/${COLLECTION_URL}/POST&PUT`, function () {
   updateTimeouts(this);
 
   const NEW_COMMENT = {
@@ -41,18 +42,30 @@ describe(`/${COLLECTION_URL}/POST&PUT`, function () {
   });
 
   it('User - allow to add', () => {
-    return user1Promise.then(({agent}) => {
-      return agent.post(COLLECTION_URL)
-        .send(NEW_COMMENT)
-        .expect(200)
-        .expect((res) => {
-          let comment = res.body;
-          user1.id.should.equal(comment.userId);
-          NEW_COMMENT.subjectId.should.eq(comment.subjectId);
-          'story'.should.eq(comment.subjectType);
-          Comment.STATUS.ACTIVE.should.equal(comment.status);
+    let created = 0;
+    let commentsNumber = 0;
+    Story.findByIdRequired(NEW_COMMENT.subjectId)
+      .then(story => commentsNumber = story.commentsNumber)
+      .then(() => {
+        return user1Promise.then(({agent}) => {
+          return agent.post(COLLECTION_URL)
+            .send(NEW_COMMENT)
+            .expect(200)
+            .expect((res) => {
+              let comment = res.body;
+              user1.id.should.equal(comment.userId);
+              NEW_COMMENT.subjectId.should.eq(comment.subjectId);
+              'story'.should.eq(comment.subjectType);
+              Comment.STATUS.ACTIVE.should.equal(comment.status);
+              created = new Date(comment.created);
+            })
         })
-    })
+      })
+      .then(() => Story.findByIdRequired(NEW_COMMENT.subjectId))
+      .then(story => {
+        story.commentsNumber.should.eq(commentsNumber + 1);
+        story.lastActive.getTime().should.eq(created.getTime());
+      })
   });
 
   it('User - update not exist', () => {

@@ -35,7 +35,9 @@ module.exports = (Story) => {
     contentHTML: {},
     shortInline: {},
     views: {},
-    viewsRecent: {}
+    viewsRecent: {},
+    lastActive: {newDefault: new Date()},
+    commentsNumber: {newDefault: 0}
   }));
   Story.observe('before save', Sanitize.observer('title', Sanitize.text));
   Story.observe('before save', contentObserver);

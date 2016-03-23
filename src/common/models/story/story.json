@@ -26,8 +26,14 @@
     "contentHTML": {
       "type": "string"
     },
-    "shortInline":{
+    "shortInline": {
       "type": "string"
+    },
+    "lastActive": {
+      "type": "date"
+    },
+    "commentsNumber": {
+      "type": "number"
     },
     "views": {
       "type": "number",
