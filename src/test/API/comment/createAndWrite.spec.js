@@ -10,7 +10,7 @@ let Story = app.models.Story;
 
 const COLLECTION_URL = 'comments';
 
-describe.only(`/${COLLECTION_URL}/POST&PUT`, function () {
+describe(`/${COLLECTION_URL}/POST&PUT`, function () {
   updateTimeouts(this);
 
   const NEW_COMMENT = {
@@ -76,5 +76,10 @@ describe.only(`/${COLLECTION_URL}/POST&PUT`, function () {
     })
   });
 
-  after(()=> Comment.deleteById(NEW_COMMENT.id));
+  after(()=> {
+    return Comment.deleteById(NEW_COMMENT.id)
+      .then(() => {
+        return Comment.updateSubject('Story', NEW_COMMENT.subjectId)
+      })
+  });
 });

@@ -33,7 +33,8 @@
       "type": "date"
     },
     "commentsNumber": {
-      "type": "number"
+      "type": "number",
+      "default": 0
     },
     "views": {
       "type": "number",

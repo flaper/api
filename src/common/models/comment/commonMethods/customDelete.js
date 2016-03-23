@@ -40,11 +40,15 @@ export function initCustomDelete(Comment) {
 
 
   function customDeleteById(id) {
+    let res = null;
     //findByIdRequired called to enforce existence
     return Comment.scopeActive.findByIdRequired(id)
       .then((comment) => {
+        res = comment;
         comment.status = Comment.STATUS.DELETED;
         return comment.save({skipIgnore: {status: true}});
       })
+      .then((comment) => Comment.updateSubject('Story', comment.subjectId))
+      .then(() => res);
   }
 }

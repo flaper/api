@@ -30,5 +30,8 @@ describe(`/${COLLECTION_URL}/@sanitize`, function () {
     })
   });
 
-  after(()=> Comment.deleteById(NEW_COMMENT.id));
+  after(()=> {
+    return Comment.deleteById(NEW_COMMENT.id)
+      .then(Comment.updateSubject('Story', NEW_COMMENT.subjectId))
+  });
 });
