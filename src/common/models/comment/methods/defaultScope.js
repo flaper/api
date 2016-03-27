@@ -96,7 +96,7 @@ export function initDefaultScope(Comment) {
     let promises = [];
     let result = {};
     idsArray.forEach(id => {
-      let promise = Comment.scopeActive({where: {subjectId: new ObjectID(id)}, limit: 3, order: 'DATE desc'})
+      let promise = Comment.scopeActive({where: {subjectId: new ObjectID(id)}, limit: 3, order: 'created desc'})
         .then(data => {
           result[id] = data;
         });
