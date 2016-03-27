@@ -20,25 +20,6 @@ export function initCustomDelete(Comment) {
     returns: {arg: 'count', type: 'object', root: true}
   });
 
-  Comment.remoteMethod('customFindById', {
-    description: 'Find a comment by id.',
-    accessType: 'READ',
-    accepts: [
-      {
-        arg: 'id', type: 'any', description: 'Comment id', required: true,
-        http: {source: 'path'}
-      },
-      {
-        arg: 'filter', type: 'object',
-        description: 'Filter defining fields and include'
-      }
-    ],
-    returns: {arg: 'data', type: 'Comment', root: true},
-    http: {verb: 'get', path: '/:id'},
-    rest: {after: ERRORS.convertNullToNotFoundError}
-  });
-
-
   function customDeleteById(id) {
     let res = null;
     //findByIdRequired called to enforce existence

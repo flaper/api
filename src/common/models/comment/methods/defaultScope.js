@@ -2,6 +2,7 @@ import {App} from '../../../services/App';
 import {ERRORS} from '../../../utils/errors';
 import {objectHasDeepKey} from '../../../utils/object';
 import _ from 'lodash';
+var ObjectID = require('mongodb').ObjectID;
 
 export function initDefaultScope(Comment) {
   Comment.disableRemoteMethod('find', true);
@@ -13,6 +14,7 @@ export function initDefaultScope(Comment) {
   Comment.customFind = customFind;
   Comment.customCount = customCount;
   Comment.customFindById = customFindById;
+  Comment.lastCommentsByIds = lastCommentsByIds;
 
   Comment.remoteMethod(
     'customFind',
@@ -55,6 +57,14 @@ export function initDefaultScope(Comment) {
     rest: {after: ERRORS.convertNullToNotFoundError}
   });
 
+  Comment.remoteMethod('lastCommentsByIds', {
+    description: 'Return 3 last comments for each subject id',
+    accessType: 'READ',
+    accepts: {arg: 'ids', type: 'any', description: 'Subject Ids', required: true},
+    returns: {arg: 'data', type: 'Comment', root: true},
+    http: {verb: 'get', path: '/last'}
+  });
+
 
   function customFind(filter) {
     return Comment.scopeActive(filter);
@@ -66,5 +76,33 @@ export function initDefaultScope(Comment) {
 
   function customFindById(id, filter) {
     return Comment.scopeActive.findById(id, filter);
+  }
+
+  function lastCommentsByIds(ids) {
+    let idsArray = [];
+    try {
+      idsArray = JSON.parse(ids);
+    }
+    catch (e) {
+      throw ERRORS.badRequest('Cannot parse ids');
+    }
+
+    if (!(idsArray instanceof Array)) {
+      throw ERRORS.badRequest('Ids should be array');
+    }
+    if (idsArray.length > 100) {
+      throw ERRORS.badRequest('To many ids');
+    }
+    let promises = [];
+    let result = {};
+    idsArray.forEach(id => {
+      let promise = Comment.scopeActive({where: {subjectId: new ObjectID(id)}, limit: 3, order: 'DATE desc'})
+        .then(data => {
+          result[id] = data;
+        });
+      promises.push(promise);
+    });
+    return Promise.all(promises)
+      .then(() => result)
   }
 }
