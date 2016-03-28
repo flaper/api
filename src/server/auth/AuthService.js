@@ -4,7 +4,8 @@ export class AuthService {
   static WebAppLinkWithToken(accessToken) {
     let app = require('../server');
     const WEB_APP_URL = app.get('webApp').url;
-    let redirect = url.parse(WEB_APP_URL, true);
+    let redirectUrl = `${WEB_APP_URL}/callback`;
+    let redirect = url.parse(redirectUrl, true);
 
     // this is needed or query is ignored. See url module docs.
     delete redirect.search;
