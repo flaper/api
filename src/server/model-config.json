@@ -10,6 +10,7 @@
       "../common/models/core/user-settings",
       "../common/models/auth",
       "../common/models/story",
+      "../common/models/story/story-best",
       "../common/models/comment",
       "../common/models/like",
       "../common/models/money/transaction",
@@ -77,6 +78,10 @@
     "public": true
   },
   "Story": {
+    "dataSource": "mongo",
+    "public": true
+  },
+  "StoryBest": {
     "dataSource": "mongo",
     "public": true
   },

@@ -1,13 +1,18 @@
 import {App} from '../../../services/App';
-
 import _ from 'lodash';
-
 
 module.exports = (Account) => {
   Account.commonInit(Account);
   Account.disableAllRemotesExcept(Account);
 
   Account.payment = payment;
+  Account.internalPayment = internalPayment;
+
+  Account.ACCOUNTS = {
+    FUND_VIEWS: 1,
+    FUND_BEST: 100
+  };
+
   Account.getAccountById = getAccountById;
 
   Account.remoteMethod('payment', {
@@ -44,19 +49,21 @@ module.exports = (Account) => {
     let t1 = Transaction.create({fromId, toId, amount, operatorId, type});
     let connector = Account.dataSource.connector;
     let className = Account.sharedClass.name; //just 'Account' actually
+    let fId = fromId.toString();
+    let tId = toId.toString();
     return t1.then(() => {
-        let p1 = connector.collection(className).findOneAndUpdate({id: fromId},
+        let p1 = connector.collection(className).findOneAndUpdate({subjectId: fId},
           {$inc: {amount: -amount}}, {upsert: true});
-        let p2 = connector.collection(className).findOneAndUpdate({id: toId},
+        let p2 = connector.collection(className).findOneAndUpdate({subjectId: tId},
           {$inc: {amount: amount}}, {upsert: true});
         return Promise.all([p1, p2]);
       })
-      .then(() =>  Account.find({id: {inq: [fromId, toId]}}));
+      .then(() =>  Account.find({where: {or: [{subjectId: fId}, {subjectId: tId}]}}));
   }
 
   function getAccountById(id) {
     let amount = null;
-    return Account.findById(id)
+    return Account.findOne({where: {subjectId: id}})
       .then(account => {
         amount = account ? account.amount : 0
       })

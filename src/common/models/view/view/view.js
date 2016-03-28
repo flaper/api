@@ -14,7 +14,7 @@ module.exports = (View) => {
     description: 'Register a view',
     accessType: 'WRITE',
     accepts: [
-      {arg: 'id', type: 'string', description: 'Id', required: true},
+      {arg: 'id', type: 'string', description: 'ID', required: true},
       {arg: 'req', type: 'Object', 'http': {source: 'req'}}
     ],
     returns: {root: true}

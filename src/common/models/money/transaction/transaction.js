@@ -12,6 +12,7 @@ module.exports = (Transaction) => {
     VIEW: 1,
     CHARITY: 2,
     WITHDRAWAL: 3,
-    BUSINESS_PAYMENT: 4
+    BUSINESS_PAYMENT: 4,
+    BEST_STORY: 5
   };
 };

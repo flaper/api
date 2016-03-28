@@ -1,25 +1,19 @@
 {
-  "name": "Account",
+  "name": "StoryBest",
   "base": "CommonModel",
   "idInjection": false,
-  "strict": true,
   "options": {
-    "validateUpsert": true
+    "validateUpsert": false
   },
   "properties": {
-    "subjectId": {
+    "week": {
       "type": "string",
       "required": true
     },
-    "amount": {
+    "place": {
       "type": "number",
       "required": true
-    },
-    "created": false,
-    "updated": false
-  },
-  "validations": [],
-  "relations": {
+    }
   },
   "acls": [
     {
@@ -30,20 +24,22 @@
     {
       "accessType": "READ",
       "principalType": "ROLE",
-      "principalId": "$authenticated",
+      "principalId": "$everyone",
       "permission": "ALLOW"
     },
     {
+      "accessType": "WRITE",
       "principalType": "ROLE",
       "principalId": "super",
-      "permission": "ALLOW",
-      "property": "payment"
+      "permission": "ALLOW"
     }
   ],
+  "methods": {},
   "indexes": {
-    "subjectId_index": {
+    "week_index": {
       "keys": {
-        "subjectId": 1
+        "week": -1,
+        "place": 1
       },
       "options": {
         "unique": true
