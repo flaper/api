@@ -3,7 +3,7 @@
   "version": "0.2.4",
   "main": "dist/server/server.js",
   "scripts": {
-    "prestart": "rm dist -fR && cp src dist -r && ./node_modules/.bin/babel src --out-dir dist",
+    "prestart": "rm dist -fR && cp src dist -r && ./node_modules/.bin/babel src --out-dir dist --ignore test/*",
     "start": "node .",
     "constants": "node_modules/.bin/babel-node src/server/bin/constants.js",
     "fixtures": "node_modules/.bin/babel-node src/server/bin/fixtures.js",
