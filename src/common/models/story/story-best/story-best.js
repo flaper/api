@@ -30,7 +30,8 @@ module.exports = (StoryBest) => {
     if ([1, 2, 3, 4].indexOf(place) === -1) {
       throw ERRORS.badRequest('Place should be from 1 to 4');
     }
-    let day = moment().weekday(-7).format('YYYY MM DD');//previous monday
+    let m = moment.utc().startOf('week').subtract(7, 'days');
+    let day = m.format('YYYY MM DD');
     let data = {id: id, week: day, place: place};
     let MODELS = StoryBest.app.models;
     let Story = MODELS.Story;
