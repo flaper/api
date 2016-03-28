@@ -61,7 +61,7 @@ export function initDefaultScope(Comment) {
     description: 'Return 3 last comments for each subject id',
     accessType: 'READ',
     accepts: {arg: 'ids', type: 'any', description: 'Subject Ids', required: true},
-    returns: {arg: 'data', type: 'Comment', root: true},
+    returns: {root: true},
     http: {verb: 'get', path: '/last'}
   });
 

@@ -14,18 +14,18 @@ describe(`/${COLLECTION_URL}/@sanitize`, function () {
 
   const NEW_COMMENT = {
     id: '1a5000000000000000010001',
-    content: "    test<b> comment</b>",
+    content: '    \'test\'<b> "comment"</b>',
     subjectId: "1a4000000000000000001001"
   };
 
-  it('User - should be sanitized', () => {
+  it('Comment should be sanitized', () => {
     return user1Promise.then(({agent}) => {
       return agent.post(COLLECTION_URL)
         .send(NEW_COMMENT)
         .expect(200)
         .expect((res) => {
           let comment = res.body;
-          "test comment".should.eq(comment.content);
+          '\'test\' "comment"'.should.eq(comment.content);
         })
     })
   });
