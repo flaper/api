@@ -13,7 +13,15 @@ module.exports = (StoryBest) => {
   };
 
 
+  StoryBest.currentWinners = currentWinners;
   StoryBest.addBestStory = addBestStory;
+
+  StoryBest.remoteMethod('currentWinners', {
+    http: {verb: 'get', path: '/'},
+    description: 'Get current winners',
+    accessType: 'READ',
+    returns: {root: true}
+  });
 
   StoryBest.remoteMethod('addBestStory', {
     http: {verb: 'post', path: '/'},
@@ -26,12 +34,16 @@ module.exports = (StoryBest) => {
     returns: {root: true}
   });
 
+  function currentWinners() {
+    let day = lastWeekId();
+    return StoryBest.find({where: {week: day}, order: "place ASC"});
+  }
+
   function addBestStory(id, place) {
     if ([1, 2, 3, 4].indexOf(place) === -1) {
       throw ERRORS.badRequest('Place should be from 1 to 4');
     }
-    let m = moment.utc().startOf('week').subtract(7, 'days');
-    let day = m.format('YYYY MM DD');
+    let day = lastWeekId();
     let data = {id: id, week: day, place: place};
     let MODELS = StoryBest.app.models;
     let Story = MODELS.Story;
@@ -59,4 +71,10 @@ module.exports = (StoryBest) => {
       })
       .then(() => res)
   }
+
+  function lastWeekId() {
+    let m = moment.utc().startOf('week').subtract(7, 'days');
+    return m.format('YYYY-MM-DD');
+  }
+
 };

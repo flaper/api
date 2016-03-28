@@ -29,9 +29,9 @@ describe(`${COLLECTION_URL}`, function () {
     id: STORY2.id
   };
 
-  it('No list all method', () => {
+  it('Get last winners', () => {
     return api.get(COLLECTION_URL)
-      .expect(404)
+      .expect(200)
   });
 
   it('User - deny to add', () => {
