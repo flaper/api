@@ -36,7 +36,7 @@ module.exports = (Story) => {
     shortInline: {},
     views: {},
     viewsRecent: {},
-    lastActive: {newDefault: new Date()},
+    lastActive: {newDefault: (data) => data.created},
     commentsNumber: {newDefault: 0}
   }));
   Story.observe('before save', Sanitize.observer('title', Sanitize.text));

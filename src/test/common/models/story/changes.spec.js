@@ -1,12 +1,9 @@
 import app from '../../../../server/server';
 let should = require('chai').should();
 import STORIES from  '../../../fixtures/story';
-import {Sanitize} from '../../../../../src/libs/sanitize/Sanitize';
-import {propertiesFilter, getOwnPropertiesNamesFilter} from '../../../../common/utils/object';
 
 let Story = app.models.Story;
 let STORY1 = STORIES.test1;
-
 
 describe(`models/story/@changes`, function () {
   let updated;

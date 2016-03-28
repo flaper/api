@@ -23,8 +23,9 @@ export function ignoreProperties(descriptions) {
     if (ctx.instance) {
       if (ctx.isNewInstance) {
         properties.forEach((property) => {
-          if (descriptions[property].newDefault !== undefined) {
-            ctx.instance[property] = descriptions[property].newDefault;
+          let newDefault = descriptions[property].newDefault;
+          if (newDefault !== undefined) {
+            ctx.instance[property] = typeof(newDefault) === 'function' ? newDefault(ctx.instance) : newDefault;
           } else {
             ctx.instance.unsetAttribute(property);
           }

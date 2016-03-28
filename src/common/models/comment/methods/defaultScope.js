@@ -90,6 +90,7 @@ export function initDefaultScope(Comment) {
     if (!(idsArray instanceof Array)) {
       throw ERRORS.badRequest('Ids should be array');
     }
+
     if (idsArray.length > 100) {
       throw ERRORS.badRequest('To many ids');
     }
