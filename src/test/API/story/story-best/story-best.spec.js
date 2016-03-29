@@ -29,9 +29,13 @@ describe(`${COLLECTION_URL}`, function () {
     id: STORY2.id
   };
 
-  it('Get last winners', () => {
+  it('Get current winners', () => {
     return api.get(COLLECTION_URL)
       .expect(200)
+      .expect(res => {
+        let bests = res.body;
+        bests.length.should.eq(0);
+      })
   });
 
   it('User - deny to add', () => {
@@ -79,6 +83,14 @@ describe(`${COLLECTION_URL}`, function () {
       .then(() => Account.getAccountById(STORY1.userId))
       .then(amount => {
         amount.should.eq(moneyBefore + StoryBest.PRIZES[1])
+      })
+      .then(() => {
+        return api.get(COLLECTION_URL)
+          .expect(200)
+          .expect(res => {
+            let bests = res.body;
+            bests.length.should.eq(1);
+          })
       })
   });
 

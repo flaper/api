@@ -1,4 +1,5 @@
 import {ERRORS} from '../../../utils/errors';
+import {App} from '../../../services/App';
 import moment from 'moment';
 
 module.exports = (StoryBest) => {
@@ -50,11 +51,17 @@ module.exports = (StoryBest) => {
     let Account = MODELS.Account;
     let Transaction = MODELS.Transaction;
 
+    //2 weeks period
+    let periodStart = moment.utc().startOf('week').subtract(14, 'days').toDate();
+    let periodEnd = moment.utc().startOf('week').toDate();
     let story = null;
     let res = null;
     return Story.findByIdRequired(id)
       .then((data) => {
         story = data;
+        if (!App.isTestEnv() && (story.created < periodStart || story.created >= periodEnd)) {
+          throw ERRORS.badRequest("Story doesn't fit to 2 weeks period")
+        }
         return StoryBest.findOne({where: {week: day, place: place}})
       })
       .then((best) => {
