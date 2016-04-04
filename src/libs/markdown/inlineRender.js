@@ -40,6 +40,9 @@ marked.setOptions({
 
 export let inlineRender = (value) => {
   //we replace all triple new lines to max 2 lines
-  return marked(value).trim().replace(/\n\s*\n\s*\n/g, '\n\n');
+  return marked(value)
+    .replace(/\n\s*\n\s*\n/g, '\n\n')
+    .replace(/&quot;/g, '\"')
+    .trim();
 };
 
