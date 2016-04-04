@@ -45,6 +45,7 @@
     "passport-google-oauth": "^0.2.0",
     "passport-odnoklassniki": "^0.2.0",
     "passport-vkontakte": "sklyukin/passport-vkontakte",
+    "passport-mail": "^1.0.0",
     "promise-queue": "^2.2.0",
     "sanitize-html": "^1.11.2",
     "striptags": "^2.1.1",

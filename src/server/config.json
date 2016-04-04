@@ -47,6 +47,15 @@
         "friends"
       ]
     },
+    "mail-login": {
+      "provider": "mail",
+      "module": "passport-mail",
+      "clientID": "627301",
+      "clientSecret": "fakeSecret",
+      "callbackURL": "/auth/mail/callback",
+      "authPath": "/auth/mail",
+      "callbackPath": "/auth/mail/callback"
+    },
     "odnoklassniki-login": {
       "provider": "odnoklassniki",
       "module": "passport-odnoklassniki",

@@ -80,6 +80,10 @@ function updateUserWithInfo(user, info) {
     updateField('displayName', 'identity.profile.displayName');
     //actually always should be true
     switch (info.identity.provider) {
+      case 'mail-login':
+        updateField('photo', 'identity.profile._json.pic_50');
+        updateField('photoLarge', 'identity.profile._json.pic_190');
+        break;
       case 'facebook-login':
         user.photo = `http://graph.facebook.com/${identity.externalId}/picture?type=square`;
         user.photoLarge = `http://graph.facebook.com/${identity.externalId}/picture?type=large`;
