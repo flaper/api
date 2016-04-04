@@ -24,7 +24,8 @@ renderer.listitem = (string) => {
 };
 
 renderer.link = (href, title, text) => {
-  return text;
+  let t = text.replace('https://', '').replace('http://', '');
+  return `<a href="${href}">${t}</a>`;
 };
 
 renderer.hr = () => {

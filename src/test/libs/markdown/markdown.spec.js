@@ -179,7 +179,7 @@ describe('/markdown', () => {
     it('Cut sample3', () => {
       let source = require('./data/sample3');
       let text = FlaperMark.shortInline(source);
-      let res = 'Первая версия правил, тестового режима flaper.org. ' +
+      let res = 'Первая версия правил, тестового режима <a href="http://flaper.org">flaper.org</a>. ' +
         'Правки / дополнения приветствуются в комментариях.\n' +
         '<strong>Статьи</strong>\n' +
         ' Статьи должны нести уникальный контент, скопированный текст вредит проекту и не приносит ' +
@@ -191,7 +191,7 @@ describe('/markdown', () => {
       text.should.eq(res);
     });
 
-    it('Cut sample4', () => {
+    it('Cut sample4 (multiple new lines)', () => {
       let source = require('./data/sample4');
       let text = FlaperMark.shortInline(source);
       let res = 'Во времена Никиты Сергеевича "Хрущева", с начала 1953 года - наша страна чем то начала меняться. ' +
@@ -199,6 +199,14 @@ describe('/markdown', () => {
         'шагом изменений. Из черно белого фотодела выросла и цветная фотография...' +
         '\n' +
         'Когда появились цветные картинки';
+      text.should.eq(res);
+    });
+
+    it('Cut sample5 (links)', () => {
+      let source = require('./data/sample5');
+      let text = FlaperMark.shortInline(source);
+      let res = 'ссылка <a href="http://flaper.org">flaper.org</a> и далее\n' +
+          'идет разбитый тег 5&lt;a  something';
       text.should.eq(res);
     });
   })

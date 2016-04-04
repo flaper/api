@@ -1,0 +1,3 @@
+module.exports =
+`ссылка http://flaper.org и далее
+идет разбитый тег 5<a  something`

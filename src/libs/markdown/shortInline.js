@@ -82,8 +82,9 @@ export function cutInlineHtml(html, limit) {
         i = j;
         //end of space occurred
       } else if (cj === '<') {
+        //seems open or closed tag occurred
+        //symbol < escaped currently as 5&lt; but can be changed in future
 
-        //open tag occurred
         let wordLength = j - i;
         if (wordLength > 0) {
           //so let's add word before tag
@@ -96,26 +97,13 @@ export function cutInlineHtml(html, limit) {
           }
         }
 
-        let y = j;
-        let foundSignMore = false;
-        while ((y < len - 1)) {
-          y++;
-          let cY = html[y];
-          if (cY === '>') {
-            foundSignMore = true;
-            break;
-          }
-          if (isWhite(cY)) {
-            break;
-          }
-        }
-
-        if (!foundSignMore) {
-          wordLength = y - j;
+        let tag = parseTag(j);
+        if (!tag.tag) {
+          wordLength = tag.end - j;
           if (wordLength > 0) {
-            //so let's add word before tag
+            //so let's this as just word
             if (resultLength + wordLength <= limit) {
-              res += html.substring(i, j);//html[j] not included
+              res += html.substring(j, tag.end);//html[tag.end] not included
               resultLength += wordLength;
             } else {
               //so we reached limit
@@ -123,15 +111,10 @@ export function cutInlineHtml(html, limit) {
             }
           }
 
-          //let's add space and '<' if that was last character
-          if (resultLength + 1 <= limit) {
-            res += html[y];
-            resultLength++;
-          }
-          j = y + 1;
+          j = tag.end;
           i = j;
         } else {
-          i = y + 1;
+          i = tag.end;
           //so that is html tag!!
           let isClosingTag = (html[j + 1]) === '\/';
           if (isClosingTag) {
@@ -139,11 +122,17 @@ export function cutInlineHtml(html, limit) {
             return res;
           } else {
             //so it is open tag
-            let tag = html.substring(j, y + 1);
+            let tagName = tag.tag;
             //res += tag + takeNext(depth + 1) +tag;
             let content = takeNext(depth + 1);
             if (content) {
-              res += tag + content + tag.replace(/^</, '</');
+              switch (tagName) {
+                case 'a':
+                  res += `<${tagName} href="${tag.href}">${content}</${tagName}>`;
+                  break;
+                default:
+                  res += `<${tagName}>${content}</${tagName}>`;
+              }
             }
             j = i;
           }
@@ -167,5 +156,73 @@ export function cutInlineHtml(html, limit) {
     }
     return res;
   }
+
+  //start eq to "<"
+  function parseTag(start) {
+    let foundSignMore = false;
+    let y = start;
+
+    let cY = null;
+    while ((y < len - 1)) {
+      y++;
+      cY = html[y];
+      if (cY >= 'a' && cY <= 'z' || cY === '\/') {
+        //ok
+      } else if (cY === ' ') {
+        break;
+      } else if (cY === '>') {
+        foundSignMore = true;
+        break;
+      } else {
+        return {
+          tag: false,
+          end: y //not including, that is actually new start
+        };
+      }
+    }
+
+    let tagName = html.substring(start + 1, y);
+    if (foundSignMore) {
+      return {
+        tag: tagName,
+        end: y + 1
+      }
+    }
+
+    if (tagName !== 'a' || y === len - 1) {
+      //we support attributes only for <a> tag
+      return {
+        tag: false,
+        end: y + 1
+      }
+    }
+
+    while ((y < len - 1)) {
+      y++;
+      cY = html[y];
+      if ('<\n\t'.indexOf(cY) > -1) {
+        return {
+          tag: false,
+          end: y //not including, that is actually new start
+        };
+      }
+      if (cY === '>') {
+        let hrefMatch = /<a [^>]*href="([^>"]+)"/;
+        let matches = html.substring(start, y).match(hrefMatch);
+        let href = matches ? matches[1] : '';
+        return {
+          tag: tagName,
+          end: y + 1,
+          href: href
+        }
+      }
+    }
+
+    return {
+      tag: false,
+      end: y
+    }
+  }
+
 }
 
