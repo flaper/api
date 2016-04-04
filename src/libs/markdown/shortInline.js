@@ -5,6 +5,7 @@ const SYMBOLS_PER_LINE = 120;//estimation to consider one line length
 
 export function shortInline(value, linesNumber = 4) {
   let inline = inlineRender(value);
+  inline = inline.replace(/\n\s*\n/g, '\n');
   let length = SYMBOLS_PER_LINE * linesNumber;
 
   let res = '';
