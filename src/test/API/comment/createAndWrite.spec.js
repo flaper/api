@@ -15,7 +15,7 @@ describe(`/${COLLECTION_URL}/POST&PUT`, function () {
 
   const NEW_COMMENT = {
     id: '1a5000000000000000010001',
-    content: "test comment",
+    content: "test **comment**",
     subjectId: "1a4000000000000000001001"
   };
 
@@ -44,7 +44,7 @@ describe(`/${COLLECTION_URL}/POST&PUT`, function () {
   it('User - allow to add', () => {
     let created = 0;
     let commentsNumber = 0;
-    Story.findByIdRequired(NEW_COMMENT.subjectId)
+    return Story.findByIdRequired(NEW_COMMENT.subjectId)
       .then(story => commentsNumber = story.commentsNumber)
       .then(() => {
         return user1Promise.then(({agent}) => {
@@ -56,6 +56,8 @@ describe(`/${COLLECTION_URL}/POST&PUT`, function () {
               user1.id.should.equal(comment.userId);
               NEW_COMMENT.subjectId.should.eq(comment.subjectId);
               'story'.should.eq(comment.subjectType);
+              comment.content.should.eq(NEW_COMMENT.content);
+              comment.contentHTML.should.eq('test <strong>comment</strong>');
               Comment.STATUS.ACTIVE.should.equal(comment.status);
               created = new Date(comment.created);
             })
@@ -78,8 +80,6 @@ describe(`/${COLLECTION_URL}/POST&PUT`, function () {
 
   after(()=> {
     return Comment.deleteById(NEW_COMMENT.id)
-      .then(() => {
-        return Comment.updateSubject('Story', NEW_COMMENT.subjectId)
-      })
+      .then(() => Comment.updateSubject('Story', NEW_COMMENT.subjectId))
   });
 });

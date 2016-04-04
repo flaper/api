@@ -18,6 +18,12 @@
     "content": {
       "type": "string",
       "required": true
+    },
+    "contentHTML": {
+      "type": "string"
+    },
+    "shortInline": {
+      "type": "string"
     }
   },
   "validations": [],

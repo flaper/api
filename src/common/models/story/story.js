@@ -44,9 +44,10 @@ module.exports = (Story) => {
   Story.observe('before save', Sanitize.alphaMinLengthObserver('content', Story.MIN_CONTENT_LENGTH));
   Story.observe('before save', Sanitize.observer('tags', tagSanitize));
 
-  let sanitizeContent = Sanitize.observer('content', Sanitize.html);
 
   function contentObserver(ctx) {
+    let sanitizeContent = Sanitize.observer('content', Sanitize.html);
+
     return sanitizeContent(ctx)
       .then((value) => {
         if (value) {

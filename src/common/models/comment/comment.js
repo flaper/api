@@ -4,7 +4,8 @@ import {Sanitize} from '../../../libs/sanitize/Sanitize';
 import {initDefaultScope} from './methods/defaultScope';
 import {initCustomDelete} from './methods/customDelete';
 import {initSyncSubject} from './methods/syncSubject';
-import {ignoreProperties} from '../../behaviors/propertiesHelper'
+import {ignoreProperties, ignoreUpdatedIfNoChanges, setProperty} from '../../behaviors/propertiesHelper'
+import {FlaperMark} from '../../../libs/markdown/markdown'
 import {ERRORS} from '../../utils/errors';
 
 import _ from 'lodash';
@@ -25,14 +26,32 @@ module.exports = (Comment) => {
   Comment.disableRemoteMethod('__get__subject', false);
 
   Comment.disableRemoteMethod('__get__user', false);
+  Comment.observe('before save', ignoreUpdatedIfNoChanges(['content']));
   Comment.observe('before save', setCurrentUserId);
   Comment.observe('before save', subjectObserver);
+
   Comment.observe('before save', ignoreProperties({
     status: {newDefault: Comment.STATUS.ACTIVE},
-    subjectType: {newDefault: 'story'}
+    subjectType: {newDefault: 'story'},
+    contentHTML: {},
+    shortInline: {}
   }));
-  Comment.observe('before save', Sanitize.observer('content', Sanitize.text));
+  Comment.observe('before save', contentObserver);
 
+  function contentObserver(ctx) {
+    let sanitizeContent = Sanitize.observer('content', Sanitize.html);
+
+    return sanitizeContent(ctx)
+      .then((value) => {
+        if (value) {
+          let html = FlaperMark.toInline(value);
+          let shortInline = FlaperMark.shortInline(value);
+
+          setProperty(ctx, 'contentHTML', html);
+          setProperty(ctx, 'shortInline', shortInline);
+        }
+      })
+  }
 
   initDefaultScope(Comment);
   initCustomDelete(Comment);
