@@ -70,11 +70,23 @@ describe(`/${COLLECTION_URL}/POST&PUT`, function () {
       })
   });
 
-  it('User - update not exist', () => {
-    return user1Promise.then(({agent}) => {
+  it('User (strange) - deny update', () => {
+    return user2Promise.then(({agent}) => {
       return agent.put(`${COLLECTION_URL}/${NEW_COMMENT.id}`)
         .send({})
-        .expect(404)
+        .expect(401)
+    })
+  });
+
+  it('User (owner) - allow update', () => {
+    return user1Promise.then(({agent}) => {
+      return agent.put(`${COLLECTION_URL}/${NEW_COMMENT.id}`)
+        .send({content: '*new text*'})
+        .expect(200)
+        .expect(res => {
+          let comment = res.body;
+          comment.contentHTML.should.eq('<em>new text</em>')
+        })
     })
   });
 

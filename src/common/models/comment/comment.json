@@ -62,6 +62,12 @@
       "permission": "ALLOW"
     },
     {
+      "accessType": "WRITE",
+      "principalType": "ROLE",
+      "principalId": "super",
+      "permission": "ALLOW"
+    },
+    {
       "principalType": "ROLE",
       "principalId": "admin",
       "permission": "ALLOW",
