@@ -53,8 +53,8 @@ describe('/markdown', () => {
       let text = FlaperMark.toInline(source);
       let result = '<strong>Header2</strong>\n' +
         '1p One line\n' +
-        '1p Second line\n' +
-        'New paragraph\n' + //so actually paragraph was collapsed
+        '1p Second line\n\n' +
+        'New paragraph\n' +
         '<strong>Header3</strong>';
       text.should.eq(result);
     });
@@ -207,6 +207,14 @@ describe('/markdown', () => {
       let text = FlaperMark.shortInline(source);
       let res = 'ссылка <a href="http://flaper.org">flaper.org</a> и далее\n' +
           'идет разбитый тег 5&lt;a  something';
+      text.should.eq(res);
+    });
+
+    it('Cut sample6 (two paragraphs)', () => {
+      let source = require('./data/sample6');
+      let text = FlaperMark.toInline(source);
+      let res = 'два абзаца\n\n' +
+        'второй абзац';
       text.should.eq(res);
     });
   })

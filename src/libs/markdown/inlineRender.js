@@ -12,7 +12,7 @@ renderer.image = (href, title, text) => {
 };
 
 renderer.paragraph = (text) => {
-  return text + '\n';
+  return '<br>' + text + '\n' + '<br>';
 };
 
 renderer.list = (body, ordered) => {
@@ -42,6 +42,8 @@ marked.setOptions({
 export let inlineRender = (value) => {
   //we replace all triple new lines to max 2 lines
   return marked(value)
+    .replace(/(<br>){2,}/g,'\n') //prevent paragraph collapsing
+    .replace(/<br>/g,'')
     .replace(/\n\s*\n\s*\n/g, '\n\n')
     .replace(/&quot;/g, '\"')
     .trim();
