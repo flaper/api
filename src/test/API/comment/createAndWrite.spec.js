@@ -90,6 +90,15 @@ describe(`/${COLLECTION_URL}/POST&PUT`, function () {
     })
   });
 
+  it('User - ignore id update', () => {
+    let NEW_ID = '1a5000000000000000010002';
+    return user1Promise.then(({agent}) => {
+      return agent.put(`${COLLECTION_URL}/${NEW_COMMENT.id}`)
+        .send({id: NEW_ID})
+        .expect(400)
+    })
+  });
+
   after(()=> {
     return Comment.deleteById(NEW_COMMENT.id)
       .then(() => Comment.updateSubject('Story', NEW_COMMENT.subjectId))
