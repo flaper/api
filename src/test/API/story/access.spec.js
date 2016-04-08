@@ -11,7 +11,7 @@ let User = app.models.user;
 const COLLECTION_URL = 'stories';
 const STORY1 = STORIES.test1;
 
-describe(`/${COLLECTION_URL}/@access`, function () {
+describe(`/${COLLECTION_URL}`, function () {
   updateTimeouts(this);
 
   describe('GET/HEAD', ()=> {
@@ -157,10 +157,7 @@ describe(`/${COLLECTION_URL}/@access`, function () {
       });
     });
 
-    after(()=> {
-      return Story.deleteById(NEW_STORY.id)
-        .then(() => Story.updateUser(user1.id))
-    });
+    after(()=> Story.iDeleteById(NEW_STORY.id));
   });
 
   describe('DELETE', () => {

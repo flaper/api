@@ -56,8 +56,5 @@ describe(`/${COLLECTION_URL}/@tags`, function () {
     })
   });
 
-  after(()=> {
-    return Story.deleteById(NEW_STORY.id)
-      .then(() => Story.updateUser(user1.id))
-  });
+  after(()=> Story.iDeleteById(NEW_STORY.id));
 });

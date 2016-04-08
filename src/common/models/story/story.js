@@ -6,6 +6,7 @@ import {FlaperMark} from '../../../libs/markdown/markdown'
 import {initStatusActions} from './status/status';
 import {initGet} from './get/get';
 import {initSyncUser} from './methods/syncUser';
+import {initDelete} from './methods/internalDelete';
 import _ from 'lodash';
 
 module.exports = (Story) => {
@@ -44,7 +45,11 @@ module.exports = (Story) => {
   Story.observe('before save', contentObserver);
   Story.observe('before save', Sanitize.alphaMinLengthObserver('content', Story.MIN_CONTENT_LENGTH));
   Story.observe('before save', Sanitize.observer('tags', tagSanitize));
+
   initSyncUser(Story);
+  initStatusActions(Story);
+  initGet(Story);
+  initDelete(Story);
 
 
   function contentObserver(ctx) {
@@ -70,6 +75,4 @@ module.exports = (Story) => {
     return a.filter(a => a)
   }
 
-  initStatusActions(Story);
-  initGet(Story);
 };

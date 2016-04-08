@@ -96,7 +96,6 @@ module.exports = (Like) => {
   }
 
   function actionInternalCreate(subjectId, userId) {
-    console.log('going to create');
     let IdToType = Like.app.models.IdToType;
     let subjectType;
     return IdToType.findByIdRequired(subjectId)
@@ -116,7 +115,6 @@ module.exports = (Like) => {
       .then(() => Like.updateSubject(subjectType, subjectId))
       .then((count) => {
         if (subjectType === 'Story') {
-          console.log('going to sync', subjectId);
           Like.syncUserFromStory(subjectId);
         }
         return {

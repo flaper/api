@@ -55,6 +55,6 @@ describe(`/${COLLECTION_URL}/:id/status/activate`, function () {
       .then(() => User.findByIdRequired(user1.id))
       .then(user => user.storiesNumber.should.eq(storiesNumberBefore + 1))
       .then(() => returnStatus(STORY_DENIED1.id, Story.STATUS.DENIED))
-      .then(() => Story.updateUser(STORY1.userId))
+      .then(() => Story.syncUserInternal(STORY1.userId))
   });
 });

@@ -1,9 +1,12 @@
 export function initSyncUser(Story) {
   Story.observe('after save', syncUser);
 
-  Story.updateUser = updateUser;
+  Story.syncUserInternal = syncUserInternal;
 
-  function updateUser(userId) {
+  function syncUserInternal(userId) {
+    if (!userId) {
+      return Promise.resolve();
+    }
     let User = Story.app.models.user;
     let query = {userId: userId, status: Story.STATUS.ACTIVE};
     let count;
@@ -19,6 +22,6 @@ export function initSyncUser(Story) {
       return Promise.resolve();
     }
     //for new story we sync user
-    return Story.updateUser(ctx.instance.userId);
+    return Story.syncUserInternal(ctx.instance.userId);
   }
 }

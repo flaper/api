@@ -83,6 +83,7 @@ describe(`/${COLLECTION_URL}/create`, function () {
       })
       .then(() => Story.findById(STORY_WITHOUT_LIKES_USER3.id))
       .then(story => story.numberOfLikes.should.eq(2))
+      .then(() => new Promise((resolve, reject) => setTimeout(resolve, 100)))
       .then(() => User.findByIdRequired(STORY_WITHOUT_LIKES_USER3.userId))
       .then((user) => user.likesNumber.should.eq(userLikesNumber + 2))
       .then(() => Like.deleteAll({subjectId: STORY_WITHOUT_LIKES_USER3.id}))

@@ -18,5 +18,5 @@ describe(`models/story/@lastActive`, function () {
       })
   });
 
-  after(()=> Story.deleteById(NEW_STORY.id));
+  after(()=> Story.iDeleteById(NEW_STORY.id));
 });
