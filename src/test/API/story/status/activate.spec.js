@@ -7,6 +7,7 @@ import {Sanitize} from '../../../../../src/libs/sanitize/Sanitize';
 import {returnStatus} from './helper';
 
 let Story = app.models.Story;
+let User = app.models.User;
 const STORY1 = STORIES.test1;
 const STORY_DELETED1 = STORIES.deleted1;
 const STORY_DENIED1 = STORIES.denied1;
@@ -38,14 +39,22 @@ describe(`/${COLLECTION_URL}/:id/status/activate`, function () {
   });
 
   it('Admin can activate denied story', () => {
-    return adminPromise.then(({agent}) => {
-        return agent.put(`${COLLECTION_URL}/${STORY_DENIED1.id}/status/activate`)
-          .expect(200)
-          .expect((res) => {
-            let story = res.body;
-            story.status.should.be.eq(Story.STATUS.ACTIVE);
-          })
+    let storiesNumberBefore;
+    return User.findByIdRequired(user1.id)
+      .then(user => storiesNumberBefore = user.storiesNumber)
+      .then(() => {
+        return adminPromise.then(({agent}) => {
+          return agent.put(`${COLLECTION_URL}/${STORY_DENIED1.id}/status/activate`)
+            .expect(200)
+            .expect((res) => {
+              let story = res.body;
+              story.status.should.be.eq(Story.STATUS.ACTIVE);
+            })
+        })
       })
-      .then(() => returnStatus(STORY_DENIED1.id, Story.STATUS.DENIED));
+      .then(() => User.findByIdRequired(user1.id))
+      .then(user => user.storiesNumber.should.eq(storiesNumberBefore + 1))
+      .then(() => returnStatus(STORY_DENIED1.id, Story.STATUS.DENIED))
+      .then(() => Story.updateUser(STORY1.userId))
   });
 });

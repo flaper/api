@@ -44,6 +44,10 @@ describe(`/${COLLECTION_URL}/:id/status/active`, function () {
           })
       })
     });
-    after(()=> Story.deleteById(NEW_STORY.id));
+
+    after(()=> {
+      return Story.deleteById(NEW_STORY.id)
+        .then(() => Story.updateUser(user1.id))
+    });
   });
 });

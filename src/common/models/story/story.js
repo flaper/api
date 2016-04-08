@@ -5,6 +5,7 @@ import {Sanitize} from '../../../libs/sanitize/Sanitize';
 import {FlaperMark} from '../../../libs/markdown/markdown'
 import {initStatusActions} from './status/status';
 import {initGet} from './get/get';
+import {initSyncUser} from './methods/syncUser';
 import _ from 'lodash';
 
 module.exports = (Story) => {
@@ -43,6 +44,7 @@ module.exports = (Story) => {
   Story.observe('before save', contentObserver);
   Story.observe('before save', Sanitize.alphaMinLengthObserver('content', Story.MIN_CONTENT_LENGTH));
   Story.observe('before save', Sanitize.observer('tags', tagSanitize));
+  initSyncUser(Story);
 
 
   function contentObserver(ctx) {

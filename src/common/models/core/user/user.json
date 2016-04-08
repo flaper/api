@@ -7,20 +7,28 @@
     "validateUpsert": true
   },
   "properties": {
+    "displayName": {
+      "type": "string"
+    },
     "photo": {
       "type": "string"
     },
     "photoLarge": {
       "type": "string"
     },
+    "storiesNumber": {
+      "type": "number",
+      "default": 0
+    },
+    "likesNumber": {
+      "type": "number",
+      "default": 0
+    },
     "created": {
       "type": "date"
     },
     "updated": {
       "type": "date"
-    },
-    "displayName": {
-      "type": "string"
     }
   },
   "hidden": [

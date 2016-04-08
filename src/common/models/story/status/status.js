@@ -44,15 +44,21 @@ export function initStatusActions(Story) {
 
   function actionDeny(id) {
     //admin only can call this
+    let story;
     return Story.findByIdRequired(id)
-      .then((story) => {
+      .then((s) => {
+        story = s;
         if (story.status === Story.STATUS.ACTIVE) {
           story.status = Story.STATUS.DENIED;
-          return story.save({skipIgnore: {status: true}});
+          return story.save({skipIgnore: {status: true}})
         } else {
           throw ERRORS.forbidden('Only active stories can be denied');
         }
-      });
+      })
+      .then((response) => {
+        Story.updateUser(story.userId);
+        return response;
+      })
   }
 
   //to improve - should be no ACL check in action
@@ -70,10 +76,14 @@ export function initStatusActions(Story) {
         if ((isAdmin && story.status === Story.STATUS.DENIED) ||
           (!isAdmin && ([Story.STATUS.ACTIVE, Story.STATUS.DENIED].indexOf(story.status) > -1) )) {
           story.status = Story.STATUS.DELETED;
-          return story.save({skipIgnore: {status: true}});
+          return story.save({skipIgnore: {status: true}})
         } else {
           throw ERRORS.forbidden();
         }
+      })
+      .then((response) => {
+        Story.updateUser(story.userId);
+        return response;
       })
   }
 
@@ -92,6 +102,10 @@ export function initStatusActions(Story) {
       .then(() => {
         story.status = Story.STATUS.ACTIVE;
         return story.save({skipIgnore: {status: true}});
+      })
+      .then((response) => {
+        Story.updateUser(story.userId);
+        return response;
       })
   }
 

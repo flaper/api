@@ -1,4 +1,4 @@
-import {user1Promise} from '../../helpers/api';
+import {user1, user1Promise} from '../../helpers/api';
 import {updateTimeouts} from '../timeout';
 import app from '../../../server/server';
 let should = require('chai').should();
@@ -61,5 +61,8 @@ describe(`/${COLLECTION_URL}/@sanitize`, function () {
     })
   });
 
-  after(()=> Story.deleteById(NEW_STORY.id));
+  after(()=> {
+    return Story.deleteById(NEW_STORY.id)
+      .then(() => Story.updateUser(user1.id))
+  });
 });

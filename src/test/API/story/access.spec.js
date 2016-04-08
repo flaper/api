@@ -6,6 +6,7 @@ import STORIES from  '../../fixtures/story';
 import {Sanitize} from '../../../../src/libs/sanitize/Sanitize';
 
 let Story = app.models.Story;
+let User = app.models.user;
 
 const COLLECTION_URL = 'stories';
 const STORY1 = STORIES.test1;
@@ -78,17 +79,25 @@ describe(`/${COLLECTION_URL}/@access`, function () {
     });
 
     it('User - allow to add', () => {
-      return user1Promise.then(({agent}) => {
-        return agent.post(COLLECTION_URL)
-          .send(NEW_STORY)
-          .expect(200)
-          .expect((res) => {
-            let story = res.body;
-            user1.id.should.equal(story.userId);
-            Story.STATUS.ACTIVE.should.equal(story.status);
+      let storiesNumberBefore;
+      return User.findByIdRequired(user1.id)
+        .then(user => storiesNumberBefore = user.storiesNumber)
+        .then(() => {
+          return user1Promise.then(({agent}) => {
+            return agent.post(COLLECTION_URL)
+              .send(NEW_STORY)
+              .expect(200)
+              .expect((res) => {
+                let story = res.body;
+                user1.id.should.equal(story.userId);
+                Story.STATUS.ACTIVE.should.equal(story.status);
+              })
           })
-      })
-    });
+        })
+        .then(() => User.findByIdRequired(user1.id))
+        .then(user => user.storiesNumber.should.eq(storiesNumberBefore + 1))
+    })
+    ;
 
     it('User - deny to foreign update', () => {
       return user2Promise.then(({agent}) => {
@@ -148,7 +157,10 @@ describe(`/${COLLECTION_URL}/@access`, function () {
       });
     });
 
-    after(()=> Story.deleteById(NEW_STORY.id));
+    after(()=> {
+      return Story.deleteById(NEW_STORY.id)
+        .then(() => Story.updateUser(user1.id))
+    });
   });
 
   describe('DELETE', () => {

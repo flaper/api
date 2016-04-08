@@ -1,4 +1,4 @@
-import {user1Promise} from '../../helpers/api';
+import {user1, user1Promise} from '../../helpers/api';
 import {updateTimeouts} from '../timeout';
 import app from '../../../server/server';
 let should = require('chai').should();
@@ -43,10 +43,10 @@ describe(`/${COLLECTION_URL}/@tags`, function () {
     })
   });
 
-  it('Update - skip empty tags', ()=>{
+  it('Update - skip empty tags', ()=> {
     return user1Promise.then(({agent}) => {
       return agent.put(`${COLLECTION_URL}/${NEW_STORY.id}`)
-        .send({tags: ['','  --//', ' н о р м']})
+        .send({tags: ['', '  --//', ' н о р м']})
         .expect(200)
         .expect((res) => {
           let story = res.body;
@@ -56,5 +56,8 @@ describe(`/${COLLECTION_URL}/@tags`, function () {
     })
   });
 
-  after(()=> Story.deleteById(NEW_STORY.id));
+  after(()=> {
+    return Story.deleteById(NEW_STORY.id)
+      .then(() => Story.updateUser(user1.id))
+  });
 });

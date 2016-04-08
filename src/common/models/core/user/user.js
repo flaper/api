@@ -5,6 +5,7 @@ import {initRoles} from './roles/roles'
 import {initPhotos} from './photo/photo'
 import {initSettings} from './settings/settings'
 import {initIdentities} from './identities/identities'
+import {ignoreProperties} from '../../../behaviors/propertiesHelper'
 
 module.exports = (User) => {
   User.observe('before save', timestampBehavior);
@@ -31,6 +32,11 @@ module.exports = (User) => {
   User.disableRemoteMethod('__findById__identities', false);
   User.disableRemoteMethod('__get__identities', false);
   User.disableRemoteMethod('__updateById__identities', false);
+
+  User.observe('before save', ignoreProperties({
+    commentsNumber: {newDefault: 0},
+    likesNumber: {newDefault: 0}
+  }));
 
   initRoles(User);
   initPhotos(User);
