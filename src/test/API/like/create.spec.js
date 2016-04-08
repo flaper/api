@@ -10,6 +10,7 @@ import COMMENTS from  '../../fixtures/comment';
 let COMMENT_WITHOUT_LIKES_USER3 = COMMENTS.withoutLikesUser3;
 
 let Like = app.models.Like;
+let User = app.models.User;
 let Story = app.models.Story;
 let Comment = app.models.Comment;
 
@@ -53,8 +54,11 @@ describe(`/${COLLECTION_URL}/create`, function () {
   });
 
   it('Users - allow to create 2 likes for a story, check numberOfLikes', () => {
+    let userLikesNumber;
     return Story.findById(STORY_WITHOUT_LIKES_USER3.id)
       .then(story => story.numberOfLikes.should.eq(0))
+      .then(() => User.findByIdRequired(STORY_WITHOUT_LIKES_USER3.userId))
+      .then((user) => userLikesNumber = user.likesNumber)
       .then(() => {
         return user1Promise.then(({agent}) => {
           return agent.post(`${COLLECTION_URL}/${STORY_WITHOUT_LIKES_USER3.id}`)
@@ -79,8 +83,11 @@ describe(`/${COLLECTION_URL}/create`, function () {
       })
       .then(() => Story.findById(STORY_WITHOUT_LIKES_USER3.id))
       .then(story => story.numberOfLikes.should.eq(2))
+      .then(() => User.findByIdRequired(STORY_WITHOUT_LIKES_USER3.userId))
+      .then((user) => user.likesNumber.should.eq(userLikesNumber + 2))
       .then(() => Like.deleteAll({subjectId: STORY_WITHOUT_LIKES_USER3.id}))
       .then(() => Like.updateSubject('Story', STORY_WITHOUT_LIKES_USER3.id))
+      .then(() => Like.syncUser(STORY_WITHOUT_LIKES_USER3.userId))
       .then(() => Story.findById(STORY_WITHOUT_LIKES_USER3.id))
       .then(story => story.numberOfLikes.should.eq(0))
   });

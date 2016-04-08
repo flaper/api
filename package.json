@@ -1,6 +1,6 @@
 {
   "name": "FlaperAPI",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "main": "dist/server/server.js",
   "scripts": {
     "prestart": "rm dist -fR && rsync -av --exclude test src/* dist  && ./node_modules/.bin/babel src --out-dir dist --ignore test/*",
@@ -59,6 +59,7 @@
     "jshint": "^2.5.6",
     "mocha": "^2.3.3",
     "mochawesome": "^1.2.1",
+    "sinon": "^1.17.3",
     "superagent": "^1.4.0",
     "superagent-defaults": "^0.1.13",
     "supertest": "^1.1.0"

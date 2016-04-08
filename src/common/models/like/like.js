@@ -2,21 +2,19 @@ import {App} from '../../services/App';
 import {ignoreProperties} from '../../behaviors/propertiesHelper'
 import {ERRORS} from '../../utils/errors';
 import {propertiesFilter} from '../../utils/object';
+import {initSyncUser} from './methods/syncUser';
 
 import _ from 'lodash';
-
 
 module.exports = (Like) => {
   const ALLOWED_MODELS = ['Story', 'Comment'];
   Like.commonInit(Like);
+  Like.disableAllRemotesExcept(Like, ['count', 'find']);
 
-  Like.disableRemoteMethod('updateAttributes', false);
   Like.disableRemoteMethod('__get__subject', false);
   Like.disableRemoteMethod('__get__user', false);
-  Like.disableRemoteMethod('exists', true);
-  Like.disableRemoteMethod('findById', true);
-  Like.disableRemoteMethod('deleteById', true);
-  Like.disableRemoteMethod('create', true);
+
+  initSyncUser(Like);
 
   Like.RETURN_STATUS = {
     CREATED: 'created',
@@ -98,6 +96,7 @@ module.exports = (Like) => {
   }
 
   function actionInternalCreate(subjectId, userId) {
+    console.log('going to create');
     let IdToType = Like.app.models.IdToType;
     let subjectType;
     return IdToType.findByIdRequired(subjectId)
@@ -116,6 +115,10 @@ module.exports = (Like) => {
       .then(() => Like.create({subjectId, userId, subjectType}))
       .then(() => Like.updateSubject(subjectType, subjectId))
       .then((count) => {
+        if (subjectType === 'Story') {
+          console.log('going to sync', subjectId);
+          Like.syncUserFromStory(subjectId);
+        }
         return {
           status: Like.RETURN_STATUS.CREATED,
           count: count
@@ -148,6 +151,12 @@ module.exports = (Like) => {
         return Like.updateSubject(subjectType, subjectId);
       })
       .then((count) => {
+        IdToType.findByIdRequired(subjectId)
+          .then(idToType => {
+            if (idToType.type === 'Story') {
+              Like.syncUserFromStory(subjectId);
+            }
+          });
         return {
           status: Like.RETURN_STATUS.DELETED,
           count: count

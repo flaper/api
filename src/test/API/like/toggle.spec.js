@@ -8,6 +8,7 @@ let STORY_WITHOUT_LIKES_USER3 = STORIES.withoutLikesUser3;
 
 let Like = app.models.Like;
 let Story = app.models.Story;
+let User = app.models.user;
 
 const COLLECTION_URL = 'likes';
 
@@ -52,15 +53,24 @@ describe(`/${COLLECTION_URL}/toggle`, function () {
       })
     }
 
+    let userLikesNumber;
     return Story.findById(STORY_WITHOUT_LIKES_USER3.id)
       .then(story => story.numberOfLikes.should.eq(0))
+      .then(() => User.findByIdRequired(STORY_WITHOUT_LIKES_USER3.userId))
+      .then((user) => userLikesNumber = user.likesNumber)
       .then(() => toggleLike(user1Promise, 1, Like.RETURN_STATUS.CREATED))
       .then(() => toggleLike(user2Promise, 2, Like.RETURN_STATUS.CREATED))
       .then(() => Story.findById(STORY_WITHOUT_LIKES_USER3.id))
       .then(story => story.numberOfLikes.should.eq(2))
+      .then(() => new Promise((resolve, reject) => setTimeout(resolve, 100)))// to wait async syncUser
+      .then(() => User.findById(STORY_WITHOUT_LIKES_USER3.userId))
+      .then((user) => user.likesNumber.should.eq(userLikesNumber + 2))
       .then(() => toggleLike(user1Promise, 1, Like.RETURN_STATUS.DELETED))
       .then(() => toggleLike(user2Promise, 0, Like.RETURN_STATUS.DELETED))
       .then(() => Story.findById(STORY_WITHOUT_LIKES_USER3.id))
       .then(story => story.numberOfLikes.should.eq(0))
+      .then(() => new Promise((resolve, reject) => setTimeout(resolve, 100)))
+      .then(() => User.findById(STORY_WITHOUT_LIKES_USER3.userId))
+      .then((user) => user.likesNumber.should.eq(userLikesNumber))
   });
 });
