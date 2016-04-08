@@ -43,7 +43,7 @@ describe(`/${COLLECTION_URL}/:id/status/delete`, function () {
         .then(() => User.findByIdRequired(user1.id))
         .then(user => user.storiesNumber.should.eq(storiesNumberBefore - 1))
         .then(() => returnStatus(STORY1.id, Story.STATUS.ACTIVE))
-        .then(() => Story.syncUserInternal(STORY1.userId))
+        .then(() => Story.iSyncUser(STORY1.userId))
     });
 
     it('User can delete his denied story', ()=> {

@@ -46,7 +46,7 @@ describe(`/${COLLECTION_URL}/DELETE`, function () {
       }).then(() =>  Story.findByIdRequired(COMMENT1.subjectId))
       .then(story => story.commentsNumber.should.eq(oldStory.commentsNumber - 1))
       .then(() => returnProperties(Comment, COMMENT1.id, {status: Comment.STATUS.ACTIVE}))
-      .then(() => Comment.updateSubject('Story', COMMENT1.subjectId))
+      .then(() => Comment.iSyncSubject('Story', COMMENT1.subjectId))
   });
 
   it('User - deny to delete already deleted comment', () => {
@@ -66,7 +66,7 @@ describe(`/${COLLECTION_URL}/DELETE`, function () {
           })
       })
       .then(() => returnProperties(Comment, COMMENT1.id, {status: Comment.STATUS.ACTIVE}))
-      .then(() => Comment.updateSubject('Story', COMMENT1.subjectId))
+      .then(() => Comment.iSyncSubject('Story', COMMENT1.subjectId))
   });
 
   const NEW_COMMENT = {

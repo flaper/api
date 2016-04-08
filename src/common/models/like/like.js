@@ -21,7 +21,7 @@ module.exports = (Like) => {
     DELETED: 'deleted'
   };
 
-  Like.updateSubject = (subjectType, id) => {
+  Like.iSyncSubject = (subjectType, id) => {
     let Model = Like.app.models[subjectType];
     let count;
     return Like.count({subjectId: id})
@@ -112,7 +112,7 @@ module.exports = (Like) => {
         }
       })
       .then(() => Like.create({subjectId, userId, subjectType}))
-      .then(() => Like.updateSubject(subjectType, subjectId))
+      .then(() => Like.iSyncSubject(subjectType, subjectId))
       .then((count) => {
         if (subjectType === 'Story') {
           Like.syncUserFromStory(subjectId);
@@ -146,7 +146,7 @@ module.exports = (Like) => {
       .then(() => IdToType.findByIdRequired(subjectId))
       .then((idToType) => {
         subjectType = idToType.type;
-        return Like.updateSubject(subjectType, subjectId);
+        return Like.iSyncSubject(subjectType, subjectId);
       })
       .then((count) => {
         IdToType.findByIdRequired(subjectId)

@@ -29,7 +29,7 @@ export function initCustomDelete(Comment) {
         comment.status = Comment.STATUS.DELETED;
         return comment.save({skipIgnore: {status: true}});
       })
-      .then((comment) => Comment.updateSubject('Story', comment.subjectId))
+      .then((comment) => Comment.iSyncSubject('Story', comment.subjectId))
       .then(() => res);
   }
 }

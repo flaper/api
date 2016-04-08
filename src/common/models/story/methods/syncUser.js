@@ -1,9 +1,9 @@
 export function initSyncUser(Story) {
   Story.observe('after save', syncUser);
 
-  Story.syncUserInternal = syncUserInternal;
+  Story.iSyncUser = iSyncUser;
 
-  function syncUserInternal(userId) {
+  function iSyncUser(userId) {
     if (!userId) {
       return Promise.resolve();
     }
@@ -22,6 +22,6 @@ export function initSyncUser(Story) {
       return Promise.resolve();
     }
     //for new story we sync user
-    return Story.syncUserInternal(ctx.instance.userId);
+    return Story.iSyncUser(ctx.instance.userId);
   }
 }

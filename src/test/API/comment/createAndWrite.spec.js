@@ -101,6 +101,6 @@ describe(`/${COLLECTION_URL}/POST&PUT`, function () {
 
   after(()=> {
     return Comment.deleteById(NEW_COMMENT.id)
-      .then(() => Comment.updateSubject('Story', NEW_COMMENT.subjectId))
+      .then(() => Comment.iSyncSubject('Story', NEW_COMMENT.subjectId))
   });
 });

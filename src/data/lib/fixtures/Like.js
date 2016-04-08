@@ -9,7 +9,7 @@ export function countNumberOfLikes() {
       let map = _.keyBy(result, 'subjectId');
       //unique now
       let ids = Object.keys(map);
-      let promises = ids.map(id => Like.updateSubject(map[id].subjectType, id));
+      let promises = ids.map(id => Like.iSyncSubject(map[id].subjectType, id));
       return Promise.all(promises)
         .then(() => {
           console.log('Count Likes done');

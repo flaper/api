@@ -1,9 +1,9 @@
 export function initSyncSubject(Comment) {
   Comment.observe('after save', syncSubject);
 
-  Comment.updateSubject = updateSubject;
+  Comment.iSyncSubject = iSyncSubject;
 
-  function updateSubject(subjectType, subjectId) {
+  function iSyncSubject(subjectType, subjectId) {
     let Model = Comment.app.models[subjectType];
     let count;
     let query = {subjectId: subjectId, status: Comment.STATUS.ACTIVE};
@@ -34,6 +34,6 @@ export function initSyncSubject(Comment) {
       return Promise.resolve();
     }
     //for new comment we sync subject
-    return Comment.updateSubject('Story', ctx.instance.subjectId);
+    return Comment.iSyncSubject('Story', ctx.instance.subjectId);
   }
 }

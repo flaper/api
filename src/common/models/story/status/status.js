@@ -56,7 +56,7 @@ export function initStatusActions(Story) {
         }
       })
       .then((response) => {
-        Story.syncUserInternal(story.userId);
+        Story.iSyncUser(story.userId);
         return response;
       })
   }
@@ -82,7 +82,7 @@ export function initStatusActions(Story) {
         }
       })
       .then((response) => {
-        Story.syncUserInternal(story.userId);
+        Story.iSyncUser(story.userId);
         return response;
       })
   }
@@ -104,7 +104,7 @@ export function initStatusActions(Story) {
         return story.save({skipIgnore: {status: true}});
       })
       .then((response) => {
-        Story.syncUserInternal(story.userId);
+        Story.iSyncUser(story.userId);
         return response;
       })
   }

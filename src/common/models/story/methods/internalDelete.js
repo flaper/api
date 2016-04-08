@@ -6,6 +6,6 @@ export function initDelete(Story) {
     return Story.findByIdRequired(id)
       .then(s => story = s)
       .then(() => Story.deleteById(id))
-      .then(() => Story.syncUserInternal(story.userId))
+      .then(() => Story.iSyncUser(story.userId))
   }
 }
