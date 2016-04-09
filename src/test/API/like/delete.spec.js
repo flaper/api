@@ -54,7 +54,7 @@ describe(`/${COLLECTION_URL}/delete`, function () {
           should.not.exist(like);
           return Story.findById(STORY_WITHOUT_LIKES_USER3.id);
         })
-        .then(story => story.numberOfLikes.should.eq(0))
+        .then(story => story.likesNumber.should.eq(0))
     })
   })
 });

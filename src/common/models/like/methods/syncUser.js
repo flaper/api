@@ -30,7 +30,7 @@ export function initSyncUser(Like) {
         {
           $group: {
             _id: null,
-            total: {$sum: "$numberOfLikes"}
+            total: {$sum: "$likesNumber"}
           }
         }
       ], (err, data) => {

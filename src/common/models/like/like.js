@@ -27,7 +27,7 @@ module.exports = (Like) => {
     return Like.count({subjectId: id})
       .then((c) => {
         count = c;
-        return Model.updateAll({id: id}, {numberOfLikes: count}, {skipIgnore: {numberOfLikes: true}})
+        return Model.updateAll({id: id}, {likesNumber: count}, {skipIgnore: {likesNumber: true}})
       })
       .then(() => count);
   };

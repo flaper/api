@@ -53,10 +53,10 @@ describe(`/${COLLECTION_URL}/create`, function () {
     })
   });
 
-  it('Users - allow to create 2 likes for a story, check numberOfLikes', () => {
+  it('Users - allow to create 2 likes for a story, check likesNumber', () => {
     let userLikesNumber;
     return Story.findById(STORY_WITHOUT_LIKES_USER3.id)
-      .then(story => story.numberOfLikes.should.eq(0))
+      .then(story => story.likesNumber.should.eq(0))
       .then(() => User.findByIdRequired(STORY_WITHOUT_LIKES_USER3.userId))
       .then((user) => userLikesNumber = user.likesNumber)
       .then(() => {
@@ -82,7 +82,7 @@ describe(`/${COLLECTION_URL}/create`, function () {
         })
       })
       .then(() => Story.findById(STORY_WITHOUT_LIKES_USER3.id))
-      .then(story => story.numberOfLikes.should.eq(2))
+      .then(story => story.likesNumber.should.eq(2))
       .then(() => new Promise((resolve, reject) => setTimeout(resolve, 100)))
       .then(() => User.findByIdRequired(STORY_WITHOUT_LIKES_USER3.userId))
       .then((user) => user.likesNumber.should.eq(userLikesNumber + 2))
@@ -90,7 +90,7 @@ describe(`/${COLLECTION_URL}/create`, function () {
       .then(() => Like.iSyncSubject('Story', STORY_WITHOUT_LIKES_USER3.id))
       .then(() => Like.syncUser(STORY_WITHOUT_LIKES_USER3.userId))
       .then(() => Story.findById(STORY_WITHOUT_LIKES_USER3.id))
-      .then(story => story.numberOfLikes.should.eq(0))
+      .then(story => story.likesNumber.should.eq(0))
   });
 
   it('User - allow to create like for a comment', () => {
@@ -104,11 +104,11 @@ describe(`/${COLLECTION_URL}/create`, function () {
           })
       })
       .then(() => Comment.findById(COMMENT_WITHOUT_LIKES_USER3.id))
-      .then(comment => comment.numberOfLikes.should.eq(1))
+      .then(comment => comment.likesNumber.should.eq(1))
       .then(() => Like.deleteAll({subjectId: COMMENT_WITHOUT_LIKES_USER3.id, userId: user1.id}))
       .then(() => Like.iSyncSubject('Comment', COMMENT_WITHOUT_LIKES_USER3.id))
       .then(() => Comment.findById(COMMENT_WITHOUT_LIKES_USER3.id))
-      .then(comment => comment.numberOfLikes.should.eq(0))
+      .then(comment => comment.likesNumber.should.eq(0))
   });
 
 });
