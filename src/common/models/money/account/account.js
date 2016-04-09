@@ -63,13 +63,19 @@ module.exports = (Account) => {
 
   function getAccountById(id) {
     let amount = null;
+    let User = Account.app.models.user;
+    let user = null;
+
     return Account.findOne({where: {subjectId: id}})
       .then(account => {
         amount = account ? account.amount : 0
       })
+      .then(() => User.findByIdRequired(id))
+      .then(u => user = u)
       .then(() => countRecentViewsMoney(id))
       .then(total => {
-        let res = total + amount;
+        let newbieBonus = Math.min(user.storiesNumber, 25);
+        let res = total + amount + newbieBonus;
         return Math.round(res * 100) / 100
       })
   }

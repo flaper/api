@@ -7,6 +7,7 @@ import {Sanitize} from '../../../../src/libs/sanitize/Sanitize';
 
 let Story = app.models.Story;
 let User = app.models.user;
+let Account = app.models.Account;
 
 const COLLECTION_URL = 'stories';
 const STORY1 = STORIES.test1;
@@ -64,6 +65,11 @@ describe(`/${COLLECTION_URL}`, function () {
   });
 
   describe('PUT/POST', () => {
+    let moneyBefore;
+    before(() => Account.getAccountById(user1.id)
+      .then(data => moneyBefore = data)
+    );
+
     const NEW_STORY = {
       id: '1a4000000000000000010001',
       title: "New story for test",
@@ -96,6 +102,8 @@ describe(`/${COLLECTION_URL}`, function () {
         })
         .then(() => User.findByIdRequired(user1.id))
         .then(user => user.storiesNumber.should.eq(storiesNumberBefore + 1))
+        .then(() => Account.getAccountById(user1.id))
+        .then(account => account.should.eq(moneyBefore + 1))
     })
     ;
 
