@@ -114,5 +114,23 @@ describe(`${COLLECTION_URL}`, function () {
     })
   });
 
+  it('Previous winners - 0 weeks ago', () => {
+    return api.get(`${COLLECTION_URL}/0`)
+      .expect(200)
+      .expect(res => {
+        let bests = res.body;
+        bests.length.should.eq(2);
+      })
+  });
+
+  it('Previous winners - 1 weeks ago', () => {
+    return api.get(`${COLLECTION_URL}/1`)
+      .expect(200)
+      .expect(res => {
+        let bests = res.body;
+        bests.length.should.eq(0);
+      })
+  });
+
   after(()=> StoryBest.deleteAll());
 });

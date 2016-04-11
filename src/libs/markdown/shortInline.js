@@ -1,5 +1,4 @@
 import {inlineRender} from './inlineRender'
-import striptags from 'striptags';
 
 const SYMBOLS_PER_LINE = 120;//estimation to consider one line length
 

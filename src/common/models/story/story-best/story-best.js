@@ -15,11 +15,23 @@ module.exports = (StoryBest) => {
 
 
   StoryBest.currentWinners = currentWinners;
+  StoryBest.previousWinners = previousWinners;
   StoryBest.addBestStory = addBestStory;
 
   StoryBest.remoteMethod('currentWinners', {
     http: {verb: 'get', path: '/'},
     description: 'Get current winners',
+    accessType: 'READ',
+    returns: {root: true}
+  });
+
+  StoryBest.remoteMethod('previousWinners', {
+    http: {verb: 'get', path: '/:weeksAgo'},
+    description: 'Get current winners',
+    accepts: {
+      arg: 'weeksAgo', type: 'number',
+      description: '0 - means current week, 1 means one week ago, etc', required: true
+    },
     accessType: 'READ',
     returns: {root: true}
   });
@@ -36,7 +48,11 @@ module.exports = (StoryBest) => {
   });
 
   function currentWinners() {
-    let day = lastWeekId();
+    return previousWinners(0);
+  }
+
+  function previousWinners(weeksAgo) {
+    let day = weekId(weeksAgo);
     return StoryBest.find({where: {week: day}, order: "place ASC"});
   }
 
@@ -44,7 +60,7 @@ module.exports = (StoryBest) => {
     if ([1, 2, 3, 4].indexOf(place) === -1) {
       throw ERRORS.badRequest('Place should be from 1 to 4');
     }
-    let day = lastWeekId();
+    let day = weekId(0);
     let data = {id: id, week: day, place: place};
     let MODELS = StoryBest.app.models;
     let Story = MODELS.Story;
@@ -79,8 +95,8 @@ module.exports = (StoryBest) => {
       .then(() => res)
   }
 
-  function lastWeekId() {
-    let m = moment.utc().startOf('week').subtract(7, 'days');
+  function weekId(weeksAgo = 0) {
+    let m = moment.utc().startOf('week').subtract(7 * (1 + weeksAgo), 'days');
     return m.format('YYYY-MM-DD');
   }
 
