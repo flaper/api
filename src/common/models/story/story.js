@@ -36,6 +36,7 @@ module.exports = (Story) => {
     status: {newDefault: Story.STATUS.ACTIVE},
     contentHTML: {},
     shortInline: {},
+    shortText: {},
     views: {},
     viewsRecent: {},
     lastActive: {newDefault: (data) => data.created},
@@ -60,9 +61,11 @@ module.exports = (Story) => {
         if (value) {
           let html = FlaperMark.toHTML(value);
           let shortInline = FlaperMark.shortInline(value);
+          let shortText = Sanitize.text(shortInline);
 
           setProperty(ctx, 'contentHTML', html);
           setProperty(ctx, 'shortInline', shortInline);
+          setProperty(ctx, 'shortText', shortText);
         }
       })
   }

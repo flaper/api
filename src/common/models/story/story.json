@@ -29,6 +29,9 @@
     "shortInline": {
       "type": "string"
     },
+    "shortText": {
+      "type": "string"
+    },
     "lastActive": {
       "type": "date"
     },
