@@ -9,6 +9,7 @@
       "../common/models/core/user",
       "../common/models/core/user-settings",
       "../common/models/auth",
+      "../common/models/fobject",
       "../common/models/story",
       "../common/models/story/story-best",
       "../common/models/comment",
@@ -106,6 +107,10 @@
     "public": true
   },
   "ViewHistory": {
+    "dataSource": "mongo",
+    "public": true
+  },
+  "FObject": {
     "dataSource": "mongo",
     "public": true
   }

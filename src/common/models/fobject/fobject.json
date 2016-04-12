@@ -1,0 +1,76 @@
+{
+  "name": "FObject",
+  "base": "CommonModel",
+  "http": {
+    "path": "Objects"
+  },
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "mixins": {
+  },
+  "properties": {
+    "status": {
+      "type": "string",
+      "default": "active",
+      "required": true
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {
+  },
+  "acls": [
+    {
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "DENY"
+    },
+    {
+      "accessType": "READ",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW"
+    },
+    {
+      "principalType": "ROLE",
+      "principalId": "super",
+      "permission": "ALLOW",
+      "property": "create"
+    },
+    {
+      "accessType": "WRITE",
+      "principalType": "ROLE",
+      "principalId": "super",
+      "permission": "ALLOW"
+    },
+    {
+      "principalType": "ROLE",
+      "principalId": "super",
+      "permission": "ALLOW",
+      "property": [
+        "syncFromFlap"
+      ]
+    }
+  ],
+  "scopes": {
+    "scopePublic": {
+    },
+    "scopeActive": {
+      "where": {
+        "status": "active"
+      }
+    }
+  },
+  "methods": {},
+  "indexes": {
+    "created_status_index": {
+      "created": -1,
+      "status": 1
+    }
+  }
+}
