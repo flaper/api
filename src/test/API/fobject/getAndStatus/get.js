@@ -2,11 +2,13 @@ import {api, user1, user1Promise, user2, user2Promise, adminPromise} from '../..
 import {updateTimeouts} from '../../timeout';
 import app from '../../../../server/server';
 let should = require('chai').should();
-import STORIES from  '../../../fixtures/story';
+import OBJECTS from  '../../../fixtures/fObject';
 import {Sanitize} from '../../../../../src/libs/sanitize/Sanitize';
 
 let FObject = app.models.FObject;
 const COLLECTION_URL = 'objects';
+const OBJECT1 = OBJECTS.obj1;
+const OBJECT2 = OBJECTS.obj2;
 
 describe(`/${COLLECTION_URL}/@get`, function () {
   updateTimeouts(this);
@@ -46,15 +48,25 @@ describe(`/${COLLECTION_URL}/@get`, function () {
         .query({filter: {where: {or: {0: {status: FObject.STATUS.ACTIVE}, 1: {status: FObject.STATUS.DELETED}}}}})
         .expect(200)
         .expect((res) => {
-          let objs = res.body;
-          objs.length.should.at.least(2);
-          let activeFound = objs.find(obj => obj.status === FObject.STATUS.ACTIVE);
-          let deniedFound = objs.find(obj => obj.status === FObject.STATUS.DELETED);
+          let objects = res.body;
+          objects.length.should.at.least(2);
+          let activeFound = objects.find(obj => obj.status === FObject.STATUS.ACTIVE);
+          let deniedFound = objects.find(obj => obj.status === FObject.STATUS.DELETED);
           should.exist(activeFound);
           should.exist(deniedFound);
-          objs.forEach(obj => {
+          objects.forEach(obj => {
             [FObject.STATUS.DELETED, FObject.STATUS.ACTIVE].should.include(obj.status);
           });
+        })
+    });
+
+    it('Anonymous - should return deleted and active objects', () => {
+      return api.get(`${COLLECTION_URL}/${OBJECT2.id}`)
+        .expect(200)
+        .expect((res) => {
+          let object = res.body;
+          should.exist(object);
+          should.not.exist(object.emails);
         })
     });
   });
