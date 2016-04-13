@@ -89,6 +89,12 @@ describe(`/${COLLECTION_URL}`, function () {
       }))
   });
 
+  it('Wrong ID', () => {
+    return api.post(COLLECTION_URL)
+      .send({id: 1})
+      .expect(400)
+  });
+
   after(() => {
     let ids = [];
     _.forOwn(FLAP_IDS, (id) => ids.push(id));
