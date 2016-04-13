@@ -7,7 +7,7 @@ import OBJECTS from  '../../../fixtures/fObject';
 let FObject = app.models.FObject;
 const COLLECTION_URL = 'objects';
 const OBJECT1 = OBJECTS.obj1;
-const OBJECT2 = OBJECTS.obj2;
+const PLACE1 = OBJECTS.place1;
 
 describe(`/${COLLECTION_URL}/@get`, function () {
   updateTimeouts(this);
@@ -59,8 +59,8 @@ describe(`/${COLLECTION_URL}/@get`, function () {
         })
     });
 
-    it('Anonymous - should return deleted and active objects', () => {
-      return api.get(`${COLLECTION_URL}/${OBJECT2.id}`)
+    it('Anonymous - emails should not exists', () => {
+      return api.get(`${COLLECTION_URL}/${PLACE1.id}`)
         .expect(200)
         .expect((res) => {
           let object = res.body;

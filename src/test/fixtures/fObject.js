@@ -6,6 +6,8 @@ let fobjects = {
   "obj1": {
     "id": "1a7000000000000000001001",
     "title": "Титаник",
+    //this slug actually will be generated anyway, it just to use in test
+    "slugLowerCase": 'титаник',
     "mainDomain": "кино",
     "reviewsNumber": 401,
     "rating": 9.0,
@@ -23,11 +25,12 @@ let fobjects = {
     "created": 1450716334311,
     "updated": 1450716334311
   },
-  "obj2": {
+  "place1": {
     "id": "1a7000000000000000001002",
     "title": "Русские блины",
-    "mainDomain": 'место',
+    "mainDomain": FObject.DOMAINS.PLACES,
     "region": 'оренбург',
+    "slugLowerCase": 'русские-блины',
     "reviewsNumber": 121,
     "rating": 7.8,
     "fields": {
@@ -51,20 +54,20 @@ let fobjects = {
   "obj3": {
     "id": "1a7000000000000000001003",
     "title": "Тестовый объект3",
-    "mainDomain": 'место',
+    "mainDomain": FObject.DOMAINS.PLACES,
     "created": 1450616334311,
     "updated": 1450616334311
   },
   "obj_without_region": {
     "id": "1a7000000000000000001004",
     "title": "Тестовый объект3",
-    "mainDomain": 'место',
+    "mainDomain": FObject.DOMAINS.PLACES,
     "created": 1450616334311,
     "updated": 1450616334311
   },
   "deleted1": {
     "id": "1a7000000000000000001020",
-    "mainDomain": 'место',
+    "mainDomain": FObject.DOMAINS.PLACES,
     "status": FObject.STATUS.DELETED,
     "title": "Удаленный объект"
   }

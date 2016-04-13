@@ -33,7 +33,7 @@ module.exports = (FObject) => {
 
   function domainObserver(ctx) {
     if (ctx.instance && ctx.isNewInstance) {
-      ctx.instance.mainDomain = ctx.instance.mainDomain.toLowerCase();
+      ctx.instance.mainDomain = ctx.instance.mainDomain.toLocaleLowerCase();
     }
     return Promise.resolve();
   }
@@ -43,7 +43,7 @@ module.exports = (FObject) => {
       if (!ctx.instance.region) {
         ctx.instance.region = "";
       } else {
-        ctx.instance.region = ctx.instance.region.toLowerCase();
+        ctx.instance.region = ctx.instance.region.toLocaleLowerCase();
       }
     }
     return Promise.resolve();
