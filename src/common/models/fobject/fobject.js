@@ -24,16 +24,26 @@ module.exports = (FObject) => {
 
   FObject.disableAllRemotesExcept(FObject, ['find', 'findById', 'count', 'exists']);
 
+  FObject.observe('before save', domainObserver);
   FObject.observe('before save', regionObserver);
 
   initGet(FObject);
   initSlug(FObject);
   initFlapSync(FObject);
 
+  function domainObserver(ctx) {
+    if (ctx.instance && ctx.isNewInstance) {
+      ctx.instance.mainDomain = ctx.instance.mainDomain.toLowerCase();
+    }
+    return Promise.resolve();
+  }
+
   function regionObserver(ctx) {
     if (ctx.instance && ctx.isNewInstance && ctx.instance.mainDomain === FObject.DOMAINS.PLACES) {
       if (!ctx.instance.region) {
         ctx.instance.region = "";
+      } else {
+        ctx.instance.region = ctx.instance.region.toLowerCase();
       }
     }
     return Promise.resolve();
