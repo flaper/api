@@ -1,6 +1,7 @@
 import {Sanitize} from "../../libs/sanitize/Sanitize"
 import moment from 'moment-timezone';
 import {ERRORS} from '../utils/errors'
+import _ from 'lodash'
 
 //mixin suppose that Model have 'status' property and 'active' status
 module.exports = (Model, options) => {
@@ -16,17 +17,31 @@ module.exports = (Model, options) => {
 
   Model.observe('before save', slugObserver);
   Model.observe('before activate', (model)=> {
-    return generateSlugDate(model, model.title);
+    return generateSlugWrapper(model, model.title);
   });
 
   Model.actionFindBySlug = actionFindBySlug;
+
+  if (!Model.slugFilter) {
+    Model.slugFilter = (model) => {
+      return {status: 'active'}
+    };
+  }
+
+  Model.slugSuffixDate = slugSuffixDate;
+
+  if (!Model.slugSuffix) {
+    Model.slugSuffix = Model.slugSuffixDate;
+  }
+
   Model.remoteMethod(
     'actionFindBySlug',
     {
       description: `Find an active model instance by slug`,
       http: {path: '/slug/:slug', verb: 'get'},
       accepts: [
-        {arg: 'slug', type: 'string', required: true}
+        {arg: 'slug', type: 'string', required: true},
+        {arg: 'fields', type: 'object', required: false}
       ],
       returns: {root: true},
       rest: {after: ERRORS.convertNullToNotFoundError}
@@ -36,28 +51,31 @@ module.exports = (Model, options) => {
   //another example maybe - when title has been changed (maybe after save hook
   function slugObserver(ctx) {
     if (ctx.instance && ctx.isNewInstance) {
-      return generateSlugDate(ctx.instance, ctx.instance.title);
+      return generateSlugWrapper(ctx.instance, ctx.instance.title);
     }
     return Promise.resolve();
   }
 
-
-  function generateSlugDate(model, str) {
+  function slugSuffixDate(model) {
     let adds = [];
     let m = moment().tz('Europe/Moscow');
     adds.push(m.year());
     adds.push(m.month() + 1);
     adds.push(m.date());
+    return adds;
+  }
+
+  function generateSlugWrapper(model, str) {
+    let adds = Model.slugSuffix(model);
+    adds = adds.map(add => sanitizeString(add));
+    adds = adds.filter(add => add);
+
     return generateSlug(model, str, adds);
   }
 
   function generateSlug(model, str, adds = []) {
 
-    let baseSlug = Sanitize.text(str)
-      .replace(/_/g, SLUG_SEPARATOR)
-      .replace(/[^A-Za-z0-9а-яёА-ЯЁ_\-\s]/g, '')
-      .replace(/[\s]/g, SLUG_SEPARATOR)
-      .replace(MULTIPLE_SEPARATORS_REGEX, SLUG_SEPARATOR);
+    let baseSlug = sanitizeString(str);
 
     let slug = baseSlug;
     let slugLowerCase = baseSlug.toLocaleLowerCase();
@@ -84,9 +102,11 @@ module.exports = (Model, options) => {
     }
 
     function nextIteration() {
-      return Model.findOne({where: {slugLowerCase: slugLowerCase, status: 'active'}})
-        .then(model => {
-          if (!model) {
+      let query = Model.slugFilter(model);
+      query.slugLowerCase = slugLowerCase;
+      return Model.findOne({where: query})
+        .then(instance => {
+          if (!instance) {
             //we are happy
             return {slug, slugLowerCase};
           }
@@ -96,8 +116,25 @@ module.exports = (Model, options) => {
     }
   }
 
-  function actionFindBySlug(slug) {
-    let query = {where: {slugLowerCase: slug.toLocaleLowerCase(), status: 'active'}};
-    return Model.findOne(query);
+  function actionFindBySlug(slug, fields) {
+    let query = {slugLowerCase: slug.toLocaleLowerCase(), status: 'active'};
+    if (fields) {
+      _.forOwn(fields, (value, key) => {
+        if (typeof value === 'string' && !query[key]) {
+          query[key] = value;
+        }
+      })
+    }
+    let filter = {where: query};
+    return Model.findOne(filter);
+  }
+
+  function sanitizeString(str) {
+    return Sanitize.text(str.toString()) //toString for integer .e.g
+      .replace(/_/g, SLUG_SEPARATOR)
+      .replace(/[^A-Za-z0-9а-яёА-ЯЁ_\-\s]/g, ' ')
+      .replace(/[\s]/g, SLUG_SEPARATOR)
+      .replace(MULTIPLE_SEPARATORS_REGEX, SLUG_SEPARATOR)
+      .trim();
   }
 };

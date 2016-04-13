@@ -51,17 +51,20 @@ let fobjects = {
   "obj3": {
     "id": "1a7000000000000000001003",
     "title": "Тестовый объект3",
+    "mainDomain": 'место',
     "created": 1450616334311,
     "updated": 1450616334311
   },
-  "obj_without_domain": {
+  "obj_without_region": {
     "id": "1a7000000000000000001004",
     "title": "Тестовый объект3",
+    "mainDomain": 'место',
     "created": 1450616334311,
     "updated": 1450616334311
   },
   "deleted1": {
     "id": "1a7000000000000000001020",
+    "mainDomain": 'место',
     "status": FObject.STATUS.DELETED,
     "title": "Удаленный объект"
   }

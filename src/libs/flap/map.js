@@ -15,17 +15,11 @@ export class FlapMap {
     let fields = {};
     fields.website = data.website;
     if (data.street || data.houseNumber || data.addressExtra) {
-      fields.address = data.street ? data.street : '';
-      if (data.houseNumber) {
-        fields.address = (fields.address + ' ' + data.houseNumber).trim();
-      }
-      if (data.addressExtra) {
-        if (fields.address) {
-          fields.address += '; '
-        }
-        fields.address += data.addressExtra;
-      }
-      fields.address = fields.address.trim();
+      fields.address = {
+        street: data.street,
+        houseNumber: data.houseNumber,
+        extra: data.addressExtra
+      };
     }
     if (data.latitude && data.longitude) {
       fields.location = {

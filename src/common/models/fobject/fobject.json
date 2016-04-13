@@ -9,6 +9,7 @@
     "validateUpsert": true
   },
   "mixins": {
+    "Sluggable": {}
   },
   "properties": {
     "status": {
@@ -17,6 +18,10 @@
       "required": true
     },
     "title": {
+      "type": "string",
+      "required": true
+    },
+    "mainDomain": {
       "type": "string",
       "required": true
     }
