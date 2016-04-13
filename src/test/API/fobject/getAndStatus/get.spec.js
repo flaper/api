@@ -3,7 +3,6 @@ import {updateTimeouts} from '../../timeout';
 import app from '../../../../server/server';
 let should = require('chai').should();
 import OBJECTS from  '../../../fixtures/fObject';
-import {Sanitize} from '../../../../../src/libs/sanitize/Sanitize';
 
 let FObject = app.models.FObject;
 const COLLECTION_URL = 'objects';
