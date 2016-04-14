@@ -2,6 +2,16 @@ import {App} from '../services/App';
 //if used as mixins for common-model inheritance create double call for this method
 //seems loopback doesn't handle mixins inheritance properly
 export function timestampBehavior(ctx) {
+  let skipCreated = ctx.options && ctx.options.skipTimestampCreated;
+  if (skipCreated) {
+    if (ctx.instance) {
+      ctx.instance.updated = new Date();
+    } else {
+      ctx.data.updated = new Date();
+    }
+    return Promise.resolve();
+  }
+
   if (ctx.instance) {
     //notNewInstance if model.save() inside app, not from API call
     if (ctx.isNewInstance) {

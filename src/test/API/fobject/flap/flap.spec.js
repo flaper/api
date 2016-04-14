@@ -11,7 +11,8 @@ describe(`/${COLLECTION_URL}`, function () {
   const FLAP_IDS = {
     ID1: 23187,
     ID2: 3329255,
-    ID3: 4484301
+    ID3: 4484301,
+    ID_CLOSED: 21920
   };
 
   it('Anonymous - sync company', () => {
@@ -30,6 +31,9 @@ describe(`/${COLLECTION_URL}`, function () {
         let fields = obj.fields;
         should.exist(fields.address);
         should.exist(fields.location);
+        (new Date(obj.created).getTime() / 1000).should.eq(1297321328);
+        should.exist(obj.flap.avatar);
+        obj.flap.photos.length.should.least(10);
       })
   });
 
@@ -51,6 +55,7 @@ describe(`/${COLLECTION_URL}`, function () {
           should.not.exist(fields.address);
           should.not.exist(fields.location);
         }
+        obj.flap.creatorId.should.eq(3058272);
       })
   });
 
@@ -92,6 +97,12 @@ describe(`/${COLLECTION_URL}`, function () {
   it('Wrong ID', () => {
     return api.post(COLLECTION_URL)
       .send({id: 1})
+      .expect(400)
+  });
+
+  it('Closed ID', () => {
+    return api.post(COLLECTION_URL)
+      .send({id: FLAP_IDS.ID_CLOSED})
       .expect(400)
   });
 

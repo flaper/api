@@ -5,6 +5,7 @@ export class FlapMap {
     obj.title = data.title;
     obj.mainDomain = data.mainDomain;
     obj.region = data.region; //if null field will be skipped
+    obj.created = data.created * 1000;
     if (data.email) {
       if (data.email instanceof Array) {
         obj.emails = data.email;
@@ -48,6 +49,11 @@ export class FlapMap {
     obj.fields = fields;
     obj.flap.reviewsNumber = data.reviewsNumber;
     obj.flap.rating = data.rating;
+    obj.flap.avatar = data.avatar;
+    obj.flap.photos = data.photos.map(photo => +photo);
+    if (data.creatorId) {
+      obj.flap.creatorId = +data.creatorId;
+    }
 
     return obj;
   }
