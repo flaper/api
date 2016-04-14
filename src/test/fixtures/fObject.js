@@ -9,8 +9,6 @@ let fobjects = {
     //this slug actually will be generated anyway, it just to use in test
     "slugLowerCase": 'титаник',
     "mainDomain": "кино",
-    "reviewsNumber": 401,
-    "rating": 9.0,
     "fields": {
       'год': '1997',
       'бюджет': '$ 200000000',
@@ -20,7 +18,9 @@ let fobjects = {
       'премьера': '1997-11-01'
     },
     "flap": {
-      'id': 3327961
+      'id': 3327961,
+      "reviewsNumber": 401,
+      "rating": 9.0
     },
     "created": 1450716334311,
     "updated": 1450716334311
@@ -31,8 +31,6 @@ let fobjects = {
     "mainDomain": FObject.DOMAINS.PLACES,
     "region": 'оренбург',
     "slugLowerCase": 'русские-блины',
-    "reviewsNumber": 121,
-    "rating": 7.8,
     "fields": {
       address: 'Ул. Володарского 14',
       phones: ['8-800-500-80-05 горячая линия', '31-26-27 единая справочная'],
@@ -45,7 +43,9 @@ let fobjects = {
       }
     },
     "flap": {
-      'id': 200190
+      'id': 200190,
+      "reviewsNumber": 121,
+      "rating": 7.8
     },
     "emails": ['orenblin@mail.ru'],
     "created": 1450718334311,

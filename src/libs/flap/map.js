@@ -13,7 +13,11 @@ export class FlapMap {
       }
     }
     let fields = {};
-    fields.website = data.website;
+    if (data.website) {
+      fields.urls = data.website.split(';').map(url => url.trim())
+        .filter(url => url);
+    }
+
     if (data.street || data.houseNumber || data.addressExtra) {
       fields.address = {
         street: data.street,
@@ -28,7 +32,7 @@ export class FlapMap {
       }
     }
     if (data.phone) {
-      obj.phones = data.phone.split(';').map(phone => phone.trim());
+      fields.phones = data.phone.split(';').map(phone => phone.trim());
     }
 
     let days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
