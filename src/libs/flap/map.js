@@ -49,8 +49,10 @@ export class FlapMap {
     obj.fields = fields;
     obj.flap.reviewsNumber = data.reviewsNumber;
     obj.flap.rating = data.rating;
-    obj.flap.avatar = data.avatar;
-    obj.flap.photos = data.photos.map(photo => +photo);
+    if (data.avatar) {
+      obj.flap.avatar = data.avatar.replace('thumb', 'middle')
+    }
+    obj.flap.images = data.photos.map(photo => +photo);
     if (data.creatorId) {
       obj.flap.creatorId = +data.creatorId;
     }

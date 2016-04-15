@@ -33,7 +33,7 @@ describe(`/${COLLECTION_URL}`, function () {
         should.exist(fields.location);
         (new Date(obj.created).getTime() / 1000).should.eq(1297321328);
         should.exist(obj.flap.avatar);
-        obj.flap.photos.length.should.least(10);
+        obj.flap.images.length.should.least(10);
       })
   });
 
