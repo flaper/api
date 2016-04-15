@@ -36,6 +36,23 @@ export class RoleService {
     })
   }
 
+  static isSuper(userId) {
+    /* same workaround as isAdmin*/
+    return new Promise((resolve, reject) => {
+      let resolved = false;
+      Promise.all([supersPromise])
+        .then(() => resolved = true);
+
+      let fid = setInterval(() => {
+        if (resolved) {
+          let result = superIds.indexOf(userId.toString()) > -1;
+          clearInterval(fid);
+          resolve(result);
+        }
+      }, 10);
+    })
+  }
+
   static setRole(userId, roleName) {
     return Role.findOne({where: {name: roleName}})
       .then(role => {

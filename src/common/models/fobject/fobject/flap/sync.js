@@ -1,4 +1,4 @@
-import {Flap} from '../../../../libs/flap/flap';
+import {Flap} from '../../../../../libs/flap/flap';
 
 export function initFlapSync(FObject) {
   FObject.flapSync = flapSync;

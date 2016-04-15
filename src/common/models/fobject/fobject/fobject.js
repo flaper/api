@@ -1,5 +1,5 @@
-import {applyIdToType} from '../../behaviors/idToType'
-import {ignoreUpdatedIfNoChanges, ignoreProperties, setProperty} from '../../behaviors/propertiesHelper'
+import {applyIdToType} from '../../../behaviors/idToType'
+import {ignoreUpdatedIfNoChanges, ignoreProperties, setProperty} from '../../../behaviors/propertiesHelper'
 import {initGet} from './get/get';
 import {initSlug} from './slug/slug';
 import {initFlapSync} from './flap/sync';

@@ -43,6 +43,11 @@ export class App {
     return userId ? RoleService.isAdmin(userId) : Promise.resolve(false);
   }
 
+  static isSuper() {
+    let userId = App.getCurrentUserId();
+    return userId ? RoleService.isSuper(userId) : Promise.resolve(false);
+  }
+
   ///fixtures
   static isFixturesLoading() {
     return fixturesLoading;

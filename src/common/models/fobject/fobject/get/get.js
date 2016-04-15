@@ -1,5 +1,5 @@
-import {App} from '../../../services/App';
-import {objectHasDeepKey} from '../../../utils/object';
+import {App} from '../../../../services/App';
+import {objectHasDeepKey} from '../../../../utils/object';
 import _ from 'lodash';
 
 export function initGet(FObject) {

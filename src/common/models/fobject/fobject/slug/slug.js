@@ -1,4 +1,4 @@
-import {ERRORS} from '../../../utils/errors'
+import {ERRORS} from '../../../../utils/errors'
 
 export function initSlug(FObject) {
   FObject.slugFilter = slugFilter;

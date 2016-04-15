@@ -9,7 +9,8 @@
       "../common/models/core/user",
       "../common/models/core/user-settings",
       "../common/models/auth",
-      "../common/models/fobject",
+      "../common/models/fobject/fobject",
+      "../common/models/fobject/manage-request",
       "../common/models/story",
       "../common/models/story/story-best",
       "../common/models/comment",
@@ -111,6 +112,10 @@
     "public": true
   },
   "FObject": {
+    "dataSource": "mongo",
+    "public": true
+  },
+  "ManageRequest": {
     "dataSource": "mongo",
     "public": true
   }
