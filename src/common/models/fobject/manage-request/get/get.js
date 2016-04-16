@@ -23,11 +23,14 @@ export function initGet(ManageRequest) {
   function customFind(filter) {
     return App.isSuper()
       .then(isSuper => {
+        let status = _.get(filter, 'where.status', ManageRequest.STATUS.ACTIVE).toString();
         if (isSuper) {
+          filter = filter ? filter : {};
+          filter.where = filter.where ? filter.where : {};
+          filter.where.status = status;
           return ManageRequest.find(filter);
         }
         let userId = App.getCurrentUserId();
-        let status = _.get(filter, 'where.status', ManageRequest.STATUS.ACTIVE).toString();
         let where = {userId: userId, status: status};
         let subjectId = _.get(filter, 'where.subjectId');
         if (subjectId) {
