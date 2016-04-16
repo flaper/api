@@ -4,14 +4,14 @@ import {updateTimeouts} from '../../timeout';
 import app from '../../../../server/server';
 let should = require('chai').should();
 import OBJECTS from  '../../../fixtures/fObject';
+import _ from 'lodash';
 
 let FObject = app.models.FObject;
 let ManageRequest = app.models.ManageRequest;
 const COLLECTION_URL = 'ManageRequests';
-const OBJECT1 = OBJECTS.obj1;
-const PLACE1 = OBJECTS.place1;
+const OBJECT1 = OBJECTS.obj_without_manage_requests;
 
-describe.only(`/${COLLECTION_URL}`, function () {
+describe(`/${COLLECTION_URL}/@general`, function () {
   updateTimeouts(this);
   const requestsIds = [];
 
@@ -30,22 +30,38 @@ describe.only(`/${COLLECTION_URL}`, function () {
         .expect(401)
     });
 
-    it('User1 - should be able to create manage request', () => {
+    it('User1 - subjectId is required', () => {
       return user1Promise.then(({agent})=> {
         return agent.post(COLLECTION_URL)
-          .send(NEW_REQUEST)
-          .expect(200)
-          .expect((res) => {
-            let request = res.body;
-            requestsIds.push(request.id);
-            request.status.should.eq(ManageRequest.STATUS.ACTIVE);
-            request.name.should.eq(NEW_REQUEST.name);
-            request.position.should.eq(NEW_REQUEST.position);
-            request.phone.should.eq(NEW_REQUEST.phone);
-            request.email.should.eq(NEW_REQUEST.email);
-            request.subjectId.should.eq(OBJECT1.id);
-          })
+          .send(_.omit(NEW_REQUEST, 'subjectId'))
+          .expect(400)
       });
+    });
+
+    it('User1 - should be able to create manage request', () => {
+      return user1Promise.then(({agent})=> {
+          return agent.post(COLLECTION_URL)
+            .send(NEW_REQUEST)
+            .expect(200)
+            .expect((res) => {
+              let request = res.body;
+              requestsIds.push(request.id);
+              request.status.should.eq(ManageRequest.STATUS.ACTIVE);
+              request.name.should.eq(NEW_REQUEST.name);
+              request.position.should.eq(NEW_REQUEST.position);
+              request.phone.should.eq(NEW_REQUEST.phone);
+              request.email.should.eq(NEW_REQUEST.email);
+              request.subjectId.should.eq(OBJECT1.id);
+            })
+        })
+        .then(() => {
+          //should not be able to create request for the same object twice
+          return user1Promise.then(({agent})=> {
+            return agent.post(COLLECTION_URL)
+              .send(NEW_REQUEST)
+              .expect(400)
+          });
+        })
     });
 
     it('User1 should be able to get his request', () => {

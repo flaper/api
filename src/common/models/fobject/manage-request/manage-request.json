@@ -2,6 +2,7 @@
   "name": "ManageRequest",
   "base": "CommonModel",
   "idInjection": true,
+  "strict": true,
   "options": {
     "validateUpsert": true
   },
@@ -23,6 +24,10 @@
     },
     "email": {
       "type": "string"
+    },
+    "subjectId": {
+      "type": "string",
+      "required": true
     }
   },
   "validations": [],
@@ -45,19 +50,27 @@
     {
       "accessType": "READ",
       "principalType": "ROLE",
-      "principalId": "$owner",
-      "permission": "ALLOW"
+      "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": "customFind"
     },
     {
       "principalType": "ROLE",
       "principalId": "$authenticated",
       "permission": "ALLOW",
-      "action": "create"
+      "property": "customCreate"
+    },
+    {
+      "principalType": "ROLE",
+      "principalId": "$owner",
+      "permission": "ALLOW",
+      "property": "actionDelete"
     },
     {
       "principalType": "ROLE",
       "principalId": "super",
-      "permission": "ALLOW"
+      "permission": "ALLOW",
+      "property": "actionDeny"
     }
   ],
   "methods": {},

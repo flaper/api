@@ -65,6 +65,12 @@ let fobjects = {
     "created": 1450616334311,
     "updated": 1450616334311
   },
+  "obj_without_manage_requests": {
+    "id": "1a7000000000000000001005",
+    "title": "Объект без запросов на управление",
+    "mainDomain": FObject.DOMAINS.PLACES
+  },
+
   "deleted1": {
     "id": "1a7000000000000000001020",
     "mainDomain": FObject.DOMAINS.PLACES,
