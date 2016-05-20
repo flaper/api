@@ -42,7 +42,7 @@ export function initGet(Story) {
       filter['order'] = 'created DESC';
     }
     if (!_.get(filter, 'where') || !objectHasDeepKey(filter.where, 'status')) {
-      //be default we return only active stories
+      //by default we return only active stories
       return Story.scopeActive(filter);
     }
     //but it is possible to request active and deleted as well

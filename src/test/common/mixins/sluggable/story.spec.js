@@ -51,8 +51,15 @@ describe(`Sluggable/Story`, function () {
     status: Story.STATUS.ACTIVE
   };
 
+  const NEW_ACTIVE_STORY10 = {
+    id: '1a4000000000000000010010',
+    title: 'Идеи для   творчества.',
+    content: STORY1.content,
+    status: Story.STATUS.ACTIVE
+  };
+
   let models = [NEW_DENIED_STORY, NEW_ACTIVE_STORY1, NEW_ACTIVE_STORY2, NEW_ACTIVE_STORY3,
-    NEW_ACTIVE_STORY4, NEW_ACTIVE_STORY5];
+    NEW_ACTIVE_STORY4, NEW_ACTIVE_STORY5, NEW_ACTIVE_STORY10];
   let m = moment().tz('Europe/Moscow');
   let year = m.year();
   let month = m.month() + 1;
@@ -115,6 +122,13 @@ describe(`Sluggable/Story`, function () {
       .then((story) => {
         story.status.should.eq(Story.STATUS.ACTIVE);
         story.slugLowerCase.should.eq(`${SLUG1}-${year}-${month}-${date}-3`);
+      })
+  });
+
+  it('Active slug6', () => {
+    return Story.findById(NEW_ACTIVE_STORY10.id)
+      .then((story) => {
+        story.slug.should.eq('Идеи-для-творчества');
       })
   });
   after(()=> Story.deleteAll({id: {inq: _.map(models, 'id')}}));

@@ -133,8 +133,8 @@ module.exports = (Model, options) => {
     return Sanitize.text(str.toString()) //toString for integer .e.g
       .replace(/_/g, SLUG_SEPARATOR)
       .replace(/[^A-Za-z0-9а-яёА-ЯЁ_\-\s]/g, ' ')
+      .trim()
       .replace(/[\s]/g, SLUG_SEPARATOR)
       .replace(MULTIPLE_SEPARATORS_REGEX, SLUG_SEPARATOR)
-      .trim();
   }
 };

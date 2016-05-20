@@ -29,7 +29,6 @@ function userAgentPromise(user) {
 
 export let admin = USERS.testAdmin;
 export let adminPromise = userAgentPromise(admin);
-export let testSuper = USERS.testSuper;
 export let superUser = USERS.testSuper;
 export let superPromise = userAgentPromise(USERS.testSuper);
 export let stasPromise = userAgentPromise(USERS.stas);
