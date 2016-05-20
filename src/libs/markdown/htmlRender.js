@@ -1,6 +1,7 @@
 delete require.cache[require.resolve('marked')];//to prevent get options for marked from another library
 import marked from 'marked';
 import {ImageService, IMAGE_FORMAT} from '../../common/services/ImageService';
+import {linkRender} from './link';
 
 //to remove auto ids for headers
 let renderer = new marked.Renderer();
@@ -17,6 +18,8 @@ renderer.image = function (href, title, text) {
   href = isLocalLink ? ImageService.getImageUrlById(href, IMAGE_FORMAT.middle) : href;
   return parentImageMethod(href, title, text);
 };
+
+renderer.link = linkRender;
 
 marked.setOptions({
   renderer: renderer,

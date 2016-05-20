@@ -47,6 +47,7 @@
     "passport-odnoklassniki": "^0.2.0",
     "passport-vkontakte": "sklyukin/passport-vkontakte",
     "promise-queue": "^2.2.0",
+    "punycode": "^1.4.1",
     "request-promise": "^2.0.1",
     "sanitize-html": "^1.11.2",
     "striptags": "^2.1.1",

@@ -23,6 +23,22 @@ describe('/markdown', () => {
     html.trim().should.eq(`<p><div class="${GROUP_CLASS}"><div><img src="${testUrl}" alt=""></div></div></p>`);
   });
 
+  it('idn-domain', () => {
+    let html = FlaperMark.toHTML(`http://xn--80avnr.xn--p1ai/%D0%BE%D1%80%D0%B5%D0%BD%D0%B1%D1%83%D1%80%D0%B3`);
+    html.trim().should.eq('<p><a href="http://флап.рф/оренбург" target="_blank">флап.рф/оренбург</a></p>');
+  });
+
+  it('Link to flaper.org', () => {
+    let html = FlaperMark.toHTML(`http://flaper.org/s/%D0%A4%D0%BB%D0%B0%D0%BF%D0%B5%D1%80`);
+    html.trim().should.eq('<p><a href="http://flaper.org/s/Флапер">flaper.org/s/Флапер</a></p>');
+  });
+
+  it('Regular link', () => {
+    let html = FlaperMark.toHTML('https://translate.yandex.ru/?text=тест&lang=ru-en');
+    html.trim().should.eq('<p><a href="https://translate.yandex.ru/?text=тест&lang=ru-en" target="_blank">' +
+      'translate.yandex.ru/?text=тест&lang=ru-en</a></p>');
+  });
+
   it('group images', () => {
     let markdown = `![](${testId})`;
     for (let i = 0; i < 7; i++) {
@@ -206,7 +222,7 @@ describe('/markdown', () => {
       let source = require('./data/sample5');
       let text = FlaperMark.shortInline(source);
       let res = 'ссылка <a href="http://flaper.org">flaper.org</a> и далее\n' +
-          'идет разбитый тег 5&lt;a  something';
+        'идет разбитый тег 5&lt;a  something';
       text.should.eq(res);
     });
 
