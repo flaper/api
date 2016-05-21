@@ -8,15 +8,17 @@
       "../common/models/core",
       "../common/models/core/user",
       "../common/models/core/user-settings",
+      "../common/models/core/user-extra",
       "../common/models/auth",
+      "../common/models/comment",
       "../common/models/fobject/fobject",
       "../common/models/fobject/manage-request",
-      "../common/models/story",
-      "../common/models/story/story-best",
-      "../common/models/comment",
       "../common/models/like",
       "../common/models/money/transaction",
       "../common/models/money/account",
+      "../common/models/payment/payment",
+      "../common/models/story",
+      "../common/models/story/story-best",
       "../common/models/view/view",
       "../common/models/view/view-history"
     ],
@@ -75,6 +77,10 @@
     "dataSource": "mongo",
     "public": false
   },
+  "UserExtra": {
+    "dataSource": "mongo",
+    "public": false
+  },
   "Image": {
     "dataSource": "mongo",
     "public": true
@@ -116,6 +122,10 @@
     "public": true
   },
   "ManageRequest": {
+    "dataSource": "mongo",
+    "public": true
+  },
+  "Payment": {
     "dataSource": "mongo",
     "public": true
   }

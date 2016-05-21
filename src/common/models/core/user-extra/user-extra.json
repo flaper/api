@@ -1,0 +1,26 @@
+{
+  "name": "UserExtra",
+  "base": "CommonModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "userId": {
+      "type": "string",
+      "required": true
+    }
+  },
+  "validations": [],
+  "methods": {},
+  "indexes": {
+    "userId_index": {
+      "keys": {
+        "userId": 1
+      },
+      "options": {
+        "unique": true
+      }
+    }
+  }
+}
