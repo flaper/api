@@ -31,7 +31,7 @@ module.exports = (Payment) => {
       let clientId = config.clientId;
       if (!clientId) {
         //test version
-        return resolve('test');
+        return 'test';
       }
       return new Promise((resolve, reject) => {
         yandexMoney.ExternalPayment.getInstanceId(clientId, (err, data) => {
