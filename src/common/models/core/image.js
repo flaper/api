@@ -61,7 +61,7 @@ module.exports = (Image) => {
           Image.create({type}, {currentUserId: currentUserId})
             .then((data) => {
               image = data;
-              ImageService.uploadToS3(data, buffers)
+              return ImageService.uploadToS3(data, buffers)
 
             })
             .then(s3Response => resolve(image), reject);
