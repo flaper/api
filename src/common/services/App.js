@@ -10,6 +10,10 @@ export class App {
     return process.env.NODE_ENV || 'development';
   }
 
+  static isProduction() {
+    return App.env() === 'production';
+  }
+
   static isTestEnv() {
     return App.env() === 'test';
   }

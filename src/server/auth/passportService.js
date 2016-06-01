@@ -3,6 +3,15 @@ let _ = require('lodash');
 import {AuthService} from './AuthService';
 
 export default function (app) {
+  var cookieParser = require('cookie-parser');
+  app.use(cookieParser());
+
+  app.use('/auth/:provider', (req, res, next) => {
+    let cb = req.query.cb;
+    res.cookie('client_cb', cb, {maxAge: 900000, httpOnly: true});
+    next();
+  });
+
   // Create an instance of PassportConfigurator with the app instance
   let PassportConfigurator =
     require('loopback-component-passport').PassportConfigurator;
@@ -45,8 +54,8 @@ export default function (app) {
 }
 
 function customCallbackWrapper({strategy, opts, passport, app}) {
-  const WEB_APP_URL = app.get('webApp').url;
   return (req, res, next) => {
+    let returnTo = AuthService.ReturnTo(req);
     // Note that we have to only use variables that are in scope
     // right now, like opts.
     passport.authenticate(
@@ -61,12 +70,11 @@ function customCallbackWrapper({strategy, opts, passport, app}) {
         }
         if (!user) {
           console.error('user not returned for passport.js');
-          return res.redirect(WEB_APP_URL);
+          return res.redirect(returnTo);
         }
         //we will set displayName && email when necessary
         updateUserWithInfo(user, info);
-
-        let url = AuthService.WebAppLinkWithToken(info.accessToken);
+        let url = AuthService.WebAppLinkWithToken(info.accessToken, returnTo);
         return res.redirect(url);
       }
     )(req, res, next);

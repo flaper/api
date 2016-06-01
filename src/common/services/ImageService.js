@@ -107,6 +107,10 @@ export class ImageService {
   }
 
   static uploadToS3(imageObject, buffers) {
+    if (App.isTestEnv()) {
+      return Promise.resolve({});
+    }
+
     return new Promise((resolve, reject) => {
       let bucket = new AWS.S3({params: {Bucket: ImageService.getBucketName()}});
 

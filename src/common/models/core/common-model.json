@@ -15,6 +15,9 @@
   "validations": [],
   "relations": {},
   "acls": [],
+  "scope": {
+    "limit": 100
+  },
   "scopes": {
     "scopeAll": {
       "where": {}
