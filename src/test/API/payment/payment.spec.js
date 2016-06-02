@@ -18,7 +18,7 @@ describe(`/${COLLECTION_URL}`, function () {
       .expect(401)
   });
 
-  it('User should be able to make payment', () => {
+  it.skip('User should be able to make payment', () => {
     return user1Promise.then(({agent}) => {
       return agent.post(COLLECTION_URL)
         .expect(200)
