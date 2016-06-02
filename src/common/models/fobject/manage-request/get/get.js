@@ -36,6 +36,7 @@ export function initGet(ManageRequest) {
         if (subjectId) {
           where.subjectId = subjectId.toString();
         }
+        console.log('custom find');
         return ManageRequest.find({where: where});
       })
   }

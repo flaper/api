@@ -105,6 +105,9 @@
       "property": "saveSettings"
     }
   ],
+  "scope": {
+    "limit": 100
+  },
   "methods": {},
   "indexes": {
     "email_index": {

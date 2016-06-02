@@ -24,11 +24,18 @@ describe(`/${COLLECTION_URL}/@general`, function () {
     subjectId: OBJECT_WITHOUT_MR.id
   };
 
-  it('Anonymous - deny to create manage request', () => {
-    api.post(COLLECTION_URL)
+  it('Anonymous - deny to list manage requests', () => {
+    return api.get(COLLECTION_URL)
       .send(NEW_REQUEST)
       .expect(401)
   });
+
+  it('Anonymous - deny to create manage request', () => {
+    return api.post(COLLECTION_URL)
+      .send(NEW_REQUEST)
+      .expect(401)
+  });
+
 
   it('User1 - subjectId is required', () => {
     return user1Promise.then(({agent})=> {
