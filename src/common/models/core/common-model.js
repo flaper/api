@@ -38,7 +38,19 @@ module.exports = (CommonModel) => {
           configurable: true,
           get: () => oldScope
         });
-      })
+      });
+
+      let oldFind = Model.find;
+      Model.find = function (filter, ...params) {
+        let f = filter ? filter : {};
+        let limit = +f.limit;
+        if (!limit) {
+          f.limit = 100;
+        } else if (limit > 1000) {
+          f.limit = 1000;
+        }
+        return oldFind.call(this, f, ...params);
+      }
     });
   }
 

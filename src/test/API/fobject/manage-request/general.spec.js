@@ -6,7 +6,6 @@ let should = require('chai').should();
 import OBJECTS from  '../../../fixtures/fObject';
 import _ from 'lodash';
 
-let FObject = app.models.FObject;
 let ManageRequest = app.models.ManageRequest;
 const COLLECTION_URL = 'ManageRequests';
 const OBJECT1 = OBJECTS.obj1;
