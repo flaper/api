@@ -5,7 +5,7 @@ let app = require('../../server/server');
 let User, Role, RoleMapping;
 let adminsPromise, supersPromise;
 let adminIds, superIds;
-let rolesToIds = {};
+let rolesBynames = {};
 let roleIdToName = {};
 
 //this class is used to hold roles in the memory to fast checking roles like 'admin' (isAdmin)
@@ -34,6 +34,18 @@ export class RoleService {
         }
       }, 10);
     })
+  }
+
+  static isSales(userId) {
+    return RoleService.isSuper(userId)
+      .then(isSuper => {
+        if (isSuper) {
+          return true;
+        }
+        let roleId = rolesBynames['sales'].id;
+        return RoleMapping.findOne({where: {roleId: roleId, principalId: userId}})
+          .then(mapping => !!mapping)
+      })
   }
 
   static isSuper(userId) {
@@ -97,7 +109,7 @@ export class RoleService {
       adminIds = adminIds.concat(ids);
     });
     Role.find().then(roles => {
-      rolesToIds = _.keyBy(roles, 'name');
+      rolesBynames = _.keyBy(roles, 'name');
       roleIdToName = _.keyBy(roles, 'id');
       roleIdToName = _.mapValues(roleIdToName, value => value.name);
     })

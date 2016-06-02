@@ -21,10 +21,10 @@ export function initGet(ManageRequest) {
   );
 
   function customFind(filter) {
-    return App.isSuper()
-      .then(isSuper => {
+    return App.isSales()
+      .then(isSales => {
         let status = _.get(filter, 'where.status', ManageRequest.STATUS.ACTIVE).toString();
-        if (isSuper) {
+        if (isSales) {
           filter = filter ? filter : {};
           filter.where = filter.where ? filter.where : {};
           filter.where.status = status;
@@ -36,7 +36,6 @@ export function initGet(ManageRequest) {
         if (subjectId) {
           where.subjectId = subjectId.toString();
         }
-        console.log('custom find');
         return ManageRequest.find({where: where});
       })
   }

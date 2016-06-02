@@ -47,6 +47,11 @@ export class App {
     return userId ? RoleService.isAdmin(userId) : Promise.resolve(false);
   }
 
+  static isSales() {
+    let userId = App.getCurrentUserId();
+    return userId ? RoleService.isSales(userId) : Promise.resolve(false);
+  }
+
   static isSuper() {
     let userId = App.getCurrentUserId();
     return userId ? RoleService.isSuper(userId) : Promise.resolve(false);
