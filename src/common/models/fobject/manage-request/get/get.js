@@ -21,6 +21,8 @@ export function initGet(ManageRequest) {
   );
 
   function customFind(filter) {
+    //should be at top, because userId can be lost, loopback issue
+    let userId = App.getCurrentUserId();
     return App.isSales()
       .then(isSales => {
         let status = _.get(filter, 'where.status', ManageRequest.STATUS.ACTIVE).toString();
@@ -30,7 +32,6 @@ export function initGet(ManageRequest) {
           filter.where.status = status;
           return ManageRequest.find(filter);
         }
-        let userId = App.getCurrentUserId();
         let where = {userId: userId, status: status};
         let subjectId = _.get(filter, 'where.subjectId');
         if (subjectId) {
