@@ -1,4 +1,4 @@
-import {api, user1, user1Promise,adminPromise, superPromise} from '../../helpers/api';
+import {api, user1, user1Promise, user2Promise, adminPromise, superPromise} from '../../helpers/api';
 import {updateTimeouts} from '../timeout';
 let should = require('chai').should();
 
@@ -52,5 +52,44 @@ describe(`/${COLLECTION_URL}`, function () {
           .expect(200)
       });
     })
+  });
+
+  describe('Transactions', ()=> {
+    let url = `${COLLECTION_URL}/${user1.id}/transactions`;
+    it('Anonymous - deny', () => {
+      return api.get(url)
+        .expect(401)
+    });
+
+    it('User - deny foreign', () => {
+      return user2Promise.then(({agent}) => {
+        return agent.get(url)
+          .expect(403)
+      });
+    });
+
+    it('User - allow his data', () => {
+      return user1Promise.then(({agent}) => {
+        return agent.get(url)
+          .expect(200)
+          .expect(res => {
+            let transactions = res.body;
+            should.exist(transactions);
+            transactions.length.should.least(2);
+          })
+      });
+    });
+
+    it('Super - allow', () => {
+      return superPromise.then(({agent}) => {
+        return agent.get(url)
+          .expect(200)
+          .expect(res => {
+            let transactions = res.body;
+            should.exist(transactions);
+            transactions.length.should.least(2);
+          })
+      });
+    });
   })
 });

@@ -38,6 +38,12 @@
       "principalId": "super",
       "permission": "ALLOW",
       "property": "payment"
+    },
+    {
+      "principalType": "ROLE",
+      "principalId": "$authenticated",
+      "permission": "ALLOW",
+      "property": "getTransactions"
     }
   ],
   "indexes": {

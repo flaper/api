@@ -1,4 +1,5 @@
 import {App} from '../../../services/App';
+import {ERRORS} from '../../../utils/errors';
 import _ from 'lodash';
 
 module.exports = (Account) => {
@@ -14,6 +15,7 @@ module.exports = (Account) => {
   };
 
   Account.getAccountById = getAccountById;
+  Account.getTransactions = getTransactions;
 
   Account.remoteMethod('payment', {
     http: {verb: 'post', path: '/payment'},
@@ -35,6 +37,16 @@ module.exports = (Account) => {
       {arg: 'id', type: 'string', description: 'Id', required: true}
     ],
     returns: {arg: 'amount', type: 'object'}
+  });
+
+  Account.remoteMethod('getTransactions', {
+    http: {verb: 'get', path: '/:id/transactions'},
+    description: 'Get account',
+    accessType: 'READ',
+    accepts: [
+      {arg: 'id', type: 'string', description: 'Id', required: true}
+    ],
+    returns: {root: true}
   });
 
   function payment(fromId, toId, amount) {
@@ -59,6 +71,18 @@ module.exports = (Account) => {
         return Promise.all([p1, p2]);
       })
       .then(() =>  Account.find({where: {or: [{subjectId: fId}, {subjectId: tId}]}}));
+  }
+
+  function getTransactions(id) {
+    let userId = App.getCurrentUserId();
+    return App.isSuper()
+      .then((isSuper) => {
+        if (!isSuper && (id !== userId.toString())) {
+          throw ERRORS.forbidden();
+        }
+        let Transaction = Account.app.models.Transaction;
+        return Transaction.find({where: {or: [{fromId: id}, {toId: id}]}, order: 'created DESC'});
+      });
   }
 
   function getAccountById(id) {
