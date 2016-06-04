@@ -1,5 +1,5 @@
 import {user1} from '../../../helpers/api';
-import app from '../../../../server/server';
+import app from '../../../helpers/app';
 let should = require('chai').should();
 let IdToType = app.models.IdToType;
 let Story = app.models.Story;

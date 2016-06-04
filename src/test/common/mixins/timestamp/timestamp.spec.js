@@ -1,5 +1,5 @@
 import {user1Promise, user1, user2, user2Promise, adminPromise} from '../../../helpers/api';
-import app from '../../../../server/server';
+import app from '../../../helpers/app';
 let should = require('chai').should();
 import STORIES from  '../../../fixtures/story';
 import moment from 'moment-timezone';

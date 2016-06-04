@@ -1,6 +1,6 @@
 import {api, user1Promise, user1, user2Promise} from '../../helpers/api';
 import {updateTimeouts} from '../timeout';
-import app from '../../../server/server';
+import app from '../../helpers/app';
 let should = require('chai').should();
 
 let Like = app.models.Like;

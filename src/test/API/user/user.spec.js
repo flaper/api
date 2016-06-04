@@ -1,6 +1,6 @@
 import {api, superPromise, adminPromise, user1Promise, superUser} from '../../helpers/api';
 import {updateTimeouts} from '../timeout';
-import app from '../../../server/server';
+import app from '../../helpers/app';
 
 const USERS = require('../../fixtures/allUsers');
 import _ from 'lodash';

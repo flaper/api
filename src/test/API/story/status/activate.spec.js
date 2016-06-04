@@ -1,6 +1,6 @@
 import {user1Promise, user1, adminPromise} from '../../../helpers/api';
 import {updateTimeouts} from '../../timeout';
-import app from '../../../../server/server';
+import app from '../../../helpers/app';
 let should = require('chai').should();
 import STORIES from  '../../../fixtures/story';
 import {Sanitize} from '../../../../../src/libs/sanitize/Sanitize';

@@ -1,6 +1,6 @@
 import {api, adminPromise} from '../../helpers/api';
 import {updateTimeouts} from '../timeout';
-import app from '../../../server/server';
+import app from '../../helpers/app';
 let should = require('chai').should();
 
 let Comment = app.models.Comment;

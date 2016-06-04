@@ -1,6 +1,6 @@
 import {api, user1Promise,user2Promise, user1} from '../../helpers/api';
 import {updateTimeouts} from '../timeout';
-import app from '../../../server/server';
+import app from '../../helpers/app';
 let should = require('chai').should();
 
 let Image = app.models.Image;

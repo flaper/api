@@ -1,7 +1,8 @@
 module.exports = (UserExtra) => {
   UserExtra.commonInit(UserExtra);
   UserExtra.PROPERTIES = {
-    ymInstanceId: 'ymInstanceId'// YANDEX_MONEY
+    premiumSupport: 'premiumSupport',
+    objects: 'objects'
   };
 
   UserExtra.updateValue = updateValue;

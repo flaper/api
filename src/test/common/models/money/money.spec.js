@@ -1,5 +1,5 @@
 import {user1, user2} from '../../../helpers/api';
-import app from '../../../../server/server';
+import app from '../../../helpers/app';
 let should = require('chai').should();
 let Account = app.models.Account;
 let Transaction = app.models.Transaction;
@@ -12,7 +12,6 @@ describe('models/money', function () {
   });
 
   it('Test payment', () => {
-    console.log('before', transactionsBefore);
     let amount = 10;
     return Account.payment(user1.id, user2.id, amount)
       .then((accounts) => {

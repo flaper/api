@@ -1,6 +1,6 @@
 import {api} from '../../helpers/api';
 import {updateTimeouts} from '../timeout';
-import app from '../../../server/server';
+import app from '../../helpers/app';
 let should = require('chai').should();
 import LIKES from  '../../fixtures/like';
 const LIKE_STORY1 = LIKES.like_story1;

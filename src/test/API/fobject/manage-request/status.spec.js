@@ -1,7 +1,7 @@
 import {api, user1, user1Promise, user2, user2Promise, adminPromise, admin, superPromise, superUser}
   from '../../../helpers/api';
 import {updateTimeouts} from '../../timeout';
-import app from '../../../../server/server';
+import app from '../../../helpers/app';
 let should = require('chai').should();
 import OBJECTS from  '../../../fixtures/fObject';
 import REQUESTS from  '../../../fixtures/manageRequest';
