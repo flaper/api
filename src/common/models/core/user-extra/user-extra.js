@@ -2,6 +2,7 @@ module.exports = (UserExtra) => {
   UserExtra.commonInit(UserExtra);
   UserExtra.PROPERTIES = {
     premiumSupport: 'premiumSupport',
+    flapId: 'flapId',
     objects: 'objects'
   };
 
