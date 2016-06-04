@@ -5,6 +5,8 @@ module.exports = (UserExtra) => {
     flapId: 'flapId',
     objects: 'objects'
   };
+  let PROPS = UserExtra.PROPERTIES;
+  UserExtra.PROPERTIES_FOR_API = [PROPS.premiumSupport, PROPS.objects];
 
   UserExtra.updateValue = updateValue;
 

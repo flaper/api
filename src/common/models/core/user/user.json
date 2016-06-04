@@ -48,61 +48,47 @@
       "accessType": "READ",
       "principalType": "ROLE",
       "principalId": "$everyone",
-      "permission": "ALLOW"
+      "permission": "ALLOW",
+      "property": [
+        "find",
+        "findById",
+        "findOne",
+        "count",
+        "exists",
+        "getRoles",
+        "__count__roles",
+        "getSettings",
+        "getIdentities"
+      ]
     },
     {
       "principalType": "ROLE",
       "principalId": "$everyone",
       "permission": "DENY",
-      "property": "create"
-    },
-    {
-      "principalType": "ROLE",
-      "principalId": "admin",
-      "permission": "ALLOW",
-      "property": "create"
-    },
-    {
-      "principalType": "ROLE",
-      "principalId": "$everyone",
-      "permission": "DENY",
-      "property": "updateAttributes"
+      "property": [
+        "create",
+        "updateAttributes"
+      ]
     },
     {
       "principalType": "ROLE",
       "principalId": "super",
       "permission": "ALLOW",
-      "property": "updateAttributes"
-    },
-    {
-      "principalType": "ROLE",
-      "principalId": "admin",
-      "permission": "ALLOW",
-      "property": "__get__roles"
-    },
-    {
-      "principalType": "ROLE",
-      "principalId": "admin",
-      "permission": "ALLOW",
-      "property": "__count__roles"
-    },
-    {
-      "principalType": "ROLE",
-      "principalId": "super",
-      "permission": "ALLOW",
-      "property": "__delete__roles"
-    },
-    {
-      "principalType": "ROLE",
-      "principalId": "super",
-      "permission": "ALLOW",
-      "property": "setRole"
+      "property": [
+        "create",
+        "updateAttributes",
+        "__delete__roles",
+        "setRole"
+      ]
     },
     {
       "principalType": "ROLE",
       "principalId": "$owner",
       "permission": "ALLOW",
-      "property": "saveSettings"
+      "property": [
+        "saveSettings",
+        "getExtra"
+      ]
     }
   ],
   "scope": {

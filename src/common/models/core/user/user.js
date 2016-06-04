@@ -1,11 +1,12 @@
 import {timestampBehavior} from '../../../behaviors/timestamps.js';
 import {applyIdToType} from '../../../behaviors/idToType'
 import {findByIdRequired} from '../methods/findMethods'
+import {ignoreProperties} from '../../../behaviors/propertiesHelper'
+import {initIdentities} from './identities/identities'
 import {initRoles} from './roles/roles'
 import {initPhotos} from './photo/photo'
 import {initSettings} from './settings/settings'
-import {initIdentities} from './identities/identities'
-import {ignoreProperties} from '../../../behaviors/propertiesHelper'
+import {initExtra} from './extra/extra'
 
 module.exports = (User) => {
   User.observe('before save', timestampBehavior);
@@ -38,8 +39,9 @@ module.exports = (User) => {
     likesNumber: {newDefault: 0}
   }));
 
+  initIdentities(User);
   initRoles(User);
   initPhotos(User);
   initSettings(User);
-  initIdentities(User);
+  initExtra(User);
 };

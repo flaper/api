@@ -2,10 +2,10 @@ import {App} from '../../../../services/App';
 import {ERRORS} from '../../../../utils/errors';
 
 export function initSettings(User) {
-  User.getSettingsByUser = getSettingsByUser;
+  User.getSettings = getSettings;
   User.saveSettings = saveSettings;
 
-  User.remoteMethod('getSettingsByUser', {
+  User.remoteMethod('getSettings', {
     http: {verb: 'get', path: '/:id/settings'},
     description: 'Get settings',
     accessType: 'READ',
@@ -27,7 +27,7 @@ export function initSettings(User) {
     returns: {root: true}
   });
 
-  function getSettingsByUser(id) {
+  function getSettings(id) {
     let UserSettings = User.app.models.UserSettings;
     return User.findByIdRequired(id)
       .then(() => UserSettings.find({where: {userId: id}}))

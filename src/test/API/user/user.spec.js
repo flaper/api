@@ -95,7 +95,7 @@ describe(`/${COLLECTION_URL}/`, function () {
     });
 
     it('Admin - allow to add', () => {
-      return adminPromise.then(({agent}) => {
+      return superPromise.then(({agent}) => {
         return agent.post(COLLECTION_URL)
           .send(NEW_USER)
           .expect(200)

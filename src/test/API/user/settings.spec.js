@@ -11,7 +11,7 @@ let UserSettings = app.models.UserSettings;
 const USER1 = USERS.user1;
 
 
-describe(`/user/:id/settings`, function () {
+describe(`/users/:id/settings`, function () {
   updateTimeouts(this);
   function _url(id) {
     return `users/${id}/settings`;

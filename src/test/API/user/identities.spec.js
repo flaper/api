@@ -10,14 +10,14 @@ let User = app.models.User;
 const USER1 = USERS.user1;
 
 
-describe(`/user/:id/identities`, function () {
+describe(`/users/:id/identities`, function () {
   updateTimeouts(this);
   function _url(id) {
     return `users/${id}/identities`;
   }
 
   describe('GET', () => {
-    it('Anonymous - allow access to settings', () => {
+    it('Anonymous - allow access to identities', () => {
       return api.get(_url(USER1.id))
         .expect(200)
         .expect((res) => {
