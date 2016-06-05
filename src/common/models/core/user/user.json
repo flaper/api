@@ -104,8 +104,7 @@
         "create",
         "updateAttributes",
         "__delete__roles",
-        "setRole",
-        "getObjectsIds"
+        "setRole"
       ]
     }
   ],
