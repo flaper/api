@@ -43,8 +43,8 @@ export function initObjects(User) {
   }
 
   function getObjectsIds(id) {
-    return User.getExtra(id)
-      .then(extra => _.get(extra, 'objects', []))
+    let UserExtra = User.app.models.UserExtra;
+    return UserExtra.getObjectsIds(id);
   }
 
   function isOwner(userId, objectId) {

@@ -24,5 +24,14 @@ describe(`models/UserObjects`, function () {
       .then((extra) => _.isEqual(extra.objects, objs))
   });
 
+  it("Adding object multiple times should be ignored", () => {
+    return UserExtra.addObject(userId, OBJECTS.place1.id)
+      .then(() => UserExtra.addObject(userId, OBJECTS.place1.id))
+      .then(objects => {
+        let res = objects.filter(id => id === OBJECTS.place1.id);
+        res.length.should.eq(1)
+      })
+  });
+
   after(() => UserExtra.updateValue(userId, 'objects', []))
 });

@@ -1,3 +1,4 @@
+import _ from 'lodash';
 module.exports = (UserExtra) => {
   UserExtra.commonInit(UserExtra);
   UserExtra.PROPERTIES = {
@@ -10,6 +11,7 @@ module.exports = (UserExtra) => {
 
   UserExtra.updateValue = updateValue;
   UserExtra.addObject = addObject;
+  UserExtra.getObjectsIds = getObjectsIds;
 
   function updateValue(userId, name, value) {
     let id = userId.toString();
@@ -27,15 +29,24 @@ module.exports = (UserExtra) => {
   function addObject(userId, objId) {
     let id = userId.toString();
     const PROP_OBJECT = UserExtra.PROPERTIES.objects;
-    return new Promise((resolve, reject) => {
-      let collection = getCollection();
-      collection.findOneAndUpdate({userId: id},
-        {$push: {[PROP_OBJECT]: objId}},
-        {upsert: true, returnOriginal: false}, (err, result) => {
-          if (err) return reject(err);
-          resolve(result.value.objects);
+    return getObjectsIds(userId)
+      .then((objs) => {
+        if (objs.includes(objId)) return objs;
+        return new Promise((resolve, reject) => {
+          let collection = getCollection();
+          collection.findOneAndUpdate({userId: id},
+            {$push: {[PROP_OBJECT]: objId}},
+            {upsert: true, returnOriginal: false}, (err, result) => {
+              if (err) return reject(err);
+              resolve(result.value.objects);
+            })
         })
-    })
+      })
+  }
+
+  function getObjectsIds(id) {
+    return UserExtra.findOne({userId: id})
+      .then(extra => _.get(extra, 'objects', []))
   }
 
   function getCollection() {
