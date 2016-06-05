@@ -84,7 +84,7 @@
       "property": [
         "saveSettings",
         "getExtra",
-        "getObjects"
+        "getObjectsIds"
       ]
     },
     {
@@ -92,7 +92,7 @@
       "principalId": "sales",
       "permission": "ALLOW",
       "property": [
-        "getObjects"
+        "getObjectsIds"
       ]
     },
     {
@@ -104,7 +104,7 @@
         "updateAttributes",
         "__delete__roles",
         "setRole",
-        "getObjects"
+        "getObjectsIds"
       ]
     }
   ],

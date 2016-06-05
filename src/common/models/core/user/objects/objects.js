@@ -5,7 +5,7 @@ import _ from 'lodash';
 /**object owners*/
 export function initObjects(User) {
   User.addObject = addObject;
-  User.getObjects = getObjects;
+  User.getObjectsIds = getObjectsIds;
   User.isOwner = isOwner;
 
   User.remoteMethod('addObject', {
@@ -19,8 +19,8 @@ export function initObjects(User) {
     returns: {root: true}
   });
 
-  User.remoteMethod('getObjects', {
-    http: {verb: 'get', path: '/:id/objects'},
+  User.remoteMethod('getObjectsIds', {
+    http: {verb: 'get', path: '/:id/objectsIds'},
     description: 'Get objects which user own',
     accessType: 'EXECUTE',
     accepts: {arg: 'id', type: 'string', description: 'User Id', required: true},
@@ -42,13 +42,13 @@ export function initObjects(User) {
       });
   }
 
-  function getObjects(id) {
+  function getObjectsIds(id) {
     return User.getExtra(id)
       .then(extra => _.get(extra, 'objects', []))
   }
 
   function isOwner(userId, objectId) {
-    return User.getObjects(userId)
+    return User.getObjectsIds(userId)
       .then(objs => objs.includes(objectId));
   }
 }

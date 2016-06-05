@@ -14,9 +14,13 @@ describe(`/users/:id/objects`, function () {
     return `users/${id}/objects`;
   }
 
+  function _getUrl(id) {
+    return `users/${id}/objectsIds`;
+  }
+
   before(() => {
     return user1Promise.then(({agent}) => {
-      return agent.get(_url(user1.id))
+      return agent.get(_getUrl(user1.id))
         .expect(200)
         .expect(res => {
           let objects = res.body;
@@ -28,28 +32,28 @@ describe(`/users/:id/objects`, function () {
   describe('GET', () => {
     it('User - deny foreign access', () => {
       return user1Promise.then(({agent}) => {
-        return agent.get(_url(user2.id))
+        return agent.get(_getUrl(user2.id))
           .expect(401);
       });
     });
 
     it('User - allow access to his list', () => {
       return user1Promise.then(({agent}) => {
-        return agent.get(_url(user1.id))
+        return agent.get(_getUrl(user1.id))
           .expect(200);
       });
     });
 
     it('Sales - allow access to anyone list', () => {
       return salesPromise.then(({agent}) => {
-        return agent.get(_url(user1.id))
+        return agent.get(_getUrl(user1.id))
           .expect(200);
       });
     });
 
     it('Super - allow access to anyone list', () => {
       return superPromise.then(({agent}) => {
-        return agent.get(_url(user1.id))
+        return agent.get(_getUrl(user1.id))
           .expect(200);
       });
     })
@@ -93,7 +97,7 @@ describe(`/users/:id/objects`, function () {
         })
         .then(() => {
           return superPromise.then(({agent}) => {
-            return agent.get(_url(user2.id))
+            return agent.get(_getUrl(user2.id))
               .expect(200)
               .expect(res => {
                 let objects = res.body;
