@@ -7,7 +7,7 @@ before(() => {
       //can be approved via actual check
       console.log('MongoDB connection established');
       resolve();
-    }, 10);
+    }, 20);
   })
 });
 

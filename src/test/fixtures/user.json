@@ -33,5 +33,12 @@
     "email": "super@test.com",
     "password": "test-super",
     "displayName": "Test Super"
+  },
+  "testSales": {
+    "id": "1a1000000000000000001030",
+    "username": "test-sales",
+    "email": "sales@test.com",
+    "password": "test-sales",
+    "displayName": "Test Sales"
   }
 }

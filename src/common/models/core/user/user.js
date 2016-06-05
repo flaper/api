@@ -7,6 +7,7 @@ import {initRoles} from './roles/roles'
 import {initPhotos} from './photo/photo'
 import {initSettings} from './settings/settings'
 import {initExtra} from './extra/extra'
+import {initObjects} from './objects/objects'
 
 module.exports = (User) => {
   User.observe('before save', timestampBehavior);
@@ -44,4 +45,5 @@ module.exports = (User) => {
   initPhotos(User);
   initSettings(User);
   initExtra(User);
+  initObjects(User);
 };

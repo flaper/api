@@ -10,5 +10,11 @@
     "principalId": "1a1000000000000000001020",
     "principalType": "USER",
     "roleId": "1a2000000000000000000002"
+  },
+  "test-sales": {
+    "id": "1a3000000000000000001003",
+    "principalId": "1a1000000000000000001030",
+    "principalType": "USER",
+    "roleId": "1a2000000000000000000004"
   }
 }

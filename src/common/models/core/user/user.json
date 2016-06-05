@@ -45,7 +45,6 @@
   },
   "acls": [
     {
-      "accessType": "READ",
       "principalType": "ROLE",
       "principalId": "$everyone",
       "permission": "ALLOW",
@@ -63,11 +62,37 @@
     },
     {
       "principalType": "ROLE",
+      "principalId": "$authenticated",
+      "permission": "ALLOW",
+      "property": [
+        "addObject"
+      ]
+    },
+    {
+      "principalType": "ROLE",
       "principalId": "$everyone",
       "permission": "DENY",
       "property": [
         "create",
         "updateAttributes"
+      ]
+    },
+    {
+      "principalType": "ROLE",
+      "principalId": "$owner",
+      "permission": "ALLOW",
+      "property": [
+        "saveSettings",
+        "getExtra",
+        "getObjects"
+      ]
+    },
+    {
+      "principalType": "ROLE",
+      "principalId": "sales",
+      "permission": "ALLOW",
+      "property": [
+        "getObjects"
       ]
     },
     {
@@ -78,16 +103,8 @@
         "create",
         "updateAttributes",
         "__delete__roles",
-        "setRole"
-      ]
-    },
-    {
-      "principalType": "ROLE",
-      "principalId": "$owner",
-      "permission": "ALLOW",
-      "property": [
-        "saveSettings",
-        "getExtra"
+        "setRole",
+        "getObjects"
       ]
     }
   ],
