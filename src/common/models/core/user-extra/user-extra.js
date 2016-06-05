@@ -11,6 +11,7 @@ module.exports = (UserExtra) => {
 
   UserExtra.updateValue = updateValue;
   UserExtra.addObject = addObject;
+  UserExtra.removeObject = removeObject;
   UserExtra.getObjectsIds = getObjectsIds;
 
   function updateValue(userId, name, value) {
@@ -42,6 +43,21 @@ module.exports = (UserExtra) => {
             })
         })
       })
+  }
+
+  function removeObject(userId, objId) {
+    let id = userId.toString();
+    const PROP_OBJECT = UserExtra.PROPERTIES.objects;
+    return new Promise((resolve, reject) => {
+      let collection = getCollection();
+      collection.findOneAndUpdate({userId: id},
+        {$pull: {[PROP_OBJECT]: objId}},
+        {upsert: true, returnOriginal: false}, (err, result) => {
+          if (err) return reject(err);
+          let objects = _.get(result.value, 'objects', []);
+          resolve(objects);
+        })
+    })
   }
 
   function getObjectsIds(id) {

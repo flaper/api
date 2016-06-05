@@ -108,6 +108,50 @@ describe(`/users/:id/objects`, function () {
     });
   });
 
+  describe('DELETE', () => {
+    it('Anonymous - deny', () => {
+      return api.del(_url(user1.id))
+        .send({objectId: OBJECTS.obj1.id})
+        .expect(401)
+    });
+
+    it('Super - allow to unlink anyone', () => {
+      return superPromise.then(({agent}) => {
+        return agent.del(_url(user1.id))
+          .send({objectId: OBJECTS.obj1.id})
+          .expect(200)
+          .expect(res => {
+            let objects = res.body;
+            let obj1 = objects.find(id => OBJECTS.obj1.id);
+            should.not.exist(obj1);
+          })
+      })
+    });
+
+    it('User - deny to unlink if not owner', () => {
+      return user1Promise.then(({agent}) => {
+        return agent.del(_url(user1.id))
+          .send({objectId: OBJECTS.obj1.id})
+          .expect(403)
+      })
+    });
+
+    it('User - allow to unlink if owner', () => {
+      return superPromise.then(({agent}) => {
+          return agent.put(_url(user1.id))
+            .send({objectId: OBJECTS.obj1.id})
+            .expect(200)
+        })
+        .then(() => {
+          return user1Promise.then(({agent}) => {
+            return agent.del(_url(user1.id))
+              .send({objectId: OBJECTS.obj1.id})
+              .expect(200)
+          })
+        })
+    });
+  });
+
   after(() => {
     let promises = [];
     promises.push(User.updateExtraValue(user1.id, 'objects', []));

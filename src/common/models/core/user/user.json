@@ -65,7 +65,8 @@
       "principalId": "$authenticated",
       "permission": "ALLOW",
       "property": [
-        "addObject"
+        "addObject",
+        "removeObject"
       ]
     },
     {
