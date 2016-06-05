@@ -33,7 +33,7 @@ module.exports = (UserExtra) => {
         {$push: {[PROP_OBJECT]: objId}},
         {upsert: true, returnOriginal: false}, (err, result) => {
           if (err) return reject(err);
-          resolve(result.value);
+          resolve(result.value.objects);
         })
     })
   }
