@@ -124,6 +124,10 @@ describe(`/${COLLECTION_URL}/@status`, function () {
           moment(extra.premiumSupport).diff(now, 'days').should.eq(30);
           extra.objects.should.include(REQUEST1.subjectId);
         })
+        .then(() => ManageRequest.findById(REQUEST1.id))
+        .then(request => {
+          request.status.should.eq(ManageRequest.STATUS.APPROVED)
+        })
         .then(() => User.updateExtraValue(user1.id, 'objects', []))
     });
   });

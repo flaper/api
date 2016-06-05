@@ -54,6 +54,8 @@ export function initStatusActions(ManageRequest) {
         promises.push(User.addObject(request.userId, request.subjectId));
         let premiumExpire = moment().add(30, 'days').toDate();
         promises.push(User.updateExtraValueToLeast(request.userId, UserExtra.PROPERTIES.premiumSupport, premiumExpire));
+        request.status = ManageRequest.STATUS.APPROVED;
+        promises.push(request.save({skipIgnore: {status: true}}));
         return Promise.all(promises);
       });
   }
