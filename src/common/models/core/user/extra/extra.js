@@ -5,6 +5,7 @@ import _ from 'lodash';
 export function initExtra(User) {
   User.getExtra = getExtra;
   User.updateExtraValue = updateExtraValue;
+  User.updateExtraValueToLeast = updateExtraValueToLeast;
 
   User.remoteMethod('getExtra', {
     http: {verb: 'get', path: '/:id/extra'},
@@ -29,6 +30,12 @@ export function initExtra(User) {
   //is not supposed for API
   function updateExtraValue(userId, name, value) {
     let UserExtra = User.app.models.UserExtra;
-    UserExtra.updateValue(userId, name, value);
+    return UserExtra.updateValue(userId, name, value);
+  }
+
+  //is not supposed for API
+  function updateExtraValueToLeast(userId, name, value) {
+    let UserExtra = User.app.models.UserExtra;
+    return UserExtra.updateValueToLeast(userId, name, value);
   }
 }

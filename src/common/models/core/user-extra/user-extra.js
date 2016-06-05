@@ -10,6 +10,7 @@ module.exports = (UserExtra) => {
   UserExtra.PROPERTIES_FOR_API = [PROPS.premiumSupport, PROPS.objects];
 
   UserExtra.updateValue = updateValue;
+  UserExtra.updateValueToLeast = updateValueToLeast;
   UserExtra.addObject = addObject;
   UserExtra.removeObject = removeObject;
   UserExtra.getObjectsIds = getObjectsIds;
@@ -22,13 +23,23 @@ module.exports = (UserExtra) => {
         {$set: {userId: id, [name]: value}},
         {upsert: true, returnOriginal: false}, (err, result) => {
           if (err) return reject(err);
-          resolve(result.value);
+          resolve(result.value[name]);
         })
     })
   }
 
-  function addObject(userId, objId) {
+  function updateValueToLeast(userId, name, value) {
+    return UserExtra.findOne({userId})
+      .then(extra => {
+        let current = _.get(extra, name);
+        if (!current || current < value) return updateValue(userId, name, value);
+        return current;
+      })
+  }
+
+  function addObject(userId, objectId) {
     let id = userId.toString();
+    let objId = objectId.toString();
     const PROP_OBJECT = UserExtra.PROPERTIES.objects;
     return getObjectsIds(userId)
       .then((objs) => {
