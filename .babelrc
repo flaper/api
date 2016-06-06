@@ -1,4 +1,7 @@
 {
-  "presets": ["es2015"],
-  "plugins": ["array-includes"]
+  "plugins": [
+  "array-includes", "transform-es2015-destructuring",
+  "transform-es2015-literals", "transform-es2015-modules-commonjs", "transform-es2015-object-super",
+  "transform-es2015-parameters"
+  ]
 }
