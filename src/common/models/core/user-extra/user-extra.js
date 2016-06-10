@@ -72,7 +72,7 @@ module.exports = (UserExtra) => {
   }
 
   function getObjectsIds(id) {
-    return UserExtra.findOne({userId: id})
+    return UserExtra.findOne({where: {userId: id}})
       .then(extra => _.get(extra, 'objects', []))
   }
 

@@ -70,7 +70,11 @@ let fobjects = {
     "title": "Объект без запросов на управление",
     "mainDomain": FObject.DOMAINS.PLACES
   },
-
+  "obj_without_owners": {
+    "id": "1a7000000000000000001006",
+    "title": "Объект без владельцев",
+    "mainDomain": FObject.DOMAINS.PLACES
+  },
   "deleted1": {
     "id": "1a7000000000000000001020",
     "mainDomain": FObject.DOMAINS.PLACES,

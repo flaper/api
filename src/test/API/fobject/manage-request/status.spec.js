@@ -9,12 +9,11 @@ import _ from 'lodash';
 import moment from 'moment';
 import {returnProperties} from '../../commonModel/helper'
 
-let FObject = app.models.FObject;
 let User = app.models.User;
 let ManageRequest = app.models.ManageRequest;
 const COLLECTION_URL = 'ManageRequests';
 const OBJECT_WITHOUT_MR = OBJECTS.obj_without_manage_requests;
-const REQUEST1 = REQUESTS.request1;
+const REQUEST2 = REQUESTS.request2;
 
 describe(`/${COLLECTION_URL}/@status`, function () {
   updateTimeouts(this);
@@ -45,7 +44,7 @@ describe(`/${COLLECTION_URL}/@status`, function () {
   });
 
   describe('Delete', () => {
-    let url = `${COLLECTION_URL}/${REQUEST1.id}/status/delete`;
+    let url = `${COLLECTION_URL}/${REQUEST2.id}/status/delete`;
 
     it('User not allowed to delete foreign request', () => {
       return adminPromise.then(({agent})=> {
@@ -55,17 +54,17 @@ describe(`/${COLLECTION_URL}/@status`, function () {
     });
 
     it('User allowed to delete his request', () => {
-      return user1Promise.then(({agent})=> {
+      return user2Promise.then(({agent})=> {
         return agent.put(url)
           .expect(200)
       }).then(() => {
           //cannot delete second time
-          return user1Promise.then(({agent})=> {
+          return user2Promise.then(({agent})=> {
             return agent.put(url)
               .expect(403)
           })
         })
-        .then(() => returnProperties(ManageRequest, REQUEST1.id, {status: ManageRequest.STATUS.ACTIVE}))
+        .then(() => returnProperties(ManageRequest, REQUEST2.id, {status: ManageRequest.STATUS.ACTIVE}))
     });
 
     it('Super cannot delete request', () => {
@@ -77,7 +76,7 @@ describe(`/${COLLECTION_URL}/@status`, function () {
   });
 
   describe('Deny', () => {
-    let url = `${COLLECTION_URL}/${REQUEST1.id}/status/deny`;
+    let url = `${COLLECTION_URL}/${REQUEST2.id}/status/deny`;
 
     it('User cannot deny request', () => {
       return user1Promise.then(({agent})=> {
@@ -97,12 +96,12 @@ describe(`/${COLLECTION_URL}/@status`, function () {
               .expect(403)
           })
         })
-        .then(() => returnProperties(ManageRequest, REQUEST1.id, {status: ManageRequest.STATUS.ACTIVE}))
+        .then(() => returnProperties(ManageRequest, REQUEST2.id, {status: ManageRequest.STATUS.ACTIVE}))
     });
   });
 
   describe('Approve', () => {
-    let url = `${COLLECTION_URL}/${REQUEST1.id}/status/approve`;
+    let url = `${COLLECTION_URL}/${REQUEST2.id}/status/approve`;
 
     it('User cannot approve request', () => {
       return user1Promise.then(({agent})=> {
@@ -113,22 +112,27 @@ describe(`/${COLLECTION_URL}/@status`, function () {
 
     it('Super can approve request, premium support should have 30 days', () => {
       let now = moment();
-      return superPromise.then(({agent})=> {
-          return agent.put(url)
-            .expect(200)
+      let before = null;
+      return User.getExtra(REQUEST2.userId)
+        .then(extra => before = extra.objects ? extra.objects: [])
+        .then(() => {
+          return superPromise.then(({agent})=> {
+            return agent.put(url)
+              .expect(200)
+          })
         })
-        .then(() => User.getExtra(REQUEST1.userId))
+        .then(() => User.getExtra(REQUEST2.userId))
         .then(extra => {
           should.exist(extra.premiumSupport);
           should.exist(extra.objects);
           moment(extra.premiumSupport).diff(now, 'days').should.eq(30);
-          extra.objects.should.include(REQUEST1.subjectId);
+          extra.objects.should.include(REQUEST2.subjectId);
         })
-        .then(() => ManageRequest.findById(REQUEST1.id))
+        .then(() => ManageRequest.findById(REQUEST2.id))
         .then(request => {
           request.status.should.eq(ManageRequest.STATUS.APPROVED)
         })
-        .then(() => User.updateExtraValue(user1.id, 'objects', []))
+        .then(() => User.updateExtraValue(user1.id, 'objects', before))
     });
   });
 
