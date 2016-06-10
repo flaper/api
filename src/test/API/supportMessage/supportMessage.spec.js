@@ -9,6 +9,54 @@ const COLLECTION_URL = 'supportMessages';
 describe(`/${COLLECTION_URL}`, function () {
   updateTimeouts(this);
 
+  describe('GET', () => {
+    let url = `${COLLECTION_URL}/${user1.id}`;
+    it('Anonymous - deny', () => {
+      return api.get(url)
+        .expect(401)
+    });
+
+    it('Regular user - deny', () => {
+      let premiumSupport = null;
+      return User.getExtra(user2.id)
+        .then(extra => premiumSupport => extra.premiumSupport)
+        .then(() => User.updateExtraValue(user2.id, 'premiumSupport', null))
+        .then(() => {
+          return user2Promise.then(({agent}) => {
+            return agent.get(url)
+              .expect(403);
+          });
+        })
+        .then(() => User.updateExtraValue(user2.id, 'premiumSupport', premiumSupport))
+    });
+
+    it('User with premiumSupport - allow', () => {
+      return user1Promise.then(({agent}) => {
+        return agent.get(url)
+          .expect(res => {
+            let messages = res.body;
+            messages.length.should.least(2);
+            messages.forEach(message => {
+              true.should.eq(message.toId === user1.id || message.fromId === user1.id);
+            })
+          })
+      });
+    });
+
+    it('Super - allow', () => {
+      return superPromise.then(({agent}) => {
+        return agent.get(url)
+          .expect(res => {
+            let messages = res.body;
+            messages.length.should.least(2);
+            messages.forEach(message => {
+              true.should.eq(message.toId === user1.id || message.fromId === user1.id);
+            })
+          })
+      });
+    })
+  });
+
   describe('POST', () => {
     let toSupport = {toId: 0, message: 'I have issue'};
     let fromSupport = {toId: user1.id, message: 'Fixed'};

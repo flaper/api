@@ -13,7 +13,19 @@ module.exports = (SupportMessage) => {
 
   SupportMessage.disableAllRemotesExcept(SupportMessage);
 
+  SupportMessage.getDialog = getDialog;
   SupportMessage.postMessage = postMessage;
+
+  SupportMessage.remoteMethod('getDialog', {
+    http: {verb: 'get', path: '/:userId'},
+    description: 'Get support dialog',
+    accessType: 'READ',
+    accepts: [
+      {arg: 'userId', type: 'string', description: 'client userId', required: true}
+    ],
+    returns: {root: true}
+  });
+
   SupportMessage.remoteMethod('postMessage', {
     http: {verb: 'post', path: '/'},
     description: 'Sent message',
@@ -25,9 +37,30 @@ module.exports = (SupportMessage) => {
     returns: {root: true}
   });
 
+  function getDialog(dialog) {
+    let userId = App.getCurrentUserId();
+    return checkAccessToDialog(userId, dialog)
+      .then(hasAccess => {
+        if (!hasAccess) throw ERRORS.forbidden();
+        return SupportMessage.find({where: {dialog: dialog}});
+      })
+  }
+
+  function checkAccessToDialog(userId, dialog) {
+    let id = userId.toString();
+    return App.isSales(id)
+      .then(isSales => {
+        if (isSales) return true;
+        if (dialog === id) {
+          return hasPremiumSupport(id);
+        }
+        return false;
+      });
+  }
+
   function postMessage(toId, message) {
     let userId = App.getCurrentUserId();
-    return checkAccess(userId, toId)
+    return checkAccessToSend(userId, toId)
       .then(hasAccess => {
         if (!hasAccess) throw ERRORS.forbidden();
         //client sends message to toId = 0 and dialog equal to clientId
@@ -41,7 +74,7 @@ module.exports = (SupportMessage) => {
       })
   }
 
-  function checkAccess(userId, toId) {
+  function checkAccessToSend(userId, toId) {
     return App.isSales(userId)
       .then(isSales => {
         if (isSales) return true;

@@ -36,7 +36,7 @@
       "principalType": "ROLE",
       "principalId": "$authenticated",
       "permission": "ALLOW",
-      "property": "postMessage"
+      "property": ["postMessage", "getDialog"]
     }
   ],
   "methods": {},
