@@ -29,7 +29,7 @@ module.exports = (UserExtra) => {
   }
 
   function updateValueToLeast(userId, name, value) {
-    return UserExtra.findOne({userId})
+    return UserExtra.findOne({where: {userId}})
       .then(extra => {
         let current = _.get(extra, name);
         if (!current || current < value) return updateValue(userId, name, value);

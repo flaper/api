@@ -114,7 +114,9 @@ describe(`/${COLLECTION_URL}/@status`, function () {
       let now = moment();
       let before = null;
       return User.getExtra(REQUEST2.userId)
-        .then(extra => before = extra.objects ? extra.objects: [])
+        .then(extra => {
+          before = extra.objects ? extra.objects: []
+        })
         .then(() => {
           return superPromise.then(({agent})=> {
             return agent.put(url)

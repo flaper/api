@@ -19,6 +19,7 @@
       "../common/models/payment/payment",
       "../common/models/story",
       "../common/models/story/story-best",
+      "../common/models/supportMessage",
       "../common/models/view/view",
       "../common/models/view/view-history"
     ],
@@ -126,6 +127,10 @@
     "public": true
   },
   "Payment": {
+    "dataSource": "mongo",
+    "public": true
+  },
+  "SupportMessage": {
     "dataSource": "mongo",
     "public": true
   }
