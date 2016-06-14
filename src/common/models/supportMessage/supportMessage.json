@@ -27,6 +27,10 @@
     "message": {
       "type": "string",
       "required": true
+    },
+    "messageHTML": {
+      "type": "string",
+      "required": true
     }
   },
   "validations": [],

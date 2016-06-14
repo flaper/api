@@ -1,5 +1,6 @@
 import {ERRORS} from '../../utils/errors';
 import {App} from '../../services/App';
+import {FlaperMark} from '../../../libs/markdown/markdown'
 import {ignoreProperties, setProperty} from '../../behaviors/propertiesHelper'
 import _ from 'lodash';
 
@@ -118,6 +119,7 @@ module.exports = (SupportMessage) => {
         supportMessage.fromId = userId;
         supportMessage.toId = toId;
         supportMessage.message = message;
+        supportMessage.messageHTML = FlaperMark.toHTML(message);
         return supportMessage.save();
       })
   }

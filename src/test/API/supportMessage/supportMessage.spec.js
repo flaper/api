@@ -92,7 +92,7 @@ describe(`/${COLLECTION_URL}`, function () {
   });
 
   describe('POST', () => {
-    let toSupport = {toId: 0, message: 'I have issue'};
+    let toSupport = {toId: 0, message: 'I have issue with http://flaper.org/something'};
     let fromSupport = {toId: user1.id, message: 'Fixed'};
     it('Anonymous - deny', () => {
       return api.post(COLLECTION_URL)
