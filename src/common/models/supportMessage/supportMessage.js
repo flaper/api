@@ -91,7 +91,7 @@ module.exports = (SupportMessage) => {
     return checkAccessToDialog(userId, dialog)
       .then(hasAccess => {
         if (!hasAccess) throw ERRORS.forbidden();
-        return SupportMessage.find({where: {dialog: dialog}});
+        return SupportMessage.find({where: {dialog: dialog, status: 'active'}});
       })
   }
 
