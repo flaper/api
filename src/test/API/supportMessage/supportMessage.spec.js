@@ -2,16 +2,20 @@ import {api, user1, user1Promise, user2Promise, user2, adminPromise, superPromis
 import {updateTimeouts} from '../timeout';
 let should = require('chai').should();
 import app from '../../helpers/app';
+import {returnProperties} from '../commonModel/helper'
 import _ from 'lodash';
+import MESSAGES from '../../fixtures/supportMessage.js';
+const MESSAGE1 = MESSAGES.msg1;
 
-let User = app.models.User;
+const User = app.models.User;
+const SupportMessage = app.models.SupportMessage;
 const COLLECTION_URL = 'supportMessages';
 
 describe(`/${COLLECTION_URL}`, function () {
   updateTimeouts(this);
 
   describe('GET dialogs', () => {
-    let url = COLLECTION_URL;
+    let url = `${COLLECTION_URL}/dialogs`;
     it('Anonymous - deny', () => {
       return api.get(url)
         .expect(401)
@@ -40,7 +44,7 @@ describe(`/${COLLECTION_URL}`, function () {
   });
 
   describe('GET dialog', () => {
-    let url = `${COLLECTION_URL}/${user1.id}`;
+    let url = `${COLLECTION_URL}/dialogs/${user1.id}`;
     it('Anonymous - deny', () => {
       return api.get(url)
         .expect(401)
@@ -139,5 +143,34 @@ describe(`/${COLLECTION_URL}`, function () {
           })
       });
     });
+  });
+
+  describe('DELETE', () => {
+    let url = `${COLLECTION_URL}/${MESSAGE1.id}`;
+
+    it('Anonymous - deny', () => {
+      return api.del(url)
+        .expect(401)
+    });
+
+    it('Another user - deny', () => {
+      return user2Promise.then(({agent}) => {
+        return agent.del(url)
+          .expect(403)
+      });
+    });
+
+    it('Allow for own message', () => {
+      return user1Promise.then(({agent}) => {
+          return agent.del(url)
+            .expect(200)
+        })
+        .then(() => SupportMessage.findByIdRequired(MESSAGE1.id))
+        .then(message => {
+          message.status.should.eq('deleted');
+        });
+    });
+
+    after(() => returnProperties(SupportMessage, MESSAGE1.id, {status: 'active'}))
   })
 });

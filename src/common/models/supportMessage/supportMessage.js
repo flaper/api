@@ -1,5 +1,6 @@
 import {ERRORS} from '../../utils/errors';
 import {App} from '../../services/App';
+import {ignoreProperties, setProperty} from '../../behaviors/propertiesHelper'
 import _ from 'lodash';
 
 module.exports = (SupportMessage) => {
@@ -13,19 +14,24 @@ module.exports = (SupportMessage) => {
 
   SupportMessage.disableAllRemotesExcept(SupportMessage);
 
+  SupportMessage.observe('before save', ignoreProperties({
+    status: {newDefault: SupportMessage.STATUS.ACTIVE}
+  }));
+
   SupportMessage.getDialogs = getDialogs;
   SupportMessage.getDialog = getDialog;
   SupportMessage.postMessage = postMessage;
+  SupportMessage.removeMessage = removeMessage;
 
   SupportMessage.remoteMethod('getDialogs', {
-    http: {verb: 'get', path: '/'},
+    http: {verb: 'get', path: '/dialogs'},
     description: 'Get last dialogs',
     accessType: 'READ',
     returns: {root: true}
   });
 
   SupportMessage.remoteMethod('getDialog', {
-    http: {verb: 'get', path: '/:userId'},
+    http: {verb: 'get', path: '/dialogs/:userId'},
     description: 'Get support dialog',
     accessType: 'READ',
     accepts: [
@@ -45,19 +51,31 @@ module.exports = (SupportMessage) => {
     returns: {root: true}
   });
 
+  SupportMessage.remoteMethod('removeMessage', {
+    http: {verb: 'delete', path: '/:id'},
+    description: 'Remove message',
+    accessType: 'WRITE',
+    accepts: [
+      {arg: 'id', type: 'string', description: 'Message id', required: true}
+    ],
+    returns: {root: true}
+  });
+
+
   function getDialogs() {
     return new Promise((resolve, reject) => {
       var collection = SupportMessage.dataSource.connector.collection('SupportMessage');
-      collection.aggregate({
-          $match: {status: 'active'},
-          $sort: {"created": -1}
-        },
+      collection.aggregate(
+        {$match: {status: 'active'}},
+        {$sort: {created: -1}},
         {
           $group: {
             _id: {dialog: "$dialog"},
-            last: {$first: "$$ROOT"}
+            last: {$first: "$$ROOT"},
+            created: {$max: "$created"}
           }
         },
+        {$sort: {created: -1}},
         function (err, data) {
           if (err) {
             return reject(err);
@@ -120,6 +138,23 @@ module.exports = (SupportMessage) => {
     return User.getExtra(userId)
       .then(extra => {
         return extra.premiumSupport && extra.premiumSupport > new Date();
+      })
+  }
+
+  function removeMessage(id) {
+    let userId = App.getCurrentUserId().toString();
+    let isSuper = false;
+    return App.isSuper(userId)
+      .then((value) => {
+        isSuper = value;
+        return SupportMessage.findByIdRequired(id)
+      })
+      .then(message => {
+        if (isSuper || message.fromId.toString() === userId) {
+          message.status = SupportMessage.STATUS.DELETED;
+          return message.save({skipIgnore: {status: true}});
+        }
+        throw ERRORS.forbidden();
       })
   }
 };
