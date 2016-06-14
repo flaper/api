@@ -2,6 +2,7 @@ import {api, user1, user1Promise, user2Promise, user2, adminPromise, superPromis
 import {updateTimeouts} from '../timeout';
 let should = require('chai').should();
 import app from '../../helpers/app';
+import _ from 'lodash';
 
 let User = app.models.User;
 const COLLECTION_URL = 'supportMessages';
@@ -9,7 +10,36 @@ const COLLECTION_URL = 'supportMessages';
 describe(`/${COLLECTION_URL}`, function () {
   updateTimeouts(this);
 
-  describe('GET', () => {
+  describe('GET dialogs', () => {
+    let url = COLLECTION_URL;
+    it('Anonymous - deny', () => {
+      return api.get(url)
+        .expect(401)
+    });
+
+    it('User - deny', () => {
+      return user1Promise.then(({agent}) => {
+        return agent.get(url)
+          .expect(401);
+      });
+    });
+
+    it('Super - allow', () => {
+      return superPromise.then(({agent}) => {
+        return agent.get(url)
+          .expect(res => {
+            let dialogs = res.body;
+            dialogs.length.should.least(2);
+            let dialogsIds = dialogs.map(message => message.dialog);
+            dialogsIds = _.uniq(dialogsIds);
+            //so all dialogs are unique actually
+            dialogsIds.length.should.eq(dialogs.length);
+          })
+      });
+    })
+  });
+
+  describe('GET dialog', () => {
     let url = `${COLLECTION_URL}/${user1.id}`;
     it('Anonymous - deny', () => {
       return api.get(url)
@@ -91,6 +121,7 @@ describe(`/${COLLECTION_URL}`, function () {
             message.toId.should.eq('0');
             message.fromId.should.eq(user1.id);
             message.dialog.should.eq(user1.id);
+            message.message.should.eq(toSupport.message);
           })
       });
     });

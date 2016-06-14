@@ -13,8 +13,16 @@ module.exports = (SupportMessage) => {
 
   SupportMessage.disableAllRemotesExcept(SupportMessage);
 
+  SupportMessage.getDialogs = getDialogs;
   SupportMessage.getDialog = getDialog;
   SupportMessage.postMessage = postMessage;
+
+  SupportMessage.remoteMethod('getDialogs', {
+    http: {verb: 'get', path: '/'},
+    description: 'Get last dialogs',
+    accessType: 'READ',
+    returns: {root: true}
+  });
 
   SupportMessage.remoteMethod('getDialog', {
     http: {verb: 'get', path: '/:userId'},
@@ -36,6 +44,28 @@ module.exports = (SupportMessage) => {
     ],
     returns: {root: true}
   });
+
+  function getDialogs() {
+    return new Promise((resolve, reject) => {
+      var collection = SupportMessage.dataSource.connector.collection('SupportMessage');
+      collection.aggregate({
+          $match: {status: 'active'},
+          $sort: {"created": -1}
+        },
+        {
+          $group: {
+            _id: {dialog: "$dialog"},
+            last: {$first: "$$ROOT"}
+          }
+        },
+        function (err, data) {
+          if (err) {
+            return reject(err);
+          }
+          resolve(data.map(row => row.last));
+        });
+    });
+  }
 
   function getDialog(dialog) {
     let userId = App.getCurrentUserId();
