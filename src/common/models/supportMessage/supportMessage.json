@@ -68,9 +68,6 @@
     }
   },
   "scope": {
-    "order": "created DESC",
-    "where": {
-      "status": "active"
-    }
+    "order": "created DESC"
   }
 }
