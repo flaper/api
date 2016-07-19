@@ -13,6 +13,7 @@ describe(`/${COLLECTION_URL}/@sanitize`, function () {
   updateTimeouts(this);
   const NEW_STORY = {
     id: '1a4000000000000000010001',
+    type: 'article',
     title: "New story <em>for test",
     content: "Nice <b>content</b> for test"
   };
@@ -26,9 +27,9 @@ describe(`/${COLLECTION_URL}/@sanitize`, function () {
   });
 
   it('Add - should be sanitized', () => {
-    NEW_STORY.content = Sanitize.fakerIncreaseAlphaLength(NEW_STORY.content, Story.MIN_CONTENT_LENGTH);
+    NEW_STORY.content = Sanitize.fakerIncreaseAlphaLength(NEW_STORY.content, Story.MIN_LENGTH.article);
     let validContent = 'Nice content for test';
-    validContent = Sanitize.fakerIncreaseAlphaLength(validContent, Story.MIN_CONTENT_LENGTH);
+    validContent = Sanitize.fakerIncreaseAlphaLength(validContent, Story.MIN_LENGTH.article);
 
     return user1Promise.then(({agent}) => {
       return agent.post(COLLECTION_URL)
@@ -46,8 +47,8 @@ describe(`/${COLLECTION_URL}/@sanitize`, function () {
     let title2 = '</div> ter </div>x<br>';
     let content2 = '//// dd<script>xs';
     let validContent2 = '//// dd';
-    content2 = Sanitize.fakerIncreaseAlphaLength(content2, Story.MIN_CONTENT_LENGTH);
-    validContent2 = Sanitize.fakerIncreaseAlphaLength(validContent2, Story.MIN_CONTENT_LENGTH);
+    content2 = Sanitize.fakerIncreaseAlphaLength(content2, Story.MIN_LENGTH.article);
+    validContent2 = Sanitize.fakerIncreaseAlphaLength(validContent2, Story.MIN_LENGTH.article);
 
     return user1Promise.then(({agent}) => {
       return agent.put(`${COLLECTION_URL}/${NEW_STORY.id}`)

@@ -19,12 +19,21 @@ module.exports = (Story) => {
     DENIED: 'denied',
     ERASED: 'erased'
   };
+  Story.TYPE = {
+    ARTICLE: 'article',
+    REVIEW: 'review'
+  };
   Story.STATUSES = _.values(Story.STATUS);
+  Story.TYPES = _.values(Story.TYPE);
 
   Story.validatesInclusionOf('status', {in: Story.STATUSES});
+  Story.validatesInclusionOf('type', {in: Story.TYPES});
 
   Story.MAX_TAGS = 3;
-  Story.MIN_CONTENT_LENGTH = 1000;
+  Story.MIN_LENGTH = {
+    article: 1000,
+    review: 256,
+  };
 
   Story.disableRemoteMethod('deleteById', true);
 
@@ -44,7 +53,16 @@ module.exports = (Story) => {
   }));
   Story.observe('before save', Sanitize.observer('title', Sanitize.text));
   Story.observe('before save', contentObserver);
-  Story.observe('before save', Sanitize.alphaMinLengthObserver('content', Story.MIN_CONTENT_LENGTH));
+  Story.observe('before save', (ctx) => {
+    let type = ctx.instance ? ctx.instance.type : _.get(ctx, 'currentInstance.type');
+    if (!type) {
+      if (ctx.data) delete ctx.data.content;
+      // e.g. just updating comments number
+      return Promise.resolve();
+    }
+    let observer = Sanitize.alphaMinLengthObserver('content', Story.MIN_LENGTH[type]);
+    return observer(ctx);
+  });
   Story.observe('before save', Sanitize.observer('tags', tagSanitize));
 
   initSyncUser(Story);

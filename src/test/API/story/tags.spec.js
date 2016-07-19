@@ -15,6 +15,7 @@ describe(`/${COLLECTION_URL}/@tags`, function () {
 
   const NEW_STORY = {
     id: '1a4000000000000000010001',
+    type: 'article',
     content: STORY1.content,
     title: STORY1.title,
     tags: ["tag1", "tag2", "tag3"]

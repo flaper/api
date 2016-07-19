@@ -7,6 +7,7 @@ let Story = app.models.Story;
 let stories = {
   "test1": {
     "id": "1a4000000000000000001001",
+    "type": 'article',
     "userId": "1a1000000000000000001001",
     "title": "Заголовок для теста",
     //this slug actually will be generated anyway, it just to use in test
@@ -17,6 +18,7 @@ let stories = {
   },
   "test2": {
     "id": "1a4000000000000000001002",
+    "type": 'article',
     "userId": "1a1000000000000000001001",
     "title": "Заголовок для теста2",
     "content": "Тестовое содержимое2",
@@ -25,6 +27,7 @@ let stories = {
   },
   "test3": {
     "id": "1a4000000000000000001003",
+    "type": 'article',
     "userId": "1a1000000000000000001002",
     "title": "Заголовок для теста3",
     "content": "Тестовое содержимое3",
@@ -33,6 +36,7 @@ let stories = {
   },
   "denied1": {
     "id": "1a4000000000000000001010",
+    "type": 'article',
     "status": Story.STATUS.DENIED,
     "userId": "1a1000000000000000001001",
     "title": "Отклоненная статья",
@@ -40,12 +44,14 @@ let stories = {
   },
   "deleted1": {
     "id": "1a4000000000000000001020",
+    "type": 'article',
     "status": Story.STATUS.DELETED,
     "userId": "1a1000000000000000001001",
     "title": "Удаленная статья",
     "content": "Содержимое удаленной статьи."
   },
   "withoutId": {
+    "type": 'article',
     "status": Story.STATUS.ACTIVE,
     "userId": "1a1000000000000000001001",
     "title": "Статья без id в фикстурах",
@@ -53,6 +59,7 @@ let stories = {
   },
   //2 means second user
   "withoutLikesUser3": {
+    "type": 'article',
     "id": "1a4000000000000000001030",
     "status": Story.STATUS.ACTIVE,
     "userId": "1a1000000000000000001003",
@@ -60,6 +67,7 @@ let stories = {
     "content": "Содержимое статьи без лайков."
   },
   "withoutActiveComments": {
+    "type": 'article',
     "id": "1a4000000000000000001040",
     "status": Story.STATUS.ACTIVE,
     "userId": "1a1000000000000000001003",
@@ -69,7 +77,7 @@ let stories = {
 };
 
 _.forOwn(stories, (story) => {
-  story.content = Sanitize.fakerIncreaseAlphaLength(story.content, Story.MIN_CONTENT_LENGTH)
+  story.content = Sanitize.fakerIncreaseAlphaLength(story.content, Story.MIN_LENGTH.article)
 });
 
 export default stories;

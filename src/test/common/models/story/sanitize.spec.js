@@ -10,13 +10,14 @@ let Story = app.models.Story;
 describe(`models/story/@sanitize`, function () {
   const NEW_STORY = {
     id: '1a4000000000000000010001',
+    type: 'article',
     title: "Title 'with' \"quotes\" <a>inside tag</a>",
     content: "# Header\n" +
     "Second line."
   };
 
   before(() => {
-    NEW_STORY.content = Sanitize.fakerIncreaseAlphaLength(NEW_STORY.content, Story.MIN_CONTENT_LENGTH);
+    NEW_STORY.content = Sanitize.fakerIncreaseAlphaLength(NEW_STORY.content, Story.MIN_LENGTH.article);
     return Story.create(NEW_STORY);
   });
 

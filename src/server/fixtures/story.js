@@ -64,7 +64,7 @@ let stories = {
 };
 
 _.forOwn(stories, (story) => {
-  story.content = Sanitize.fakerIncreaseAlphaLength(story.content, Story.MIN_CONTENT_LENGTH)
+  story.content = Sanitize.fakerIncreaseAlphaLength(story.content, Story.MIN_LENGTH.article)
 });
 
 export default stories;

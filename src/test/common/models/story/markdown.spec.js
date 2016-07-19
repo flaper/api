@@ -9,6 +9,7 @@ let Story = app.models.Story;
 describe(`models/story/@markdown`, function () {
   const NEW_STORY = {
     id: '1a4000000000000000010001',
+    type: 'article',
     title: "New story for test",
     content: "# Header\n" +
     "Second line.\n" +
@@ -18,7 +19,7 @@ describe(`models/story/@markdown`, function () {
   };
 
   before(() => {
-    NEW_STORY.content = Sanitize.fakerIncreaseAlphaLength(NEW_STORY.content, Story.MIN_CONTENT_LENGTH);
+    NEW_STORY.content = Sanitize.fakerIncreaseAlphaLength(NEW_STORY.content, Story.MIN_LENGTH.article);
     return Story.create(NEW_STORY);
   });
 

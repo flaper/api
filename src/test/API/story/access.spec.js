@@ -72,6 +72,7 @@ describe(`/${COLLECTION_URL}`, function () {
 
     const NEW_STORY = {
       id: '1a4000000000000000010001',
+      type: 'article',
       title: "New story for test",
       content: STORY1.content,
       //this userId should be ignored
@@ -104,8 +105,7 @@ describe(`/${COLLECTION_URL}`, function () {
         .then(user => user.storiesNumber.should.eq(storiesNumberBefore + 1))
         .then(() => Account.getAccountById(user1.id))
         .then(account => account.should.eq(moneyBefore + 1))
-    })
-    ;
+    });
 
     it('User - deny to foreign update', () => {
       return user2Promise.then(({agent}) => {
@@ -118,7 +118,7 @@ describe(`/${COLLECTION_URL}`, function () {
     let newTitle = "NEW TITLE";
     let newId = '1a4000000000000000910001';
     let newContent = 'NEW CONTENT';
-    newContent = Sanitize.fakerIncreaseAlphaLength(newContent, Story.MIN_CONTENT_LENGTH);
+    newContent = Sanitize.fakerIncreaseAlphaLength(newContent, Story.MIN_LENGTH.article);
 
     it('User - deny to update id', () => {
       return user1Promise.then(({agent}) => {

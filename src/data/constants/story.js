@@ -1,6 +1,7 @@
 export default {
   "welcome": {
     "id": "1a4000000000000000000001",
+    "type": "article",
     "userId": "1a1000000000000000000001",
     "title": "Добро пожаловать!!",
     "content": "## Введение\n" +

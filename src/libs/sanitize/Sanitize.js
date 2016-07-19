@@ -6,12 +6,12 @@ export class Sanitize {
    * @description difference with Sanitize.text is that current method encode '"<> etc to html entities
    * @param dirty
    * @returns {*}
-     */
+   */
   static html(dirty) {
     return sanitizeHtml(dirty, {
       allowedTags: [],
       allowedAttributes: [],
-      textFilter: function(text) {
+      textFilter: function (text) {
         return text.replace(/&quot;/g, '\"');
       }
     }).trim();

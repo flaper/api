@@ -76,7 +76,7 @@ export class Fixture {
     let promises = values.map(callback);
     return Promise.all(promises)
       .then(() => console.log(`${pluralModelName}' fixtures are loaded`))
-      .catch((err) => console.error(`Uplodad ${singleModelName} error: ${JSON.stringify(err)}`));
+      .catch((err) => console.error(`Upload ${singleModelName} error: ${JSON.stringify(err)}`));
   }
 
   //to apply new indexes and upload new models

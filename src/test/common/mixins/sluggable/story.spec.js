@@ -13,18 +13,21 @@ describe(`Sluggable/Story`, function () {
   const TITLE1 = 'Для теста slug';
   const NEW_DENIED_STORY = {
     id: '1a4000000000000000010001',
+    type: 'article',
     title: TITLE1,
     content: STORY1.content,
     status: Story.STATUS.DENIED
   };
   const NEW_ACTIVE_STORY1 = {
     id: '1a4000000000000000010002',
+    type: 'article',
     title: TITLE1,
     content: STORY1.content,
     status: Story.STATUS.ACTIVE
   };
   const NEW_ACTIVE_STORY2 = {
     id: '1a4000000000000000010003',
+    type: 'article',
     title: TITLE1,
     content: STORY1.content,
     status: Story.STATUS.ACTIVE
@@ -32,6 +35,7 @@ describe(`Sluggable/Story`, function () {
 
   const NEW_ACTIVE_STORY3 = {
     id: '1a4000000000000000010004',
+    type: 'article',
     title: TITLE1,
     content: STORY1.content,
     status: Story.STATUS.ACTIVE
@@ -39,6 +43,7 @@ describe(`Sluggable/Story`, function () {
 
   const NEW_ACTIVE_STORY4 = {
     id: '1a4000000000000000010005',
+    type: 'article',
     title: TITLE1,
     content: STORY1.content,
     status: Story.STATUS.ACTIVE
@@ -46,6 +51,7 @@ describe(`Sluggable/Story`, function () {
 
   const NEW_ACTIVE_STORY5 = {
     id: '1a4000000000000000010006',
+    type: 'article',
     title: TITLE1,
     content: STORY1.content,
     status: Story.STATUS.ACTIVE
@@ -53,6 +59,7 @@ describe(`Sluggable/Story`, function () {
 
   const NEW_ACTIVE_STORY10 = {
     id: '1a4000000000000000010010',
+    type: 'article',
     title: 'Идеи для   творчества.',
     content: STORY1.content,
     status: Story.STATUS.ACTIVE
