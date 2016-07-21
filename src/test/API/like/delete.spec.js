@@ -28,6 +28,7 @@ describe(`/${COLLECTION_URL}/delete`, function () {
     const NEW_LIKE = {
       subjectId: STORY_WITHOUT_LIKES_USER3.id,
       subjectType: 'Story',
+      subjectUserId: STORY_WITHOUT_LIKES_USER3.userId,
       userId: user1.id
     };
     before(() => Like.create(NEW_LIKE));

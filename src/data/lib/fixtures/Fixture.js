@@ -4,7 +4,7 @@ import fs from 'fs';
 import PromiseQueue from "promise-queue"
 import {lowerFirstLetter} from '../../../common/utils/string';
 import {App} from '../../../common/services/App';
-import {countlikesNumber} from './Like'
+import {countLikesNumber} from './Like'
 
 let dataSource = app.dataSources.mongo;
 
@@ -128,7 +128,7 @@ export class Fixture {
   //private
   startProcessing() {
     return this.uploadAllModels()
-      .then(countlikesNumber);
+      .then(countLikesNumber);
   }
 
   process() {

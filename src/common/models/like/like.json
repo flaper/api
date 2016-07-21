@@ -19,6 +19,10 @@
       "type": "string",
       "required": true
     },
+    "subjectUserId": {
+      "type": "string",
+      "required": true
+    },
     "updated": false
   },
   "hidden": {

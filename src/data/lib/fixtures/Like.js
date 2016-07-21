@@ -1,7 +1,7 @@
 import app from '../../../server/server';
 import _ from 'lodash';
 
-export function countlikesNumber() {
+export function countLikesNumber() {
   let Like = app.models.Like;
   return Like.find({fields: {subjectId: true, subjectType: true}})
     .then(result => {

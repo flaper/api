@@ -3,31 +3,37 @@
     "id": "1a6000000000000000001001",
     "userId": "1a1000000000000000001002",
     "subjectId": "1a4000000000000000001001",
-    "subjectType": "Story"
+    "subjectType": "Story",
+    "subjectUserId": "1a1000000000000000001001"
   },
   "like_story2": {
     "userId": "1a1000000000000000001002",
     "subjectId": "1a4000000000000000001002",
-    "subjectType": "Story"
+    "subjectType": "Story",
+    "subjectUserId": "1a1000000000000000001001"
   },
   "like_story3": {
     "userId": "1a1000000000000000001001",
     "subjectId": "1a4000000000000000001003",
-    "subjectType": "Story"
+    "subjectType": "Story",
+    "subjectUserId": "1a1000000000000000001002"
   },
   "like_comment1": {
     "userId": "1a1000000000000000001002",
     "subjectId": "1a5000000000000000001001",
-    "subjectType": "Comment"
+    "subjectType": "Comment",
+    "subjectUserId": "1a1000000000000000001001"
   },
   "like_comment2": {
     "userId": "1a1000000000000000001002",
     "subjectId": "1a5000000000000000001002",
-    "subjectType": "Comment"
+    "subjectType": "Comment",
+    "subjectUserId": "1a1000000000000000001001"
   },
   "like_comment3": {
     "userId": "1a1000000000000000001001",
     "subjectId": "1a5000000000000000001003",
-    "subjectType": "Comment"
+    "subjectType": "Comment",
+    "subjectUserId": "1a1000000000000000001001"
   }
 }

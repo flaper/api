@@ -98,6 +98,7 @@ module.exports = (Like) => {
   function actionInternalCreate(subjectId, userId) {
     let IdToType = Like.app.models.IdToType;
     let subjectType;
+    let subjectUserId;
     return IdToType.findByIdRequired(subjectId)
       .then(idToType => {
         subjectType = idToType.type;
@@ -110,8 +111,9 @@ module.exports = (Like) => {
         if (subject.userId.toString() === userId.toString()) {
           throw ERRORS.badRequest('Cannot like own subject.')
         }
+        subjectUserId = subject.userId;
       })
-      .then(() => Like.create({subjectId, userId, subjectType}))
+      .then(() => Like.create({subjectId, userId, subjectType, subjectUserId}))
       .then(() => Like.iSyncSubject(subjectType, subjectId))
       .then((count) => {
         if (subjectType === 'Story') {

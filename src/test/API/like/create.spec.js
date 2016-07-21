@@ -71,6 +71,10 @@ describe(`/${COLLECTION_URL}/create`, function () {
         })
       })
       .then(() => {
+        Like.find({order: 'created DESC', limit: 1})
+          .then(likes => likes[0].subjectUserId.should.eq(STORY_WITHOUT_LIKES_USER3.userId))
+      })
+      .then(() => {
         return user2Promise.then(({agent}) => {
           return agent.post(`${COLLECTION_URL}/${STORY_WITHOUT_LIKES_USER3.id}`)
             .expect(200)
