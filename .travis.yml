@@ -9,7 +9,7 @@ addons:
     - mongodb-3.0-precise
     packages:
     - g++-4.8
-    - mongodb-3.0-precise
+    - mongodb-3.0-server
 node_js:
   - "5.1"
 services:
