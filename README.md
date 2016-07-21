@@ -4,6 +4,9 @@ Browse API - [http://api.flaper.org/explorer/](http://api.flaper.org/explorer/)
 
 Based on [LoopBack](http://loopback.io) framework.
 
+## Requirements
+mongodb 2.6 or higher
+
 ## Installation
 ```
 npm install

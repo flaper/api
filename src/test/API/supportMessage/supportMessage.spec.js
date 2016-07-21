@@ -31,6 +31,7 @@ describe(`/${COLLECTION_URL}`, function () {
     it('Super - allow', () => {
       return superPromise.then(({agent}) => {
         return agent.get(url)
+          .expect(200)
           .expect(res => {
             let dialogs = res.body;
             dialogs.length.should.least(2);

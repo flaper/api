@@ -6,8 +6,10 @@ addons:
   apt:
     sources:
     - ubuntu-toolchain-r-test
+    - mongodb-3.0-precise
     packages:
     - g++-4.8
+    - mongodb-3.0-precise
 node_js:
   - "5.1"
 services:
@@ -18,3 +20,6 @@ before_install:
   - ssh-keyscan -H bitbucket.org >> ~/.ssh/known_hosts 2>/dev/null
   - git clone git@bitbucket.org:sklyukin/flaper.config.test.git build_config
   - cp build_config/src/server/config.local.json src/server/config.local.json
+after_failure:
+  - cat src/test/out/app.out
+  - cat src/test/out/app.err
