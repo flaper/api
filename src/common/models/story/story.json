@@ -23,6 +23,9 @@
       "type": "string",
       "required": true
     },
+    "rating": {
+      "type": "number"
+    },
     "content": {
       "type": "string",
       "required": true
@@ -64,6 +67,10 @@
     "user": {
       "type": "belongsTo",
       "model": "user"
+    },
+    "object": {
+      "type": "belongsTo",
+      "model": "FObject"
     }
   },
   "acls": [

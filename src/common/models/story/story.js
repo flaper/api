@@ -7,6 +7,7 @@ import {initStatusActions} from './status/status';
 import {initGet} from './get/get';
 import {initSyncUser} from './methods/syncUser';
 import {initDelete} from './methods/internalDelete';
+import {ERRORS} from '../../utils/errors';
 import _ from 'lodash';
 
 module.exports = (Story) => {
@@ -32,7 +33,7 @@ module.exports = (Story) => {
   Story.MAX_TAGS = 3;
   Story.MIN_LENGTH = {
     article: 1000,
-    review: 256,
+    review: 256
   };
 
   Story.disableRemoteMethod('deleteById', true);
@@ -53,7 +54,16 @@ module.exports = (Story) => {
   }));
   Story.observe('before save', Sanitize.observer('title', Sanitize.text));
   Story.observe('before save', contentObserver);
-  Story.observe('before save', (ctx) => {
+  Story.observe('before save', minLengthObserver);
+  Story.observe('before save', Sanitize.observer('tags', tagSanitize));
+  Story.observe('before save', reviewObserver);
+
+  initSyncUser(Story);
+  initStatusActions(Story);
+  initGet(Story);
+  initDelete(Story);
+
+  function minLengthObserver(ctx) {
     let type = ctx.instance ? ctx.instance.type : _.get(ctx, 'currentInstance.type');
     if (!type) {
       if (ctx.data) delete ctx.data.content;
@@ -62,14 +72,7 @@ module.exports = (Story) => {
     }
     let observer = Sanitize.alphaMinLengthObserver('content', Story.MIN_LENGTH[type]);
     return observer(ctx);
-  });
-  Story.observe('before save', Sanitize.observer('tags', tagSanitize));
-
-  initSyncUser(Story);
-  initStatusActions(Story);
-  initGet(Story);
-  initDelete(Story);
-
+  }
 
   function contentObserver(ctx) {
     let sanitizeContent = Sanitize.observer('content', Sanitize.html);
@@ -96,4 +99,29 @@ module.exports = (Story) => {
     return a.filter(a => a)
   }
 
+  function reviewObserver(ctx) {
+    return new Promise((resolve, reject)=> {
+      if (ctx.isNewInstance) {
+        if (ctx.instance.type !== Story.TYPE.REVIEW)
+          return resolve();
+        verifyRating(ctx.instance.rating);
+        verifyFObject(ctx.instance.objectId);
+      }
+      resolve();
+    })
+  }
+
+  function verifyRating(rating) {
+    if (!rating)
+      throw ERRORS.badRequest('Rating required');
+    if (![1, 2, 3, 4, 5, 6, 7, 8, 9].includes(rating))
+      throw ERRORS.badRequest('Invalid rating');
+  }
+
+  function verifyFObject(objectId) {
+    if (!objectId)
+      throw ERRORS.badRequest('Invalid objectId');
+
+    // throw ERRORS.badRequest('Invalid objectId');
+  }
 };

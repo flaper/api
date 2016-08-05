@@ -20,6 +20,8 @@ describe(`/${COLLECTION_URL}/@reviews`, function () {
       type: 'review',
       title: "New story for test",
       content: Sanitize.fakerIncreaseAlphaLength("test review", 256),
+      rating: 8,
+      objectId: '1a7000000000000000001001',
       //this userId should be ignored
       userId: '1a400000000000000001111'
     };
@@ -28,6 +30,22 @@ describe(`/${COLLECTION_URL}/@reviews`, function () {
       return user1Promise.then(({agent}) => {
         return agent.post(COLLECTION_URL)
           .send(_.assign({}, NEW_REVIEW, {content: 'too short'}))
+          .expect(400)
+      })
+    });
+
+    it('User - deny to add without rating', () => {
+      return user1Promise.then(({agent}) => {
+        return agent.post(COLLECTION_URL)
+          .send(_.omit(NEW_REVIEW, 'rating'))
+          .expect(400)
+      })
+    });
+
+    it('User - deny to add without objectId', () => {
+      return user1Promise.then(({agent}) => {
+        return agent.post(COLLECTION_URL)
+          .send(_.omit(NEW_REVIEW, 'objectId'))
           .expect(400)
       })
     });
