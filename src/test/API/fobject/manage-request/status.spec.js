@@ -29,115 +29,91 @@ describe(`/${COLLECTION_URL}/@status`, function () {
     subjectId: OBJECT_WITHOUT_MR.id
   };
 
-  it('Status should be ignored when creating user', () => {
-    return user1Promise.then(({agent})=> {
-      return agent.post(COLLECTION_URL)
-        .send(NEW_REQUEST)
-        .expect(200)
-        .expect((res) => {
-          let request = res.body;
-          request.status.should.eq(ManageRequest.STATUS.ACTIVE);
-          request.userId.should.eq(user1.id);
-          request.subjectId.should.eq(NEW_REQUEST.subjectId);
-        })
-    });
+  it('Status should be ignored when creating user', function*() {
+    let {agent} = yield (user1Promise);
+    yield (agent.post(COLLECTION_URL)
+      .send(NEW_REQUEST)
+      .expect(200)
+      .expect((res) => {
+        let request = res.body;
+        request.status.should.eq(ManageRequest.STATUS.ACTIVE);
+        request.userId.should.eq(user1.id);
+        request.subjectId.should.eq(NEW_REQUEST.subjectId);
+      }));
   });
 
   describe('Delete', () => {
     let url = `${COLLECTION_URL}/${REQUEST2.id}/status/delete`;
 
-    it('User not allowed to delete foreign request', () => {
-      return adminPromise.then(({agent})=> {
-        return agent.put(url)
-          .expect(401)
-      });
+    it('User not allowed to delete foreign request', function*() {
+      let {agent} = yield (adminPromise);
+      yield (agent.put(url)
+        .expect(401));
     });
 
-    it('User allowed to delete his request', () => {
-      return user2Promise.then(({agent})=> {
-        return agent.put(url)
-          .expect(200)
-      }).then(() => {
-          //cannot delete second time
-          return user2Promise.then(({agent})=> {
-            return agent.put(url)
-              .expect(403)
-          })
-        })
-        .then(() => returnProperties(ManageRequest, REQUEST2.id, {status: ManageRequest.STATUS.ACTIVE}))
+    it('User allowed to delete his request', function*() {
+      let {agent} = yield (user2Promise);
+      yield (agent.put(url)
+        .expect(200));
+      agent = (yield (user2Promise)).agent;
+      yield (agent.put(url)
+        .expect(403));
+      yield  (returnProperties(ManageRequest, REQUEST2.id, {status: ManageRequest.STATUS.ACTIVE}));
     });
 
-    it('Super cannot delete request', () => {
-      return superPromise.then(({agent})=> {
-        return agent.put(url)
-          .expect(401)
-      });
+    it('Super cannot delete request', function*() {
+      let {agent} = yield (superPromise);
+      yield (agent.put(url)
+        .expect(401));
     });
   });
 
   describe('Deny', () => {
     let url = `${COLLECTION_URL}/${REQUEST2.id}/status/deny`;
 
-    it('User cannot deny request', () => {
-      return user1Promise.then(({agent})=> {
-        return agent.put(url)
-          .expect(401)
-      });
+    it('User cannot deny request', function*() {
+      let {agent} = yield (user1Promise);
+      yield (agent.put(url)
+        .expect(401));
     });
 
-    it('Super can deny request', () => {
-      return superPromise.then(({agent})=> {
-        return agent.put(url)
-          .expect(200)
-      }).then(() => {
-          //cannot deny second time
-          return superPromise.then(({agent})=> {
-            return agent.put(url)
-              .expect(403)
-          })
-        })
-        .then(() => returnProperties(ManageRequest, REQUEST2.id, {status: ManageRequest.STATUS.ACTIVE}))
+    it('Super can deny request', function*() {
+      let {agent} = yield (superPromise);
+      yield (agent.put(url));
+      agent = (yield (superPromise)).agent;
+      yield (agent.put(url)
+        .expect(403));
+      yield (returnProperties(ManageRequest, REQUEST2.id, {status: ManageRequest.STATUS.ACTIVE}));
     });
   });
 
   describe('Approve', () => {
     let url = `${COLLECTION_URL}/${REQUEST2.id}/status/approve`;
 
-    it('User cannot approve request', () => {
-      return user1Promise.then(({agent})=> {
-        return agent.put(url)
-          .expect(401)
-      });
+    it('User cannot approve request', function*() {
+      let {agent} = yield (user1Promise);
+      yield (agent.put(url)
+        .expect(401));
     });
 
-    it('Super can approve request, premium support should have 30 days', () => {
+    it('Super can approve request, premium support should have 30 days', function*() {
       let now = moment();
-      let before = null;
-      return User.getExtra(REQUEST2.userId)
-        .then(extra => {
-          before = extra.objects ? extra.objects: []
-        })
-        .then(() => {
-          return superPromise.then(({agent})=> {
-            return agent.put(url)
-              .expect(200)
-          })
-        })
-        .then(() => User.getExtra(REQUEST2.userId))
-        .then(extra => {
-          should.exist(extra.premiumSupport);
-          should.exist(extra.objects);
-          moment(extra.premiumSupport).diff(now, 'days').should.eq(30);
-          extra.objects.should.include(REQUEST2.subjectId);
-        })
-        .then(() => ManageRequest.findById(REQUEST2.id))
-        .then(request => {
-          request.status.should.eq(ManageRequest.STATUS.APPROVED)
-        })
-        .then(() => User.updateExtraValue(user1.id, 'objects', before))
+      let extra = yield (User.getExtra(REQUEST2.userId));
+      let before = extra.objects || [];
+      let {agent} = yield (superPromise);
+      yield (agent.put(url)
+        .expect(200));
+      extra = yield (User.getExtra(REQUEST2.userId));
+      should.exist(extra.premiumSupport);
+      should.exist(extra.objects);
+      moment(extra.premiumSupport).diff(now, 'days').should.eq(30);
+      extra.objects.should.include(REQUEST2.subjectId);
+      let request = yield (ManageRequest.findById(REQUEST2.id));
+      request.status.should.eq(ManageRequest.STATUS.APPROVED);
+      yield (User.updateExtraValue(user1.id, 'objects', before));
+      yield (returnProperties(ManageRequest, REQUEST2.id, {status: ManageRequest.STATUS.ACTIVE}));
     });
   });
-
 
   after(() => ManageRequest.deleteById(NEW_REQUEST.id))
 });
