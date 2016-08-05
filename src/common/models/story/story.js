@@ -74,21 +74,19 @@ module.exports = (Story) => {
     return observer(ctx);
   }
 
-  function contentObserver(ctx) {
+  function* contentObserver(ctx) {
     let sanitizeContent = Sanitize.observer('content', Sanitize.html);
 
-    return sanitizeContent(ctx)
-      .then((value) => {
-        if (value) {
-          let html = FlaperMark.toHTML(value);
-          let shortInline = FlaperMark.shortInline(value);
-          let shortText = Sanitize.text(shortInline);
+    let value = yield (sanitizeContent(ctx));
+    if (!value)
+      return;
+    let html = FlaperMark.toHTML(value);
+    let shortInline = FlaperMark.shortInline(value);
+    let shortText = Sanitize.text(shortInline);
 
-          setProperty(ctx, 'contentHTML', html);
-          setProperty(ctx, 'shortInline', shortInline);
-          setProperty(ctx, 'shortText', shortText);
-        }
-      })
+    setProperty(ctx, 'contentHTML', html);
+    setProperty(ctx, 'shortInline', shortInline);
+    setProperty(ctx, 'shortText', shortText);
   }
 
   function tagSanitize(array) {
@@ -99,16 +97,13 @@ module.exports = (Story) => {
     return a.filter(a => a)
   }
 
-  function reviewObserver(ctx) {
-    return new Promise((resolve, reject)=> {
-      if (ctx.isNewInstance) {
-        if (ctx.instance.type !== Story.TYPE.REVIEW)
-          return resolve();
-        verifyRating(ctx.instance.rating);
-        verifyFObject(ctx.instance.objectId);
-      }
-      resolve();
-    })
+  function* reviewObserver(ctx) {
+    if (ctx.isNewInstance) {
+      if (ctx.instance.type !== Story.TYPE.REVIEW)
+        return;
+      verifyRating(ctx.instance.rating);
+      verifyFObject(ctx.instance.objectId);
+    }
   }
 
   function verifyRating(rating) {

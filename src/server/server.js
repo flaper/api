@@ -11,6 +11,9 @@ var passportService = require('./auth/passportService').default;
 
 var app = module.exports = loopback();
 
+var extend = require('./extend/framework.js');
+extend.extendFramework(loopback);
+
 app.start = function () {
   // start the web server
   return app.listen(function () {
