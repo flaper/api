@@ -46,6 +46,13 @@ describe(`/${COLLECTION_URL}/@reviews`, function () {
         .expect(400));
     });
 
+    it('User - deny to add with wrong objectId', function*() {
+      let {agent} = yield (user1Promise);
+      yield (agent.post(COLLECTION_URL)
+        .send(_.assign({}, NEW_REVIEW, {objectId: '111'}))
+        .expect(400));
+    });
+
     it('User - allow to add', function*() {
       let userOld = yield (User.findByIdRequired(user1.id));
       let {agent} = yield (user1Promise);

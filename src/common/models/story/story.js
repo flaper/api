@@ -102,7 +102,7 @@ module.exports = (Story) => {
       if (ctx.instance.type !== Story.TYPE.REVIEW)
         return;
       verifyRating(ctx.instance.rating);
-      verifyFObject(ctx.instance.objectId);
+      yield (verifyFObject(ctx.instance.objectId));
     }
   }
 
@@ -113,10 +113,12 @@ module.exports = (Story) => {
       throw ERRORS.badRequest('Invalid rating');
   }
 
-  function verifyFObject(objectId) {
+  function* verifyFObject(objectId) {
     if (!objectId)
       throw ERRORS.badRequest('Invalid objectId');
-
-    // throw ERRORS.badRequest('Invalid objectId');
+    let FObject = Story.app.models.FObject;
+    let obj = yield (FObject.findById(objectId));
+    if (!obj)
+       throw ERRORS.badRequest(`Object with id ${objectId} does not exists`);
   }
 };
