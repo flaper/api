@@ -107,65 +107,56 @@ describe(`/${COLLECTION_URL}/`, function () {
 
   describe('PUT', () => {
     const NEW_PASSWORD = 'new password';
-    it('User - allow to update his password/account', ()=> {
-      return user1Promise.then(({agent}) => {
-          return agent.put(`${COLLECTION_URL}/${USER1.id}`)
-            .send({password: NEW_PASSWORD})
-            .expect(200)
-        })
-        .then(()=> {
-          return api.post(`${COLLECTION_URL}/login`)
-            .send(USER1)
-            .expect(401);
-        })
-        .then(()=> {
-          return api.post(`${COLLECTION_URL}/login`)
-            .send(_.assign({}, USER1, {password: NEW_PASSWORD}))
-            .expect(200);
-        })
-        .then(() => User.findById(USER1.id))
-        .then((user) => user.updateAttributes({password: USER1.password}))
-    });
-
-    it('Anonymous - deny to update account', () => {
-      return api.put(`${COLLECTION_URL}/${USER1.id}`)
+    it('User - allow to update his password/account', function*() {
+      let {agent} =  yield (user1Promise);
+      yield (agent.put(`${COLLECTION_URL}/${USER1.id}`)
         .send({password: NEW_PASSWORD})
-        .expect(401)
+        .expect(200));
+      yield (api.post(`${COLLECTION_URL}/login`)
+        .send(USER1)
+        .expect(401));
+      yield (api.post(`${COLLECTION_URL}/login`)
+        .send(_.assign({}, USER1, {password: NEW_PASSWORD}))
+        .expect(200));
+      let user = yield (User.findById(USER1.id));
+      yield (user.updateAttributes({password: USER1.password}));
+    });
+
+    it('Anonymous - deny to update account', function*() {
+      yield (api.put(`${COLLECTION_URL}/${USER1.id}`)
+        .send({password: NEW_PASSWORD})
+        .expect(401));
     });
 
 
-    it('User - deny to update another\'s password/account', ()=> {
-      return user1Promise.then(({agent}) => {
-        return agent.put(`${COLLECTION_URL}/${USER2.id}`)
-          .send({password: NEW_PASSWORD})
-          .expect(401)
-      })
+    it('User - deny to update another\'s password/account', function*() {
+      let {agent} =  yield (user1Promise);
+      yield (agent.put(`${COLLECTION_URL}/${USER2.id}`)
+        .send({password: NEW_PASSWORD})
+        .expect(401));
     });
 
-    it('User - deny to update anyone', () => {
-      return user1Promise.then(({agent}) => {
-        return agent.put(`${COLLECTION_URL}/${USER2.id}`)
-          .send({fullName: 'test'})
-          .expect(401)
-      })
+    it('User - deny to update anyone', function*() {
+      let {agent} =  yield (user1Promise);
+      yield (agent.put(`${COLLECTION_URL}/${USER2.id}`)
+        .send({fullName: 'test'})
+        .expect(401));
     });
 
-    it('Admin - deny to update anyone', () => {
-      return adminPromise.then(({agent}) => {
-        return agent.put(`${COLLECTION_URL}/${USER1.id}`)
-          .send({fullName: 'test'})
-          .expect(401)
-      })
+    it('Admin - deny to update anyone', function*() {
+      let {agent} =  yield (adminPromise);
+      yield (agent.put(`${COLLECTION_URL}/${USER1.id}`)
+        .send({fullName: 'test'})
+        .expect(401));
     });
 
-    it('Super - allow to update anyone', () => {
-      return superPromise.then(({agent}) => {
-          return agent.put(`${COLLECTION_URL}/${USER1.id}`)
-            .send({password: NEW_PASSWORD})
-            .expect(200)
-        })
-        .then(() => User.findById(USER1.id))
-        .then((user) => user.updateAttributes({password: USER1.password}))
+    it('Super - allow to update anyone', function*() {
+      let {agent} =  yield (superPromise);
+      yield (agent.put(`${COLLECTION_URL}/${USER1.id}`)
+        .send({password: NEW_PASSWORD})
+        .expect(200));
+      let user = yield (User.findById(USER1.id));
+      yield (user.updateAttributes({password: USER1.password}));
     });
   });
 
@@ -174,5 +165,5 @@ describe(`/${COLLECTION_URL}/`, function () {
       return api.del(`${COLLECTION_URL}/${USER1.id}`)
         .expect(404)
     });
-  })
+  });
 });
