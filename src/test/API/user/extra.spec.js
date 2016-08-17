@@ -4,11 +4,6 @@ import app from '../../helpers/app';
 import _ from 'lodash';
 let should = require('chai').should();
 
-let User = app.models.User;
-let UserExtra = app.models.UserExtra;
-
-
-
 describe(`/users/:id/extra`, function () {
   updateTimeouts(this);
 
@@ -17,23 +12,27 @@ describe(`/users/:id/extra`, function () {
   }
 
   describe('GET', () => {
-    it('Anonymous - deny', () => {
-      return api.get(_url(user1.id))
-        .expect(401)
+    it('Anonymous - deny', function*() {
+      yield (api.get(_url(user1.id))
+        .expect(401));
     });
 
-    it('User - deny access to foreign', () => {
-      return user1Promise.then(({agent}) => {
-        return agent.get(_url(user2.id))
-          .expect(401)
-      })
+    it('User - deny access to foreign', function*() {
+      let {agent} = yield (user1Promise);
+      yield (agent.get(_url(user2.id))
+        .expect(401));
     });
 
-    it('User - allow access to yourself', () => {
-      return user1Promise.then(({agent}) => {
-        return agent.get(_url(user1.id))
-          .expect(200)
-      })
+    it('User - allow access to yourself', function*() {
+      let {agent} = yield (user1Promise);
+      yield (agent.get(_url(user1.id))
+        .expect(200));
+    });
+
+    it('Super - allow access to any', function*() {
+      let {agent} = yield (superPromise);
+      yield (agent.get(_url(user1.id))
+        .expect(200));
     });
   });
 });
