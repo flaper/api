@@ -73,11 +73,51 @@ let stories = {
     "userId": "1a1000000000000000001003",
     "title": "Статья без комментариев",
     "content": "Содержимое статьи без комментариев."
+  },
+  "review1": {
+    "type": 'review',
+    "id": "1a4000000000000000002001",
+    "status": Story.STATUS.ACTIVE,
+    "userId": "1a1000000000000000001001",
+    "title": "Название отзыва",
+    "content": "Тестовый отзыв для объекта 1",
+    "rating": 8,
+    "objectId": '1a7000000000000000001001'
+  },
+  "review2": {
+    "type": 'review',
+    "id": "1a4000000000000000002002",
+    "status": Story.STATUS.ACTIVE,
+    "userId": "1a1000000000000000001002",
+    "title": "Название отзыва2",
+    "content": "Тестовый отзыв2 для объекта 1",
+    "rating": 9,
+    "objectId": '1a7000000000000000001001'
+  },
+  "review3": {
+    "type": 'review',
+    "id": "1a4000000000000000002003",
+    "status": Story.STATUS.ACTIVE,
+    "userId": "1a1000000000000000001001",
+    "title": "Название отзыва3",
+    "content": "Тестовый отзыв3 для объекта 2",
+    "rating": 7,
+    "objectId": '1a7000000000000000001002'
+  },
+  "denied_review1": {
+    "type": 'review',
+    "id": "1a4000000000000000002010",
+    "status": Story.STATUS.DENIED,
+    "userId": "1a1000000000000000001001",
+    "title": "Отклоненный отзыв",
+    "content": "Отклоненный отзыв для объекта 1",
+    "rating": 8,
+    "objectId": '1a7000000000000000001001'
   }
 };
 
 _.forOwn(stories, (story) => {
-  story.content = Sanitize.fakerIncreaseAlphaLength(story.content, Story.MIN_LENGTH.article)
+  story.content = Sanitize.fakerIncreaseAlphaLength(story.content, Story.MIN_LENGTH[story.type])
 });
 
 export default stories;
