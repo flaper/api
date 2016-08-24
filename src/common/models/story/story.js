@@ -103,7 +103,17 @@ module.exports = (Story) => {
         return;
       verifyRating(ctx.instance.rating);
       yield (verifyFObject(ctx.instance.objectId));
+      return;
     }
+
+    // updating existing instance via
+    // !ctx.currentInstance - happens for internal model.save
+    if (!ctx.currentInstance || ctx.currentInstance.type !== Story.TYPE.REVIEW)
+      return;
+    if (ctx.data.rating)
+      verifyRating(ctx.data.rating);
+    if (ctx.data.objectId)
+      throw ERRORS.badRequest(`Set/change of objectId is not supported via this method`);
   }
 
   function verifyRating(rating) {
@@ -119,6 +129,6 @@ module.exports = (Story) => {
     let FObject = Story.app.models.FObject;
     let obj = yield (FObject.findById(objectId));
     if (!obj)
-       throw ERRORS.badRequest(`Object with id ${objectId} does not exists`);
+      throw ERRORS.badRequest(`Object with id ${objectId} does not exists`);
   }
 };

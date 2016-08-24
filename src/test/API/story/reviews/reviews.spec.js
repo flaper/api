@@ -7,6 +7,8 @@ import {Sanitize} from '../../../../../src/libs/sanitize/Sanitize';
 import _ from 'lodash';
 
 const OBJ1 = FOBJECTS.obj1;
+const REVIEW1 = STORIES.review1;
+const REVIEW2 = STORIES.review2;
 let Story = app.models.Story;
 let User = app.models.user;
 
@@ -45,7 +47,7 @@ describe(`/${COLLECTION_URL}/@reviews`, function () {
     });
   });
 
-  describe('PUT/POST', () => {
+  describe('POST', () => {
     const NEW_REVIEW = {
       id: '1a4000000000000000010001',
       type: 'review',
@@ -108,5 +110,44 @@ describe(`/${COLLECTION_URL}/@reviews`, function () {
     });
 
     after(()=> Story.iDeleteById(NEW_REVIEW.id));
+  });
+
+  describe('PUT', ()=> {
+    it('User - deny to update foreign review', function*() {
+      let {agent} = yield (user1Promise);
+      yield (agent.put(`${COLLECTION_URL}/${REVIEW2.id}`)
+        .send({rating: 1})
+        .expect(401));
+    });
+
+    it('User - allow to update rating for review', function*() {
+      let {agent} = yield (user1Promise);
+      yield (agent.put(`${COLLECTION_URL}/${REVIEW1.id}`)
+          .send({rating: 1})
+          .expect(200)
+          .expect(res => {
+            let story = res.body;
+            story.rating.should.eq(1);
+          })
+      );
+      let review = yield (Story.findById(REVIEW1.id));
+      yield (review.updateAttributes({rating: REVIEW1.rating}));
+      review = yield (Story.findById(REVIEW1.id));
+      review.rating.should.eq(REVIEW1.rating)
+    });
+
+    it('User - deny to update with wrong rating', function*() {
+      let {agent} = yield (user1Promise);
+      yield (agent.put(`${COLLECTION_URL}/${REVIEW1.id}`)
+        .send({rating: 12})
+        .expect(400) );
+    });
+
+    it('User - deny to change objectId', function*() {
+      let {agent} = yield (user1Promise);
+      yield (agent.put(`${COLLECTION_URL}/${REVIEW1.id}`)
+        .send({objectId: FOBJECTS.obj3})
+        .expect(400) );
+    })
   });
 });
