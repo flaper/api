@@ -14,58 +14,41 @@ const regionNameById = {
 };
 
 export class FlapAPI {
-  static getObject(id) {
+  static * getObject(id) {
     let FObject = app.models.FObject;
-    let data = null;
-    return FlapAPI.request(`object/${id}`)
-      .then(res => {
-        data = res;
-        data.properties = _.keyBy(data.properties, 'id');
-        return FlapAPI.getRegionName(data.cityId)
-      })
-      .then(region => {
-        if (region.isCity) {
-          data.mainDomain = FObject.DOMAINS.PLACES;
-          data.region = region.slug;
-        } else {
-          data.mainDomain = region.slug;
-        }
-        delete data.cityId;
-        return data;
-      })
-  }
-
-  static getRegionName(regionId) {
-    if (regionNameById[regionId]) {
-      return Promise.resolve(regionNameById[regionId]);
+    let data = yield (FlapAPI.request(`object/${id}`));
+    data.properties = _.keyBy(data.properties, 'id');
+    let region = yield (FlapAPI.getRegionName(data.cityId));
+    if (region.isCity) {
+      data.mainDomain = FObject.DOMAINS.PLACES;
+      data.region = region.slug;
     } else {
-      return FlapAPI.getObject(regionId)
-        .then(region => {
-          let slug = region.title.toLowerCase();
-          let isCity = false;
-          if (region.properties && region.properties[PROPERTIES.PROPERTY_COUNTRY_ID_ID]) {
-            isCity = region.properties[PROPERTIES.PROPERTY_COUNTRY_ID_ID].value !== 'sp';
-          }
-          regionNameById[regionId] = {
-            slug: slug,
-            isCity: isCity
-          };
-          return regionNameById[regionId];
-        })
+      data.mainDomain = region.slug;
     }
+    delete data.cityId;
+    return data;
   }
 
-  static request(path) {
+  static * getRegionName(regionId) {
+    if (regionNameById[regionId]) {
+      return yield (regionNameById[regionId]);
+    }
+    let region = yield (FlapAPI.getObject(regionId));
+    let slug = region.title.toLowerCase();
+    let isCity = false;
+    if (region.properties && region.properties[PROPERTIES.PROPERTY_COUNTRY_ID_ID]) {
+      isCity = region.properties[PROPERTIES.PROPERTY_COUNTRY_ID_ID].value !== 'sp';
+    }
+    regionNameById[regionId] = {
+      slug: slug,
+      isCity: isCity
+    };
+    return regionNameById[regionId];
+  }
+
+  static * request(path) {
     let url = `${API_URL}/${path}?lang=ru`;
-    return rp(url).then(body => {
-      let data = null;
-      try {
-        data = JSON.parse(body);
-      }
-      catch (e) {
-        return Promise.reject('Cannot parse response: ', body);
-      }
-      return data;
-    })
+    let body = yield (rp(url));
+    return JSON.parse(body);
   }
 }

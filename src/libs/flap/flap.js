@@ -9,9 +9,8 @@ export class Flap {
     let id = parseInt(flapId);
     if (!id) throw 'Wrong ID';
 
-    let p1 = FlapAPI.getObject(id);
-    let p2 = FObject.findOne({where: {'flap.id': id}});
-    let [data, obj] = yield (Promise.all([p1, p2]));
+    let data = yield (FlapAPI.getObject(id));
+    let obj = yield (FObject.findOne({where: {'flap.id': id}}));
 
     if (!obj) {
       if (!['opened', 'added'].includes(data.status)) throw ERRORS.badRequest('Cannot parse data');
