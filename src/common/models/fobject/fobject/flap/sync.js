@@ -1,5 +1,4 @@
 import {Flap} from '../../../../../libs/flap/flap';
-import co from 'co';
 
 export function initFlapSync(FObject) {
   FObject.flapSync = flapSync;
@@ -12,8 +11,7 @@ export function initFlapSync(FObject) {
     returns: {root: true}
   });
 
-  function flapSync(id) {
-    let p = co.wrap(Flap.syncObject);
-    return p(id);
+  function* flapSync(id) {
+    return yield (Flap.syncObject(id));
   }
 }
