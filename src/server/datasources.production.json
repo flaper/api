@@ -1,0 +1,9 @@
+{
+  "mongo": {
+    "host": "mongo",
+    "database": "flaper",
+    "name": "mongo",
+    "connector": "mongodb",
+    "allowExtendedOperators": true
+  }
+}
