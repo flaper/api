@@ -59,39 +59,34 @@ describe(`/${COLLECTION_URL}`, function () {
       })
   });
 
-  it('Anonymous - sync two times', () => {
+  it('Anonymous - sync two times', function*() {
     const ID = FLAP_IDS.ID3;
     let objId = null;
     let title = null;
-    return user1Promise.then(() => {
-        return api.post(COLLECTION_URL)
-          .send({id: ID})
-          .expect(200)
-          .expect(res => {
-            let obj = res.body;
-            should.exist(obj.id);
-            should.exist(obj.title);
-            objId = obj.id;
-            title = obj.title;
-          })
-      })
-      .then(() => FObject.findByIdRequired(objId))
-      .then((obj) => {
-        obj.title = 'NEW TITLE';
-        return obj.save();
-      })
-      .then(() => user1Promise.then(() => {
-        return api.post(COLLECTION_URL)
-          .send({id: ID})
-          .expect(200)
-          .expect(res => {
-            let obj = res.body;
-            should.exist(obj.id);
-            should.exist(obj.title);
-            obj.id.should.eq(objId);
-            obj.title.should.eq(title);
-          })
-      }))
+    yield (api.post(COLLECTION_URL)
+      .send({id: ID})
+      .expect(200)
+      .expect(res => {
+        let obj = res.body;
+        should.exist(obj.id);
+        should.exist(obj.title);
+        objId = obj.id;
+        title = obj.title;
+      }));
+
+    let obj = yield  (FObject.findByIdRequired(objId));
+    obj.title = 'NEW TITLE';
+    yield (obj.save());
+    yield (api.post(COLLECTION_URL)
+      .send({id: ID})
+      .expect(200)
+      .expect(res => {
+        let obj = res.body;
+        should.exist(obj.id);
+        should.exist(obj.title);
+        obj.id.should.eq(objId);
+        obj.title.should.eq(title);
+      }));
   });
 
   it('Wrong ID', () => {
