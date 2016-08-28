@@ -29,6 +29,9 @@
     },
     "updated": {
       "type": "date"
+    },
+    "flapIds": {
+      "type": "Array"
     }
   },
   "hidden": [

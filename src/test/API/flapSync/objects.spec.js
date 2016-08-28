@@ -1,6 +1,8 @@
-import {api, user1, user1Promise, user2, user2Promise, adminPromise} from '../../../helpers/api';
-import {updateTimeouts} from '../../timeout';
-import app from '../../../helpers/app';
+import {api, user1, user1Promise, user2, user2Promise, adminPromise} from '../../helpers/api';
+import {updateTimeouts} from '../timeout';
+import app from '../../helpers/app';
+import {Flap} from '../../../../src/libs/flap/flap';
+
 let should = require('chai').should();
 let FObject = app.models.FObject;
 const COLLECTION_URL = 'objects/flapSync';
@@ -8,6 +10,7 @@ import _ from 'lodash';
 
 describe(`/${COLLECTION_URL}`, function () {
   updateTimeouts(this);
+
   const FLAP_IDS = {
     ID1: 23187,
     ID2: 3329255,

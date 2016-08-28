@@ -47,8 +47,14 @@ export class FlapAPI {
   }
 
   static * request(path) {
-    let url = `${API_URL}/${path}?lang=ru`;
+    let config = app.get('flap');
+    let token = _.get(config, 'token', '');
+    let url = `${API_URL}/${path}?lang=ru&key=${token}`;
     let body = yield (rp(url));
     return JSON.parse(body);
+  }
+
+  static * getUser(id) {
+    return yield (FlapAPI.request(`user/${id}`));
   }
 }
