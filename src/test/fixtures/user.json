@@ -54,5 +54,12 @@
     "email": "yuriy@test.com",
     "password": "test social",
     "displayName": "Юрий Пляцко"
+  },
+  "dobrinina": {
+    "id": "5755d58cde3ba4222cd9d58c",
+    "username": "dobrinina",
+    "email": "dobrinina@test.com",
+    "password": "test social",
+    "displayName": "Юлия Добрынина"
   }
 }

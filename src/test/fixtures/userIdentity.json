@@ -2,29 +2,26 @@
   "identity1": {
     "provider": "google-login",
     "externalId": "116923822909679391954",
-    "profile": {
-    },
     "userId": "1a1000000000000000001001"
   },
   "identity2": {
     "provider": "facebook-login",
     "externalId": "10153863566704446",
-    "profile": {
-    },
     "userId": "1a1000000000000000001001"
   },
   "aigul_odnoklassniki": {
     "provider": "odnoklassniki-login",
     "externalId": "569293123769",
-    "profile": {
-    },
     "userId": "56e6870c6b6ec35b001ace52"
   },
   "yuriy_facebook": {
     "provider": "facebook-login",
     "externalId": "815175155293930",
-    "profile": {
-    },
     "userId": "56e7240b76b3364e41802edf"
+  },
+  "dobrinina_vk": {
+    "provider": "vk-login",
+    "externalId": "165160719",
+    "userId": "5755d58cde3ba4222cd9d58c"
   }
 }

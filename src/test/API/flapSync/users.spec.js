@@ -50,6 +50,14 @@ describe(`/${COLLECTION_URL}`, function () {
     users[0].id.toString().should.eq(USERS_CONSTANTS.stas.id)
   });
 
+  it('Sync should find existed vk user', function*() {
+    let id = 7671161;
+    yield (Flap.syncUser(id));
+    let users = yield (User.find({where: {flapIds: id}}));
+    users.length.should.eq(1);
+    users[0].id.toString().should.eq(USERS.dobrinina.id)
+  });
+
   it('Sync should find existed odnoklassniki user', function*() {
     let id = 673311;
     yield (Flap.syncUser(id));
