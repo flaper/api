@@ -46,6 +46,13 @@
     "username": "aigul",
     "email": "aigul@test.com",
     "password": "test social",
-    "displayName": "Test Social"
+    "displayName": "Айгуль Уфимская"
+  },
+  "yuriy": {
+    "id": "56e7240b76b3364e41802edf",
+    "username": "yuriy",
+    "email": "yuriy@test.com",
+    "password": "test social",
+    "displayName": "Юрий Пляцко"
   }
 }

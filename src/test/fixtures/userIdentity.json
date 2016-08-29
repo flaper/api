@@ -19,5 +19,12 @@
     "profile": {
     },
     "userId": "56e6870c6b6ec35b001ace52"
+  },
+  "yuriy_facebook": {
+    "provider": "facebook-login",
+    "externalId": "815175155293930",
+    "profile": {
+    },
+    "userId": "56e7240b76b3364e41802edf"
   }
 }
