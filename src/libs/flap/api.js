@@ -3,6 +3,7 @@ import app from '../../server/server';
 import * as _ from 'lodash';
 import {FlapMap} from './map';
 import {REGIONS, PROPERTIES} from './consts';
+import {ERRORS} from '../../common/utils/errors';
 
 const API_URL = 'http://api.flap.biz';
 
@@ -55,6 +56,15 @@ export class FlapAPI {
   }
 
   static * getUser(id) {
-    return yield (FlapAPI.request(`user/${id}`));
+    let data = yield (FlapAPI.request(`user/${id}`));
+    if (data.domain === 'odnoklassniki.ru') {
+      if (!data.link) throw ERRORS.error('FLAP API - user link should be provided');
+      let matches = data.link.match(/\d+$/);
+      if (matches) {
+        // id в url соответствует id для passport js
+        data.domainId = matches[0];
+      }
+    }
+    return data;
   }
 }

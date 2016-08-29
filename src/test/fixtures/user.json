@@ -40,5 +40,12 @@
     "email": "sales@test.com",
     "password": "test-sales",
     "displayName": "Test Sales"
+  },
+  "aigul": {
+    "id": "56e6870c6b6ec35b001ace52",
+    "username": "aigul",
+    "email": "aigul@test.com",
+    "password": "test social",
+    "displayName": "Test Social"
   }
 }

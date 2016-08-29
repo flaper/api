@@ -12,5 +12,12 @@
     "profile": {
     },
     "userId": "1a1000000000000000001001"
+  },
+  "aigul_odnoklassniki": {
+    "provider": "odnoklassniki-login",
+    "externalId": "569293123769",
+    "profile": {
+    },
+    "userId": "56e6870c6b6ec35b001ace52"
   }
 }
