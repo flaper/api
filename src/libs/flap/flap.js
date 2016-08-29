@@ -36,7 +36,7 @@ export class Flap {
       'odnoklassniki.ru': 'odnoklassniki-login',
       'vk.com': 'vk-login',
       'facebook.com': 'facebook-login',
-      'mail.ru': 'main-login'
+      'mail.ru': 'mail-login'
     };
     let provider = providersMap[data.domain];
     if (!provider) throw ERRORS.error(`Wrong flap provider "${data.domain}"`);

@@ -61,5 +61,12 @@
     "email": "dobrinina@test.com",
     "password": "test social",
     "displayName": "Юлия Добрынина"
+  },
+  "kozhevnikova": {
+    "id": "5766f33ec1b2c21f0770956b",
+    "username": "kozhevnikova",
+    "email": "kozhevnikova@test.com",
+    "password": "test social",
+    "displayName": "Юлия Кожевникова"
   }
 }
