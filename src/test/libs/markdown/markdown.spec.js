@@ -233,5 +233,24 @@ describe('/markdown', () => {
         'второй абзац';
       text.should.eq(res);
     });
-  })
+  });
+
+  describe('Get images', ()=> {
+    it('Should get 0 images', () => {
+      let source = require('./data/sample6');
+      let images = FlaperMark.getImages(source);
+      images.length.should.eq(0);
+    });
+
+    it('Should get 4 images', () => {
+      let source = require('./data/sample_images');
+      let images = FlaperMark.getImages(source);
+      images.length.should.eq(4);
+      let expected = ['57c384b5a5db9b354a007a4b',
+        '57c384bca5db9b354a007a4c',
+        '57c380eca5db9b354a007a46',
+        '57c380e6a5db9b354a007a45'];
+      JSON.stringify(expected).should.eq(JSON.stringify(images));
+    });
+  });
 });

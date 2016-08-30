@@ -50,7 +50,8 @@ module.exports = (Story) => {
     views: {},
     viewsRecent: {},
     lastActive: {newDefault: (data) => data.created},
-    commentsNumber: {newDefault: 0}
+    commentsNumber: {newDefault: 0},
+    images: {newDefault: []}
   }));
   Story.observe('before save', Sanitize.observer('title', Sanitize.text));
   Story.observe('before save', contentObserver);
@@ -83,10 +84,12 @@ module.exports = (Story) => {
     let html = FlaperMark.toHTML(value);
     let shortInline = FlaperMark.shortInline(value);
     let shortText = Sanitize.text(shortInline);
+    let images = FlaperMark.getImages(value);
 
     setProperty(ctx, 'contentHTML', html);
     setProperty(ctx, 'shortInline', shortInline);
     setProperty(ctx, 'shortText', shortText);
+    setProperty(ctx, 'images', images);
   }
 
   function tagSanitize(array) {

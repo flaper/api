@@ -12,7 +12,7 @@ let stories = {
     "title": "Заголовок для теста",
     //this slug actually will be generated anyway, it just to use in test
     "slugLowerCase": "заголовок-для-теста",
-    "content": "Тестовое содержимое",
+    "content": "Тестовое содержимое ![](57c384bca5db9b354a007a4c) после картинки",
     "created": 1450716334311,
     "updated": 1450716334311
   },

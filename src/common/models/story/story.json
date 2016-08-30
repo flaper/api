@@ -54,6 +54,9 @@
       "type": "number",
       "default": 0
     },
+    "images": {
+      "type": "array"
+    },
     "tags": [
       {
         "type": "string",

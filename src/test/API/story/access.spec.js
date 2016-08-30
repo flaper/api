@@ -55,6 +55,7 @@ describe(`/${COLLECTION_URL}`, function () {
         .expect((res) => {
           let story = res.body;
           story.id.should.eq(STORY1.id);
+          story.images.length.should.eq(1);
         })
     });
 
@@ -85,26 +86,24 @@ describe(`/${COLLECTION_URL}`, function () {
         .expect(401)
     });
 
-    it('User - allow to add', () => {
-      let storiesNumberBefore;
-      return User.findByIdRequired(user1.id)
-        .then(user => storiesNumberBefore = user.storiesNumber)
-        .then(() => {
-          return user1Promise.then(({agent}) => {
-            return agent.post(COLLECTION_URL)
-              .send(NEW_STORY)
-              .expect(200)
-              .expect((res) => {
-                let story = res.body;
-                user1.id.should.equal(story.userId);
-                Story.STATUS.ACTIVE.should.equal(story.status);
-              })
-          })
-        })
-        .then(() => User.findByIdRequired(user1.id))
-        .then(user => user.storiesNumber.should.eq(storiesNumberBefore + 1))
-        .then(() => Account.getAccountById(user1.id))
-        .then(account => account.should.eq(moneyBefore + 1))
+    it('User - allow to add', function*() {
+      let user = yield (User.findByIdRequired(user1.id));
+      let storiesNumberBefore = user.storiesNumber;
+      let {agent} = yield (user1Promise);
+      yield (agent.post(COLLECTION_URL)
+        .send(NEW_STORY)
+        .expect(200)
+        .expect((res) => {
+          let story = res.body;
+          user1.id.should.equal(story.userId);
+          Story.STATUS.ACTIVE.should.equal(story.status);
+          story.images.length.should.eq(1);
+          story.images[0].should.eq('57c384bca5db9b354a007a4c');
+        }));
+      user = yield (User.findByIdRequired(user1.id));
+      user.storiesNumber.should.eq(storiesNumberBefore + 1);
+      let account = yield (Account.getAccountById(user1.id));
+      account.should.eq(moneyBefore + 1);
     });
 
     it('User - deny to foreign update', () => {
@@ -142,6 +141,7 @@ describe(`/${COLLECTION_URL}`, function () {
             user1.id.should.equal(story.userId);
             newTitle.should.equal(story.title);
             newContent.should.equal(story.content);
+            story.images.length.should.eq(0);
           })
       });
     });
