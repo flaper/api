@@ -68,6 +68,10 @@
     "subjectId_index": {
       "subjectId": 1
     },
+    "subjectUserId_index": {
+      "subjectUserId": 1,
+      "created": -1
+    },
     "userId_subjectType_created_index": {
       "userId": 1,
       "subjectType": 1,
