@@ -54,9 +54,11 @@
       "type": "number",
       "default": 0
     },
-    "images": {
-      "type": "array"
-    },
+    "images": [
+      {
+        "type": "string"
+      }
+    ],
     "tags": [
       {
         "type": "string",

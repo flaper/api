@@ -30,9 +30,11 @@
     "updated": {
       "type": "date"
     },
-    "flapIds": {
-      "type": "Array"
-    }
+    "flapIds": [
+      {
+        "type": "number"
+      }
+    ]
   },
   "hidden": [
     "email"
