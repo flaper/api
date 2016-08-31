@@ -33,12 +33,11 @@ describe(`/${COLLECTION_URL}/POST&PUT`, function () {
     })
   });
 
-  it('User - subjectId should exist', () => {
-    return user1Promise.then(({agent}) => {
-      return agent.post(COLLECTION_URL)
-        .send(_.assign({}, NEW_COMMENT, {subjectId: "wrongId"}))
-        .expect(400)
-    })
+  it('User - subjectId should exist', function* () {
+    let {agent} = yield (user1Promise);
+    yield (agent.post(COLLECTION_URL)
+      .send(_.assign({}, NEW_COMMENT, {subjectId: "wrongId"}))
+      .expect(400));
   });
 
   it('User - allow to add', () => {

@@ -11,6 +11,7 @@ import {ERRORS} from '../../utils/errors';
 import _ from 'lodash';
 
 module.exports = (Comment) => {
+  const ALLOWED_MODELS = ['Story', 'Image'];
   Comment.commonInit(Comment);
   applyIdToType(Comment);
 
@@ -59,16 +60,22 @@ module.exports = (Comment) => {
 
   let ignoreSubjectId = ignoreProperties({subjectId: {}});
 
-  function subjectObserver(ctx) {
-    let Story = Comment.app.models.Story;
+  function * subjectObserver(ctx) {
     if (!(ctx.instance && ctx.isNewInstance)) {
-      return ignoreSubjectId(ctx);
+      return yield (ignoreSubjectId(ctx));
     }
 
+    let app = Comment.app;
+    let IdToType = app.models.IdToType;
     let subjectId = ctx.instance.subjectId;
-    if (!subjectId) {
-      return Promise.reject(ERRORS.badRequest("SubjectId should exist"));
+    if (!subjectId) throw ERRORS.badRequest("SubjectId should exist");
+
+    let idToType = yield (IdToType.findByIdRequired(subjectId, null, ERRORS.badRequest));
+    let type = idToType.type;
+    if (!ALLOWED_MODELS.includes(type)) {
+      throw ERRORS.badRequest(`Comments are not allowed for type '${type}'.`);
     }
-    return Story.findByIdRequired(subjectId, null, ERRORS.badRequest);
+    let Model = app.models[type];
+    return yield (Model.findByIdRequired(subjectId));
   }
 };
