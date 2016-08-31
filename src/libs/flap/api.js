@@ -47,14 +47,6 @@ export class FlapAPI {
     return regionNameById[regionId];
   }
 
-  static * request(path) {
-    let config = app.get('flap');
-    let token = _.get(config, 'token', '');
-    let url = `${API_URL}/${path}?lang=ru&key=${token}`;
-    let body = yield (rp(url));
-    return JSON.parse(body);
-  }
-
   static * getUser(id) {
     let data = yield (FlapAPI.request(`user/${id}`));
     if (data.domain === 'odnoklassniki.ru') {
@@ -67,4 +59,17 @@ export class FlapAPI {
     }
     return data;
   }
+
+  static * getReviews(objectId) {
+    return yield (FlapAPI.request(`object/${objectId}/reviews`));
+  }
+
+  static * request(path) {
+    let config = app.get('flap');
+    let token = _.get(config, 'token', '');
+    let url = `${API_URL}/${path}?lang=ru&key=${token}`;
+    let body = yield (rp(url));
+    return JSON.parse(body);
+  }
+
 }

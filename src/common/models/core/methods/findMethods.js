@@ -11,11 +11,8 @@ export function findByIdRequired(id, filter, error = ERRORS.notFound) {
 }
 
 export function findOneRequired(params, error = ERRORS.notFound) {
-  console.log('params', params);
   return this.findOne(params)
     .then((model) => {
-      console.log('result');
-      console.log(model);
       if (!model) {
         throw error(`${this.modelName} with query '${params.where}' not found`);
       }

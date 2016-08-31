@@ -27,6 +27,14 @@ export class Flap {
     return yield (obj.save({skipTimestampCreated: true}));
   }
 
+  static * syncReviews(flapId) {
+    let FObject = app.models.FObject;
+    let obj = yield (FObject.findOne({where: {'flap.id': flapId}}));
+    if (!obj)
+      throw `Object with flapId: ${flapId} is not created in flaper yet`;
+    return yield (FlapAPI.getReviews(flapId));
+  }
+
   static * syncUser(flapId) {
     let id = getInt(flapId);
     let data = yield (FlapAPI.getUser(id));
@@ -74,10 +82,18 @@ export class Flap {
       user.flapIds.push(data.id);
       yield (user.save());
     } else {
+      if (provider === 'facebook-login') {
+        // we don't create users from facebook yet, as they have different ids in different apps
+        return null;
+      }
       user = yield User.create(userData);
     }
 
     if (!identity) {
+      if (provider === 'facebook-login') {
+        // we don't create users from facebook yet, as they have different ids in different apps
+        return null;
+      }
       identityData.userId = user.id;
       identityData.createdByFlapId = data.id;
       identity = new UserIdentity(identityData);

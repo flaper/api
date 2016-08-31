@@ -12,14 +12,14 @@ describe(`/${COLLECTION_URL}`, function () {
   updateTimeouts(this);
 
   const FLAP_IDS = {
-    ID1: 23187,
+    ID1: 23187, // Оренбург, Национальная деревня
     ID2: 3329255,
     ID3: 4484301,
     ID_CLOSED: 21920
   };
 
   it('Anonymous - sync company', () => {
-    const ID = FLAP_IDS.ID1;//национальная деревня
+    const ID = FLAP_IDS.ID1;
     return api.post(COLLECTION_URL)
       .send({id: ID})
       .expect(200)
