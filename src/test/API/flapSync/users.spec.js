@@ -74,11 +74,11 @@ describe(`/${COLLECTION_URL}`, function () {
     users[0].id.toString().should.eq(USERS.aigul.id)
   });
 
-  it.skip('Sync should find existed facebook user', function*() {
+  it('Sync should find existed facebook user', function*() {
     let id = 6972616;
-    yield (Flap.syncUser(id));
+    let data = yield (Flap.syncUser(id));
+    should.not.exist(data);
     let users = yield (User.find({where: {flapIds: id}}));
-    users.length.should.eq(1);
-    users[0].id.toString().should.eq(USERS.yuriy.id)
+    users.length.should.eq(0);
   });
 });

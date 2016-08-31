@@ -74,10 +74,18 @@ export class Flap {
       user.flapIds.push(data.id);
       yield (user.save());
     } else {
+      if (provider === 'facebook-login') {
+        // we don't create users from facebook yet, as they have different ids in different apps
+        return null;
+      }
       user = yield User.create(userData);
     }
 
     if (!identity) {
+      if (provider === 'facebook-login') {
+        // we don't create users from facebook yet, as they have different ids in different apps
+        return null;
+      }
       identityData.userId = user.id;
       identityData.createdByFlapId = data.id;
       identity = new UserIdentity(identityData);
