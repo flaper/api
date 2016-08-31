@@ -7,7 +7,7 @@ import {initSyncUser} from './methods/syncUser';
 import _ from 'lodash';
 
 module.exports = (Like) => {
-  const ALLOWED_MODELS = ['Story', 'Comment'];
+  const ALLOWED_MODELS = ['Story', 'Comment','Image'];
   Like.commonInit(Like);
   Like.disableAllRemotesExcept(Like, ['count', 'find']);
 

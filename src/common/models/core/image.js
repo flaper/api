@@ -1,5 +1,6 @@
 import {setCurrentUserId} from '../../behaviors/currentUser'
 import {ImageService} from '../../services/ImageService.js'
+import {applyIdToType} from '../../behaviors/idToType';
 import {App} from '../../services/App';
 import {ERRORS} from '../../utils/errors';
 
@@ -19,7 +20,7 @@ module.exports = (Image) => {
   Image.observe('before save', setCurrentUserId);
 
   Image.upload = upload;
-
+  applyIdToType(Image);
   Image.remoteMethod(
     'upload',
     {
