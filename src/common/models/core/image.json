@@ -12,6 +12,13 @@
     "type": {
       "type": "string",
       "required": true
+    },
+    "lastActive": {
+      "type": "date"
+    },
+    "commentsNumber": {
+      "type": "number",
+      "default": 0
     }
   },
   "validations": [],

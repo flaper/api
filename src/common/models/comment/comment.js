@@ -33,7 +33,6 @@ module.exports = (Comment) => {
 
   Comment.observe('before save', ignoreProperties({
     status: {newDefault: Comment.STATUS.ACTIVE},
-    subjectType: {newDefault: 'story'},
     contentHTML: {},
     shortInline: {}
   }));
@@ -56,11 +55,11 @@ module.exports = (Comment) => {
   initCustomDelete(Comment);
   initSyncSubject(Comment);
 
-  let ignoreSubjectId = ignoreProperties({subjectId: {}});
+  let ignoreSubjectChange = ignoreProperties({subjectId: {}, subjectType: {}});
 
   function * subjectObserver(ctx) {
     if (!(ctx.instance && ctx.isNewInstance)) {
-      return yield (ignoreSubjectId(ctx));
+      return yield (ignoreSubjectChange(ctx));
     }
 
     let app = Comment.app;
@@ -70,6 +69,7 @@ module.exports = (Comment) => {
 
     let idToType = yield (IdToType.findByIdRequired(subjectId, null, ERRORS.badRequest));
     let type = idToType.type;
+    ctx.instance.subjectType = type;
     if (!ALLOWED_MODELS.includes(type)) {
       throw ERRORS.badRequest(`Comments are not allowed for type '${type}'.`);
     }

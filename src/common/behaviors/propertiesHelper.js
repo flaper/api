@@ -49,7 +49,7 @@ export function ignoreUpdatedIfNoChanges(fields) {
     let Model = ctx.Model;
 
     if (ctx.data && ctx.where && ctx.where.id) {
-      return Model.findById(ctx.where.id)
+      return Model.findByIdRequired(ctx.where.id)
         .then(model => {
           let changes = false;
           fields.forEach(field => {

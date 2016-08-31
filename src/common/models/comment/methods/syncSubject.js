@@ -29,11 +29,13 @@ export function initSyncSubject(Comment) {
       .then(() => count);
   }
 
-  function syncSubject(ctx) {
+  function * syncSubject(ctx) {
     if (!(ctx.instance && ctx.isNewInstance)) {
-      return Promise.resolve();
+      return;
     }
+    let IdToType = Comment.app.models.IdToType;
+    let idToType = yield (IdToType.findByIdRequired(ctx.instance.subjectId));
     //for new comment we sync subject
-    return Comment.iSyncSubject('Story', ctx.instance.subjectId);
+    return yield (Comment.iSyncSubject(idToType.type, ctx.instance.subjectId));
   }
 }

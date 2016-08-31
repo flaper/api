@@ -24,6 +24,14 @@
     },
     "shortInline": {
       "type": "string"
+    },
+    "subjectId": {
+      "type": "ObjectId",
+      "required": true
+    },
+    "subjectType": {
+      "type": "string",
+      "required": true
     }
   },
   "validations": [],
