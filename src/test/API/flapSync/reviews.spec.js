@@ -20,7 +20,6 @@ describe(`/${COLLECTION_URL}`, function () {
 
   before(function* () {
     yield (Flap.syncObject(FLAP_IDS.ID1));
-    return 123;
   });
 
   it('Sync reviews', function* () {
