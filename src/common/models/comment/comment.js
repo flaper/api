@@ -39,19 +39,17 @@ module.exports = (Comment) => {
   }));
   Comment.observe('before save', contentObserver);
 
-  function contentObserver(ctx) {
+  function * contentObserver(ctx) {
     let sanitizeContent = Sanitize.observer('content', Sanitize.html);
 
-    return sanitizeContent(ctx)
-      .then((value) => {
-        if (value) {
-          let html = FlaperMark.toInline(value);
-          let shortInline = FlaperMark.shortInline(value);
+    let value = yield(sanitizeContent(ctx));
+    if (value) {
+      let html = FlaperMark.toInline(value);
+      let shortInline = FlaperMark.shortInline(value);
 
-          setProperty(ctx, 'contentHTML', html);
-          setProperty(ctx, 'shortInline', shortInline);
-        }
-      })
+      setProperty(ctx, 'contentHTML', html);
+      setProperty(ctx, 'shortInline', shortInline);
+    }
   }
 
   initDefaultScope(Comment);
