@@ -9,7 +9,6 @@ mongodb 2.6 or higher
 
 ## Installation
 ```
-npm install -g typescript
 npm install
 ```
 
