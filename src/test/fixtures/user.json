@@ -41,6 +41,13 @@
     "password": "test-sales",
     "displayName": "Test Sales"
   },
+  "yura": {
+    "id": "56822cc229f1cff2027d8d51",
+    "username": "yura",
+    "email":"daniel-y07@mail.ru",
+    "password": "test social",
+    "displayName": "Юра"
+  },
   "aigul": {
     "id": "56e6870c6b6ec35b001ace52",
     "username": "aigul",

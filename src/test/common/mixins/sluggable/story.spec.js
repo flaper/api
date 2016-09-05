@@ -69,8 +69,10 @@ describe(`Sluggable/Story`, function () {
     NEW_ACTIVE_STORY4, NEW_ACTIVE_STORY5, NEW_ACTIVE_STORY10];
   let m = moment().tz('Europe/Moscow');
   let year = m.year();
-  let month = m.month() + 1;
-  let date = m.date();
+  let month = (m.month() + 1).toString();
+  month = month.length === 1 ? '0' + month : month;
+  let date = m.date().toString();
+  date = date.length === 1 ? '0' + date : date;
 
   before(() => {
     let p = Promise.resolve();
@@ -81,33 +83,25 @@ describe(`Sluggable/Story`, function () {
     return p;
   });
 
-  it('Denied slug', () => {
-    return Story.findById(NEW_DENIED_STORY.id)
-      .then((story) => {
-        //it is not required, just current logic - slug will be generated, although it will not influence others
-        story.slugLowerCase.should.eq(SLUG1);
-      })
+  it('Denied slug', function* () {
+    let story = yield (Story.findById(NEW_DENIED_STORY.id));
+    //it is not required, just current logic - slug will be generated, although it will not influence others
+    story.slugLowerCase.should.eq(SLUG1);
   });
 
-  it('Active slug1', () => {
-    return Story.findById(NEW_ACTIVE_STORY1.id)
-      .then((story) => {
-        story.slugLowerCase.should.eq(SLUG1);
-      })
+  it('Active slug1', function* () {
+    let story = yield (Story.findById(NEW_ACTIVE_STORY1.id));
+    story.slugLowerCase.should.eq(SLUG1);
   });
 
-  it('Active slug2', () => {
-    return Story.findById(NEW_ACTIVE_STORY2.id)
-      .then((story) => {
-        story.slugLowerCase.should.eq(`${SLUG1}-${year}`);
-      })
+  it('Active slug2', function*() {
+    let story = yield (Story.findById(NEW_ACTIVE_STORY2.id));
+    story.slugLowerCase.should.eq(`${SLUG1}-${year}`);
   });
 
-  it('Active slug3', () => {
-    return Story.findById(NEW_ACTIVE_STORY3.id)
-      .then((story) => {
-        story.slugLowerCase.should.eq(`${SLUG1}-${year}-${month}`);
-      })
+  it('Active slug3', function* () {
+    let story = yield (Story.findById(NEW_ACTIVE_STORY3.id));
+    story.slugLowerCase.should.eq(`${SLUG1}-${year}-${month}`);
   });
 
   it('Active slug4', () => {

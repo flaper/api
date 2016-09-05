@@ -47,8 +47,13 @@ export class FlapAPI {
     return regionNameById[regionId];
   }
 
-  static * getUser(id) {
-    let data = yield (FlapAPI.request(`user/${id}`));
+  static _mapUserData(data) {
+    data.id = +data.id;
+    data.email = data.email ? data.email.toLowerCase() : null;
+    if (/\.\./.test(data.email)) {
+      // не валидный email, хотя такие в природе существуют, но loopback не пропустит
+      data.email = null;
+    }
     if (data.domain === 'odnoklassniki.ru') {
       if (!data.link) throw ERRORS.error('FLAP API - user link should be provided');
       let matches = data.link.match(/\d+$/);
@@ -60,8 +65,38 @@ export class FlapAPI {
     return data;
   }
 
+  static * getUsers(ids) {
+    let query = `[${ids.join(',')}]`;
+    let usersMap = yield (FlapAPI.request(`users/${query}`));
+    let users = _.values(usersMap);
+    users = users.map(FlapAPI._mapUserData);
+    return users;
+  }
+
+  static * getUser(id) {
+    let data = yield (FlapAPI.request(`user/${id}`));
+    return FlapAPI._mapUserData(data);
+  }
+
   static * getReviews(objectId) {
-    return yield (FlapAPI.request(`object/${objectId}/reviews`));
+    let rows = yield (FlapAPI.request(`object/${objectId}/reviews`));
+    let statusesMap = {
+      added: 'active',
+      approved: 'active',
+      updated: 'active',
+      denied: 'denied'
+    };
+    rows = rows.filter(row=> row.Status !== 'removed' && row.rating);
+    rows.forEach(row=> {
+      row.id = +row.id;
+      row.rating = +row.rating;
+      row.SObjectId = +row.SObjectId;
+      row.status = statusesMap[row.Status];
+      row.date = 1000 * row.date;
+      delete row.Status;
+      if (!row.status) throw ERRORS.error(`Unknown review status from flap: ${row.status}`);
+    });
+    return rows;
   }
 
   static * request(path) {

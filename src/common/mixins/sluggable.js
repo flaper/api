@@ -15,9 +15,13 @@ module.exports = (Model, options) => {
   if (Model.settings.indexes === undefined) Model.settings.indexes = {};
   Model.settings.indexes.slug_index = {slugLowerCase: 1, status: 1};
 
+  Model.getInitialSlug = Model.getInitialSlug || function (model) {
+      return model.title;
+    };
+
   Model.observe('before save', slugObserver);
   Model.observe('before activate', (model)=> {
-    return generateSlugWrapper(model, model.title);
+    return generateSlugWrapper(model, Model.getInitialSlug(model));
   });
 
   Model.actionFindBySlug = actionFindBySlug;
@@ -48,10 +52,10 @@ module.exports = (Model, options) => {
     }
   );
   //we need to call slugObserver when creating new Model and activating status
-  //another example maybe - when title has been changed (maybe after save hook
+  //another example maybe - when title has been changed (maybe after save hook)
   function slugObserver(ctx) {
     if (ctx.instance && ctx.isNewInstance) {
-      return generateSlugWrapper(ctx.instance, ctx.instance.title);
+      return generateSlugWrapper(ctx.instance, Model.getInitialSlug(ctx.instance));
     }
     return Promise.resolve();
   }
@@ -60,8 +64,12 @@ module.exports = (Model, options) => {
     let adds = [];
     let m = moment().tz('Europe/Moscow');
     adds.push(m.year());
-    adds.push(m.month() + 1);
-    adds.push(m.date());
+    let month = (m.month() + 1).toString();
+    month = month.length === 1 ? '0' + month : month;
+    let date = m.date().toString();
+    date = date.length === 1 ? '0' + date : date;
+    adds.push(month);
+    adds.push(date);
     return adds;
   }
 
@@ -92,7 +100,8 @@ module.exports = (Model, options) => {
 
     function nextSlug() {
       if (adds.length) {
-        baseSlug += SLUG_SEPARATOR + adds.shift();
+        if (baseSlug) baseSlug += SLUG_SEPARATOR;
+        baseSlug += adds.shift();
         slug = baseSlug;
       } else {
         ++postfix;

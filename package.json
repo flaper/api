@@ -1,6 +1,6 @@
 {
   "name": "FlaperAPI",
-  "version": "0.4.8",
+  "version": "0.4.9",
   "main": "dist/server/server.js",
   "scripts": {
     "prestart": "rm -fR dist && rsync -av --exclude test src/* dist  && ./node_modules/.bin/babel src --out-dir dist --ignore test/*",

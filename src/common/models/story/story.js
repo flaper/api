@@ -27,6 +27,17 @@ module.exports = (Story) => {
   Story.STATUSES = _.values(Story.STATUS);
   Story.TYPES = _.values(Story.TYPE);
 
+  Story.getInitialSlug = function (story) {
+    switch (story.type) {
+      case Story.TYPE.ARTICLE:
+        return story.title;
+      case Story.TYPE.REVIEW:
+        return story.title || story.flapId || "";
+      default:
+        throw ERRORS.badRequest('Wrong story type for getInitialSlug')
+    }
+  };
+
   Story.validatesInclusionOf('status', {in: Story.STATUSES});
   Story.validatesInclusionOf('type', {in: Story.TYPES});
 
@@ -51,6 +62,7 @@ module.exports = (Story) => {
     viewsRecent: {},
     lastActive: {newDefault: (data) => data.created},
     commentsNumber: {newDefault: 0},
+    flapId: {},
     images: {newDefault: []}
   }));
   Story.observe('before save', Sanitize.observer('title', Sanitize.text));
@@ -58,6 +70,7 @@ module.exports = (Story) => {
   Story.observe('before save', minLengthObserver);
   Story.observe('before save', Sanitize.observer('tags', tagSanitize));
   Story.observe('before save', reviewObserver);
+  Story.observe('before save', articleObserver);
 
   initSyncUser(Story);
   initStatusActions(Story);
@@ -122,7 +135,7 @@ module.exports = (Story) => {
   function verifyRating(rating) {
     if (!rating)
       throw ERRORS.badRequest('Rating required');
-    if (![1, 2, 3, 4, 5, 6, 7, 8, 9].includes(rating))
+    if (![1, 2, 3, 4, 5, 6, 7, 8, 9, 10].includes(rating))
       throw ERRORS.badRequest('Invalid rating');
   }
 
@@ -133,5 +146,16 @@ module.exports = (Story) => {
     let obj = yield (FObject.findById(objectId));
     if (!obj)
       throw ERRORS.badRequest(`Object with id ${objectId} does not exists`);
+  }
+
+  function * articleObserver(ctx) {
+    if (ctx.isNewInstance) {
+      if (ctx.instance.type !== Story.TYPE.ARTICLE)
+        return;
+      if (!ctx.instance.title)
+        throw ERRORS.badRequest(`Title is required for article`);
+    }
+
+    // update existing instance
   }
 };

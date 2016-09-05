@@ -1,8 +1,13 @@
 import app from '../../server/server';
+import {App} from '../../common/services/App';
 import {FlapMap} from './map';
 import {FlapAPI} from './api';
 import {ERRORS} from '../../common/utils/errors';
 import faker from 'faker';
+import _ from 'lodash';
+
+// пока пропускаем все id с фейсбука, кроме тек у кого совпала почта с сущестующим пользователем
+const FACEBOOK_IDS = new Set();
 
 function getInt(flapId) {
   let id = parseInt(flapId);
@@ -24,22 +29,96 @@ export class Flap {
       obj.flap = {id: id};
     }
     FlapMap.mapObject(obj, data);
-    return yield (obj.save({skipTimestampCreated: true}));
+    let res = yield (obj.save({timestamps: {created: false}}));
+    if (App.getCurrentUserId() === '1a1000000000000000000001') {
+      Flap.syncReviews(flapId);
+    }
+    return res;
   }
 
-  static * syncReviews(flapId) {
+  static * syncReviews(objectFlapId) {
     let FObject = app.models.FObject;
-    let obj = yield (FObject.findOne({where: {'flap.id': flapId}}));
+    let Story = app.models.Story;
+    let obj = yield (FObject.findOne({where: {'flap.id': objectFlapId}}));
     if (!obj)
-      throw `Object with flapId: ${flapId} is not created in flaper yet`;
-    return yield (FlapAPI.getReviews(flapId));
+      throw `Object with flapId: ${objectFlapId} is not created in flaper yet`;
+
+    let rows = yield (FlapAPI.getReviews(objectFlapId));
+    let flapUsersIds = _.uniq(rows.map(row=>row.SObjectId));
+    let idsToUserMap = yield (Flap.syncUsers(flapUsersIds));
+
+    let reviews = [];
+    for (let row of rows) {
+      let review = yield (Story.findOne({where: {flapId: row.id}}));
+      let userId = idsToUserMap.get(row.SObjectId).id;
+      if (!review) {
+        let reviewData = {
+          flapId: row.id, objectId: obj.id, userId: userId, type: Story.TYPE.REVIEW,
+          rating: row.rating, status: row.status, content: row.data, title: row.title,
+          created: row.date, updated: row.date
+        };
+        try {
+          review = yield (Story.create(reviewData, {
+            alphaMin: false, skipIgnore: {flapId: false},
+            timestamps: {created: false, updated: false}
+          }));
+        } catch (e) {
+          console.log('catch e', e);
+        }
+      }
+      if (review) {
+        reviews.push(review);
+      }
+    }
+    return reviews;
   }
 
-  static * syncUser(flapId) {
-    let id = getInt(flapId);
-    let data = yield (FlapAPI.getUser(id));
-    data.id = +data.id;
-    data.email = data.email ? data.email.toLowerCase() : null;
+  static * syncUsers(flapIds) {
+    flapIds = _.uniq(flapIds.map(id=>+id));
+    let User = app.models.user;
+    let users = yield (User.find({where: {flapIds: {inq: flapIds}}}));
+    let existedIds = [];
+    for (let user of users) {
+      existedIds = existedIds.concat(user.flapIds)
+    }
+    let ids = flapIds.filter(id=>!FACEBOOK_IDS.has(id) && !existedIds.includes(id));
+
+    let map = yield (Flap._syncUsersAdd(ids));
+    for (let flapId of flapIds) {
+      if (map.has(flapId)) continue;
+      /* jshint loopfunc:true */
+      let user = users.find(u=>u.flapIds.includes(flapId));
+      if (user) {
+        map.set(flapId, user);
+      }
+    }
+    return map;
+  }
+
+  static * _syncUsersAdd(flapIds) {
+    let map = new Map();
+    if (flapIds.length === 0) return map;
+    let flapUsers = yield (FlapAPI.getUsers(flapIds));
+    for (let flapUser of flapUsers) {
+      map.set(flapUser.id, yield (Flap._syncUser(flapUser)));
+    }
+    return map;
+  }
+
+  static * _syncUser(data) {
+    let id = data.id;
+    if (FACEBOOK_IDS.has(id)) {
+      return null;
+    }
+    let UserIdentity = app.models.UserIdentity;
+    let User = app.models.user;
+
+    let user = yield (User.findOne({where: {flapIds: id}}));
+    if (user) {
+      //do nothing for now if user already in db
+      return user;
+    }
+
     let providersMap = {
       'odnoklassniki.ru': 'odnoklassniki-login',
       'vk.com': 'vk-login',
@@ -49,15 +128,6 @@ export class Flap {
     let provider = providersMap[data.domain];
     if (!provider) throw ERRORS.error(`Wrong flap provider "${data.domain}"`);
     if (!data.domainId) throw ERRORS.error('DomainId should be provided');
-
-    let UserIdentity = app.models.UserIdentity;
-    let User = app.models.user;
-
-    let user = yield (User.findOne({where: {flapIds: data.id}}));
-    if (user) {
-      //do nothing for now if user already in db
-      return user;
-    }
 
     let identityData = {provider, externalId: data.domainId};
     let identity = yield (UserIdentity.findOne({where: identityData}));
@@ -83,14 +153,16 @@ export class Flap {
       yield (user.save());
     } else {
       if (provider === 'facebook-login') {
+        FACEBOOK_IDS.add(id);
         // we don't create users from facebook yet, as they have different ids in different apps
         return null;
       }
-      user = yield User.create(userData);
+      user = yield (User.create(userData));
     }
 
     if (!identity) {
       if (provider === 'facebook-login') {
+        FACEBOOK_IDS.add(id);
         // we don't create users from facebook yet, as they have different ids in different apps
         return null;
       }

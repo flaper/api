@@ -56,6 +56,10 @@ export class Sanitize {
   //alphaNumerical length
   static alphaMinLengthObserver(property, length) {
     return function (ctx) {
+      let options = ctx.options || {};
+      if (options.alphaMin === false) {
+        return Promise.resolve();
+      }
       let data = ctx.instance ? ctx.instance[property] : ctx.data[property];
       if (data !== undefined) {
         let len = Sanitize.symbolsNumber(data);

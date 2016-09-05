@@ -4,6 +4,7 @@
     "username": "stas",
     "email": "stas.msu@gmail.com",
     "password": "stas",
-    "displayName": "Станислав Клюкин"
+    "displayName": "Станислав Клюкин",
+    "flapIds": [99]
   }
 }

@@ -20,8 +20,7 @@
       "required": true
     },
     "title": {
-      "type": "string",
-      "required": true
+      "type": "string"
     },
     "rating": {
       "type": "number"
@@ -65,7 +64,10 @@
         "length": 3,
         "comment": "actually length not working by default"
       }
-    ]
+    ],
+    "flapId": {
+      "type": "number"
+    }
   },
   "validations": [],
   "relations": {

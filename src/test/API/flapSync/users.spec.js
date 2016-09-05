@@ -16,7 +16,7 @@ describe(`/${COLLECTION_URL}`, function () {
 
   const ID1 = 7039418;
   it('Sync new odnoklassniki user', function*() {
-    yield (Flap.syncUser(ID1));
+    yield (Flap.syncUsers([ID1]));
     let users = yield (User.find({where: {flapIds: ID1}}));
     let identities = yield (UserIdentity.find({where: {createdByFlapId: ID1}}));
     users.length.should.eq(1);
@@ -29,8 +29,8 @@ describe(`/${COLLECTION_URL}`, function () {
   });
 
   it('Sync two times should resolve to same user', function*() {
-    yield (Flap.syncUser(ID1));
-    yield (Flap.syncUser(ID1));
+    yield (Flap.syncUsers([ID1]));
+    yield (Flap.syncUsers([ID1]));
     let users = yield (User.find({where: {flapIds: ID1}}));
     let identities = yield (UserIdentity.find({where: {createdByFlapId: ID1}}));
     users.length.should.eq(1);
@@ -43,16 +43,16 @@ describe(`/${COLLECTION_URL}`, function () {
   });
 
   it('Sync should find existed user by email', function*() {
-    let id = 99;
-    yield (Flap.syncUser(id));
+    let id = 203210;
+    yield (Flap.syncUsers([id]));
     let users = yield (User.find({where: {flapIds: id}}));
     users.length.should.eq(1);
-    users[0].id.toString().should.eq(USERS_CONSTANTS.stas.id)
+    users[0].id.toString().should.eq(USERS.yura.id)
   });
 
   it('Sync should find existed vk user', function*() {
     let id = 7671161;
-    yield (Flap.syncUser(id));
+    yield (Flap.syncUsers([id]));
     let users = yield (User.find({where: {flapIds: id}}));
     users.length.should.eq(1);
     users[0].id.toString().should.eq(USERS.dobrinina.id)
@@ -60,7 +60,7 @@ describe(`/${COLLECTION_URL}`, function () {
 
   it('Sync should find existed mail-ru user', function*() {
     let id = 6303800;
-    yield (Flap.syncUser(id));
+    yield (Flap.syncUsers([id]));
     let users = yield (User.find({where: {flapIds: id}}));
     users.length.should.eq(1);
     users[0].id.toString().should.eq(USERS.kozhevnikova.id)
@@ -68,17 +68,15 @@ describe(`/${COLLECTION_URL}`, function () {
 
   it('Sync should find existed odnoklassniki user', function*() {
     let id = 673311;
-    yield (Flap.syncUser(id));
+    yield (Flap.syncUsers([id]));
     let users = yield (User.find({where: {flapIds: id}}));
     users.length.should.eq(1);
     users[0].id.toString().should.eq(USERS.aigul.id)
   });
 
-  it('Sync should find existed facebook user', function*() {
+  it('Sync should not work for not existed facebook user', function*() {
     let id = 6972616;
-    let data = yield (Flap.syncUser(id));
-    should.not.exist(data);
-    let users = yield (User.find({where: {flapIds: id}}));
-    users.length.should.eq(0);
+    let users = yield (Flap.syncUsers([id]));
+    should.not.exist(users[id]);
   });
 });

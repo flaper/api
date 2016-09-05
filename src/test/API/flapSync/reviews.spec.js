@@ -9,22 +9,28 @@ const COLLECTION_URL = 'flapSync/reviews';
 import _ from 'lodash';
 
 describe(`/${COLLECTION_URL}`, function () {
-  updateTimeouts(this);
+  this.slow(10000);
+  this.timeout(20000);
 
   const FLAP_IDS = {
-    ID1: 23187, // Оренбург, Национальная деревня
-    ID2: 3329255,
-    ID3: 4484301,
-    ID_CLOSED: 21920
+    ID1: 25085 // Оренбург, Муза Цвета
   };
 
   before(function* () {
     yield (Flap.syncObject(FLAP_IDS.ID1));
   });
 
-  it('Sync reviews', function* () {
-    let data = yield (Flap.syncReviews(FLAP_IDS.ID1));
-    data.length.should.least(50);
+  it('Sync reviews 2 times', function* () {
+    let now = Date.now();
+    let reviews = yield (Flap.syncReviews(FLAP_IDS.ID1));
+    let reviews2 = yield (Flap.syncReviews(FLAP_IDS.ID1));
+    reviews.length.should.eq(reviews2.length);
+    for (let i = 0; i < reviews.length; i++) {
+      let review = reviews[i];
+      should.equal(review.id.toString(), reviews2[i].id.toString());
+      review.created.getTime().should.lt(now);
+      review.updated.getTime().should.lt(now);
+    }
   });
 
 

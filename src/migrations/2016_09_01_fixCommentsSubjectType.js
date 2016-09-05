@@ -13,7 +13,7 @@ let main = co.wrap(function*() {
   for (let c of comments) {
     let comment = yield (Comment.findByIdRequired(c._id));
     let ITT = yield (idToType.findByIdRequired(c.subjectId));
-    let subjectType = ITT.type
+    let subjectType = ITT.type;
     comment.subjectType = subjectType;
     yield (comment.save({skipIgnore: {subjectType: true}}));
   }

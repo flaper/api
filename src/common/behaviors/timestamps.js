@@ -1,9 +1,11 @@
 import {App} from '../services/App';
+import _ from 'lodash';
 //if used as mixins for common-model inheritance create double call for this method
 //seems loopback doesn't handle mixins inheritance properly
 export function timestampBehavior(ctx) {
-  let skipCreated = ctx.options && ctx.options.skipTimestampCreated;
-  if (skipCreated) {
+  let timestamps = _.get(ctx, 'options.timestamps', {});
+  if (timestamps.created === false) {
+    if (timestamps.updated === false) return Promise.resolve();
     if (ctx.instance) {
       ctx.instance.updated = new Date();
     } else {
