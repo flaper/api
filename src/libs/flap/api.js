@@ -50,6 +50,7 @@ export class FlapAPI {
   static _mapUserData(data) {
     data.id = +data.id;
     data.email = data.email ? data.email.toLowerCase() : null;
+    data.deleted = data.deleted === '1';
     if (/\.\./.test(data.email)) {
       // не валидный email, хотя такие в природе существуют, но loopback не пропустит
       data.email = null;

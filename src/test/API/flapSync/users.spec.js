@@ -74,9 +74,15 @@ describe(`/${COLLECTION_URL}`, function () {
     users[0].id.toString().should.eq(USERS.aigul.id)
   });
 
+  it('Sync should skip deleted user', function*() {
+    let id = 6161514;
+    let users = yield (Flap.syncUsers([id]));
+    should.not.exist(users.get(id));
+  });
+
   it('Sync should not work for not existed facebook user', function*() {
     let id = 6972616;
     let users = yield (Flap.syncUsers([id]));
-    should.not.exist(users[id]);
+    should.not.exist(users.get(id));
   });
 });

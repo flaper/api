@@ -118,7 +118,7 @@ export class Flap {
 
   static * _syncUser(data) {
     let id = data.id;
-    if (FACEBOOK_IDS.has(id)) {
+    if (data.deleted || FACEBOOK_IDS.has(id)) {
       return null;
     }
     let UserIdentity = app.models.UserIdentity;
