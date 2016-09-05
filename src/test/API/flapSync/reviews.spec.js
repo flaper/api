@@ -31,6 +31,8 @@ describe(`/${COLLECTION_URL}`, function () {
       review.created.getTime().should.lt(now);
       review.updated.getTime().should.lt(now);
     }
+    let deniedReview = reviews.find(r=>r.status === 'denied');
+    should.exist(deniedReview);
   });
 
 

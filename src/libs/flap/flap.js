@@ -5,6 +5,7 @@ import {FlapAPI} from './api';
 import {ERRORS} from '../../common/utils/errors';
 import faker from 'faker';
 import _ from 'lodash';
+import co from 'co';
 
 // пока пропускаем все id с фейсбука, кроме тек у кого совпала почта с сущестующим пользователем
 const FACEBOOK_IDS = new Set();
@@ -17,6 +18,8 @@ function getInt(flapId) {
 
 export class Flap {
   static * syncObject(flapId) {
+    let currentUserId = App.getCurrentUserId();
+    currentUserId = currentUserId ? currentUserId.toString() : null;
     let id = getInt(flapId);
     let FObject = app.models.FObject;
 
@@ -30,8 +33,14 @@ export class Flap {
     }
     FlapMap.mapObject(obj, data);
     let res = yield (obj.save({timestamps: {created: false}}));
-    if (App.getCurrentUserId() === '1a1000000000000000000001') {
-      Flap.syncReviews(flapId);
+    if (currentUserId === '568194a442b1de1c0045a333') {
+      // if stanislav
+      // async call to Flap.syncReviews
+      let promise = co.wrap(Flap.syncReviews);
+      promise(flapId).then(reviews=> {
+      }, (error)=> {
+        console.log('got error during syncReviews', error);
+      });
     }
     return res;
   }
@@ -50,16 +59,18 @@ export class Flap {
     let reviews = [];
     for (let row of rows) {
       let review = yield (Story.findOne({where: {flapId: row.id}}));
-      let userId = idsToUserMap.get(row.SObjectId).id;
+      let user = idsToUserMap.get(row.SObjectId);
+      // possible user with facebook account
+      if (!user) continue;
       if (!review) {
         let reviewData = {
-          flapId: row.id, objectId: obj.id, userId: userId, type: Story.TYPE.REVIEW,
+          flapId: row.id, objectId: obj.id, userId: user.id, type: Story.TYPE.REVIEW,
           rating: row.rating, status: row.status, content: row.data, title: row.title,
           created: row.date, updated: row.date
         };
         try {
           review = yield (Story.create(reviewData, {
-            alphaMin: false, skipIgnore: {flapId: false},
+            alphaMin: false, skipIgnore: {flapId: false, status: false},
             timestamps: {created: false, updated: false}
           }));
         } catch (e) {
