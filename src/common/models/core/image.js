@@ -3,13 +3,13 @@ import {ImageService} from '../../services/ImageService.js'
 import {applyIdToType} from '../../behaviors/idToType';
 import {App} from '../../services/App';
 import {ERRORS} from '../../utils/errors';
-
-//const ALLOWED_MODELS = ['Business'];
-const ALLOWED_TYPES = ['create-story'];
-
+import co from 'co';
+import _ from 'lodash';
+const ObjectID = require('mongodb').ObjectID;
 
 module.exports = (Image) => {
   Image.commonInit(Image);
+  applyIdToType(Image);
   Image.disableRemoteMethod('create', true);
   Image.disableRemoteMethod('upsert', true);
   Image.disableRemoteMethod('deleteById', true);
@@ -19,8 +19,17 @@ module.exports = (Image) => {
 
   Image.observe('before save', setCurrentUserId);
 
+  Image.TYPE = {
+    CREATE_STORY: 'StoryCreate',
+    STORY: 'Story'
+  };
+  Image.TYPES = _.values(Image.TYPE);
+
+  // create-story type deprecated and should be removed in favor of StoryCreate
+  const UPLOAD_ALLOWED_TYPES = [Image.TYPE.CREATE_STORY, 'create-story'];
+
   Image.upload = upload;
-  applyIdToType(Image);
+  Image.updateObject = updateObject;
   Image.remoteMethod(
     'upload',
     {
@@ -41,7 +50,7 @@ module.exports = (Image) => {
     //if (!objectType || !objectId) {
     //  throw "objectType and objectId fields are required";
     //}
-    if (ALLOWED_TYPES.indexOf(type) === -1) {
+    if (!UPLOAD_ALLOWED_TYPES.includes(type)) {
       throw ERRORS.badRequest(`Type "${type}" is not allowed`);
     }
 
@@ -73,6 +82,21 @@ module.exports = (Image) => {
         console.log(errorMessage);
         throw errorMessage;
       });
+  }
+
+  function updateObject({ids, objectId, type }) {
+    ids = _.uniq(ids);
+    return co.wrap(function *() {
+      if (!ids.length) return;
+      let mongoIds = ids.map(id=>new ObjectID(id));
+      let collection = Image.dataSource.connector.collection('Image');
+      yield (collection.update({_id: {$in: mongoIds}, objectId: {$exists: false}}, {
+        $set: {
+          objectId,
+          type
+        }
+      }));
+    })();
   }
 
 

@@ -2,7 +2,7 @@ import {App} from '../../../services/App';
 import {ERRORS} from '../../../utils/errors';
 import {objectHasDeepKey} from '../../../utils/object';
 import _ from 'lodash';
-var ObjectID = require('mongodb').ObjectID;
+const ObjectID = require('mongodb').ObjectID;
 
 export function initDefaultScope(Comment) {
   Comment.disableRemoteMethod('find', true);

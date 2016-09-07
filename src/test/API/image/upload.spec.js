@@ -33,14 +33,14 @@ describe(`/${COLLECTION_URL}/upload`, function () {
   it('User - deny to upload without file', function*() {
     let {agent} = yield (user1Promise);
     yield (agent.post(COLLECTION_URL)
-      .field('type', 'create-story')
+      .field('type', 'StoryCreate')
       .expect(400));
   });
 
   it('User - allow to upload image', function*() {
     let {agent} = yield (user1Promise);
     yield (agent.post(COLLECTION_URL)
-      .field('type', 'create-story')
+      .field('type', 'StoryCreate')
       .attach('file', IMAGE_PATH)
       .expect(200));
     let image = yield (Image.findOne({

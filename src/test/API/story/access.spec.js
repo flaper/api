@@ -8,6 +8,7 @@ import {Sanitize} from '../../../../src/libs/sanitize/Sanitize';
 let Story = app.models.Story;
 let User = app.models.user;
 let Account = app.models.Account;
+let Image = app.models.Image;
 
 const COLLECTION_URL = 'stories';
 const STORY1 = STORIES.test1;
@@ -66,16 +67,33 @@ describe(`/${COLLECTION_URL}`, function () {
   });
 
   describe('PUT/POST', () => {
+    const NEW_IMAGE = {
+      "id": "1aa000000000000000010001",
+      "status": "active",
+      "type": "StoryCreate",
+      "userId": "1a1000000000000000001001"
+    };
+
+    const NEW_IMAGE2 = {
+      "id": "1aa000000000000000010002",
+      "status": "active",
+      "type": "StoryCreate",
+      "userId": "1a1000000000000000001001"
+    };
+
     let moneyBefore;
-    before(() => Account.getAccountById(user1.id)
-      .then(data => moneyBefore = data)
-    );
+
+    before(function*() {
+      moneyBefore = yield (Account.getAccountById(user1.id));
+      yield (Image.create(NEW_IMAGE));
+      yield (Image.create(NEW_IMAGE2));
+    });
 
     const NEW_STORY = {
       id: '1a4000000000000000010001',
       type: 'article',
       title: "New story for test",
-      content: STORY1.content,
+      content: STORY1.content.replace('image_holder', `![](${NEW_IMAGE.id})`),
       //this userId should be ignored
       userId: '1a400000000000000001111'
     };
@@ -97,13 +115,16 @@ describe(`/${COLLECTION_URL}`, function () {
           let story = res.body;
           user1.id.should.equal(story.userId);
           Story.STATUS.ACTIVE.should.equal(story.status);
-          story.images.length.should.eq(1);
-          story.images[0].should.eq('57c384bca5db9b354a007a4c');
+          story.images.length.should.eq(2);
+          story.images[0].should.eq(`${NEW_IMAGE.id}`);
         }));
       user = yield (User.findByIdRequired(user1.id));
       user.storiesNumber.should.eq(storiesNumberBefore + 1);
       let account = yield (Account.getAccountById(user1.id));
       account.should.eq(moneyBefore + 1);
+      let image = yield (Image.findByIdRequired(NEW_IMAGE.id));
+      image.type.should.eq('Story');
+      image.objectId.toString().should.eq(NEW_STORY.id);
     });
 
     it('User - deny to foreign update', () => {
@@ -116,56 +137,57 @@ describe(`/${COLLECTION_URL}`, function () {
 
     let newTitle = "NEW TITLE";
     let newId = '1a4000000000000000910001';
-    let newContent = 'NEW CONTENT';
+    let newContent = `NEW CONTENT ![](${NEW_IMAGE2.id})`;
     newContent = Sanitize.fakerIncreaseAlphaLength(newContent, Story.MIN_LENGTH.article);
 
-    it('User - deny to update id', () => {
-      return user1Promise.then(({agent}) => {
-        return agent.put(`${COLLECTION_URL}/${NEW_STORY.id}`)
-          .send({id: newId})
-          .expect(400)
-      });
+    it('User - deny to update id', function* () {
+      let {agent} = yield (user1Promise);
+      yield (agent.put(`${COLLECTION_URL}/${NEW_STORY.id}`)
+        .send({id: newId})
+        .expect(400));
     });
 
-    it('User - allow to update', ()=> {
-      return user1Promise.then(({agent}) => {
-        return agent.put(`${COLLECTION_URL}/${NEW_STORY.id}`)
-          .send({
-            title: newTitle,
-            content: newContent,
-            userId: user2.id
-          })
-          .expect(200)
-          .expect((res) => {
-            let story = res.body;
-            user1.id.should.equal(story.userId);
-            newTitle.should.equal(story.title);
-            newContent.should.equal(story.content);
-            story.images.length.should.eq(0);
-          })
-      });
+    it('User - allow to update', function*() {
+      let {agent} =  yield (user1Promise);
+      yield (agent.put(`${COLLECTION_URL}/${NEW_STORY.id}`)
+        .send({
+          title: newTitle,
+          content: newContent,
+          userId: user2.id
+        })
+        .expect(200)
+        .expect((res) => {
+          let story = res.body;
+          user1.id.should.equal(story.userId);
+          newTitle.should.equal(story.title);
+          newContent.should.equal(story.content);
+          story.images.length.should.eq(1);
+        }));
+      let image = yield (Image.findByIdRequired(NEW_IMAGE2.id));
+      image.type.should.eq('Story');
     });
 
 
     newTitle += 2;
-    it('Admin - allow to update any', () => {
-      return adminPromise.then(({agent}) => {
-        return agent.put(`${COLLECTION_URL}/${NEW_STORY.id}`)
-          .send({
-            title: newTitle,
-            userId: user2.id
-          })
-          .expect(200)
-          .expect((res) => {
-            let story = res.body;
-            user1.id.should.equal(story.userId);
-            newTitle.should.equal(story.title);
-            newContent.should.equal(story.content);
-          })
-      });
+    it('Admin - allow to update any', function*() {
+      let {agent} = yield (adminPromise);
+      yield (agent.put(`${COLLECTION_URL}/${NEW_STORY.id}`)
+        .send({
+          title: newTitle,
+          userId: user2.id
+        })
+        .expect(200)
+        .expect((res) => {
+          let story = res.body;
+          user1.id.should.equal(story.userId);
+          newTitle.should.equal(story.title);
+          newContent.should.equal(story.content);
+        }));
     });
 
-    after(()=> Story.iDeleteById(NEW_STORY.id));
+    after(function*() {
+      yield ([Story.iDeleteById(NEW_STORY.id), Image.deleteById(NEW_IMAGE.id), Image.deleteById(NEW_IMAGE2.id)]);
+    });
   });
 
   describe('DELETE', () => {
@@ -174,4 +196,5 @@ describe(`/${COLLECTION_URL}`, function () {
         .expect(404)
     });
   })
-});
+})
+;

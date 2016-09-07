@@ -71,6 +71,7 @@ module.exports = (Story) => {
   Story.observe('before save', Sanitize.observer('tags', tagSanitize));
   Story.observe('before save', reviewObserver);
   Story.observe('before save', articleObserver);
+  Story.observe('after save', afterSaveObserver);
 
   initSyncUser(Story);
   initStatusActions(Story);
@@ -94,6 +95,7 @@ module.exports = (Story) => {
     let value = yield (sanitizeContent(ctx));
     if (!value)
       return;
+    ctx.hookState.content = value;
     let html = FlaperMark.toHTML(value);
     let shortInline = FlaperMark.shortInline(value);
     let shortText = Sanitize.text(shortInline);
@@ -103,6 +105,15 @@ module.exports = (Story) => {
     setProperty(ctx, 'shortInline', shortInline);
     setProperty(ctx, 'shortText', shortText);
     setProperty(ctx, 'images', images);
+  }
+
+  function* afterSaveObserver(ctx) {
+    let content = ctx.hookState.content;
+    if (content) {
+      const Image = Story.app.models.Image;
+      let images = FlaperMark.getImages(content);
+      Image.updateObject({ids: images, objectId: ctx.instance.id, type: Image.TYPE.STORY});
+    }
   }
 
   function tagSanitize(array) {
