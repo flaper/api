@@ -4,14 +4,18 @@ import app from '../../helpers/app';
 import {Flap} from '../../../../src/libs/flap/flap';
 import USERS_CONSTANTS from  '../../../../src/data/constants/user.json';
 import USERS from  '../../fixtures/user.json';
+import {HAS_TOKEN} from './helper';
 
 let should = require('chai').should();
 let User = app.models.user;
 let UserIdentity = app.models.UserIdentity;
 const COLLECTION_URL = 'flapSync/users';
-import _ from 'lodash';
 
 describe(`/${COLLECTION_URL}`, function () {
+  if (!HAS_TOKEN){
+    it.skip(`Skip ${COLLECTION_URL} tests`);
+    return;
+  }
   updateTimeouts(this);
 
   const ID1 = 7039418;

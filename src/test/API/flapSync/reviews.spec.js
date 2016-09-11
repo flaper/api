@@ -2,6 +2,7 @@ import {api, user1, user1Promise, user2, user2Promise, adminPromise} from '../..
 import {updateTimeouts} from '../timeout';
 import app from '../../helpers/app';
 import {Flap} from '../../../../src/libs/flap/flap';
+import {HAS_TOKEN} from './helper';
 
 let should = require('chai').should();
 let FObject = app.models.FObject;
@@ -9,6 +10,10 @@ const COLLECTION_URL = 'flapSync/reviews';
 import _ from 'lodash';
 
 describe(`/${COLLECTION_URL}`, function () {
+  if (!HAS_TOKEN){
+    it.skip(`Skip ${COLLECTION_URL} tests`);
+    return;
+  }
   updateTimeouts(this, 4);
 
   const FLAP_IDS = {
