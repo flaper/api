@@ -1,5 +1,6 @@
-export function updateTimeouts(obj) {
+export function updateTimeouts(obj, mult) {
   //update timeout for api suits
-  obj.slow(2000);
-  obj.timeout(5000);
+  mult = mult||1;
+  obj.slow(2000*mult);
+  obj.timeout(5000*mult);
 }

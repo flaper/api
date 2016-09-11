@@ -9,8 +9,7 @@ const COLLECTION_URL = 'flapSync/reviews';
 import _ from 'lodash';
 
 describe(`/${COLLECTION_URL}`, function () {
-  this.slow(10000);
-  this.timeout(20000);
+  updateTimeouts(this, 4);
 
   const FLAP_IDS = {
     ID1: 25085 // Оренбург, Муза Цвета
