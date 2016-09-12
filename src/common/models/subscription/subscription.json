@@ -1,0 +1,91 @@
+{
+  "name": "Subscription",
+  "base": "CommonModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "userId": {
+      "type": "string",
+      "required": true
+    },
+    "targetId": {
+      "type": "string",
+      "required": true
+    },
+    "date": {
+      "type": "date"
+    }
+  },
+  "validations": [],
+  "relations": {
+    "user": {
+      "type": "belongsTo",
+      "model": "user"
+    },
+    "object": {
+      "type": "belongsTo",
+      "model": "FObject"
+    }
+  },
+  "acls": [
+    {
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "DENY"
+    },
+    {
+      "accessType": "READ",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW"
+    },
+    {
+      "principalType": "ROLE",
+      "principalId": "$authenticated",
+      "permission": "ALLOW",
+      "property": "create"
+    },
+    {
+      "accessType": "WRITE",
+      "principalType": "ROLE",
+      "principalId": "$owner",
+      "permission": "ALLOW"
+    },
+    {
+      "accessType": "WRITE",
+      "principalType": "ROLE",
+      "principalId": "admin",
+      "permission": "ALLOW"
+    },
+    {
+      "principalType": "ROLE",
+      "principalId": "$owner",
+      "permission": "ALLOW",
+      "property": "actionDelete"
+    },
+    {
+      "principalType": "ROLE",
+      "principalId": "admin",
+      "permission": "ALLOW",
+      "property": [
+        "actionDelete",
+        "actionDeny",
+        "actionActivate"
+      ]
+    }
+  ],
+  "indexes": {
+    "userId_status_created_index": {
+      "userId": 1,
+      "status": 1,
+      "created": -1
+    },
+    "targetId_status_created_index": {
+      "targetId": 1,
+      "status": 1,
+      "created": -1
+    }
+  }
+}

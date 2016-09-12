@@ -19,6 +19,7 @@
       "../common/models/payment/payment",
       "../common/models/story",
       "../common/models/story/story-best",
+      "../common/models/subscription",
       "../common/models/supportMessage",
       "../common/models/view/view",
       "../common/models/view/view-history"
@@ -99,6 +100,10 @@
     "public": true
   },
   "Like": {
+    "dataSource": "mongo",
+    "public": true
+  },
+  "Subscription": {
     "dataSource": "mongo",
     "public": true
   },
