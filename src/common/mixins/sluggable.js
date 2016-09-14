@@ -15,22 +15,15 @@ module.exports = (Model, options) => {
   if (Model.settings.indexes === undefined) Model.settings.indexes = {};
   Model.settings.indexes.slug_index = {slugLowerCase: 1, status: 1};
 
-  Model.getInitialSlug = Model.getInitialSlug || function (model) {
-      return model.title;
-    };
+  Model.getInitialSlug = Model.getInitialSlug || (model => model.title);
+  Model.slugFilter = Model.slugFilter || (model => ({status: 'active'}));
+  Model.actionFindBySlug = actionFindBySlug;
 
   Model.observe('before save', slugObserver);
   Model.observe('before activate', (model)=> {
     return generateSlugWrapper(model, Model.getInitialSlug(model));
   });
 
-  Model.actionFindBySlug = actionFindBySlug;
-
-  if (!Model.slugFilter) {
-    Model.slugFilter = (model) => {
-      return {status: 'active'}
-    };
-  }
 
   Model.slugSuffixDate = slugSuffixDate;
 

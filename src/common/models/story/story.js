@@ -27,7 +27,7 @@ module.exports = (Story) => {
   Story.STATUSES = _.values(Story.STATUS);
   Story.TYPES = _.values(Story.TYPE);
 
-  Story.getInitialSlug = function (story) {
+  Story.getInitialSlug = (story) => {
     switch (story.type) {
       case Story.TYPE.ARTICLE:
         return story.title;
@@ -37,6 +37,14 @@ module.exports = (Story) => {
         throw ERRORS.badRequest('Wrong story type for getInitialSlug')
     }
   };
+
+  Story.slugFilter = (story) => {
+    let filter = {status: 'active'};
+    if (story.type === Story.TYPE.REVIEW){
+      filter.objectId = story.objectId;
+    }
+    return filter;
+  }
 
   Story.validatesInclusionOf('status', {in: Story.STATUSES});
   Story.validatesInclusionOf('type', {in: Story.TYPES});
