@@ -7,10 +7,11 @@ import {Sanitize} from '../../../../../src/libs/sanitize/Sanitize';
 import _ from 'lodash';
 
 const OBJ1 = FOBJECTS.obj1;
+const PLACE1 = FOBJECTS.place1;
 const REVIEW1 = STORIES.review1;
 const REVIEW2 = STORIES.review2;
-let Story = app.models.Story;
 let User = app.models.user;
+let Story = app.models.Story;
 
 const COLLECTION_URL = 'stories';
 
@@ -54,10 +55,12 @@ describe(`/${COLLECTION_URL}/@reviews`, function () {
       title: "New story for test",
       content: Sanitize.fakerIncreaseAlphaLength("test review", 256),
       rating: 8,
-      objectId: '1a7000000000000000001001',
-      //this userId should be ignored
+      objectId: OBJ1.id,
+      // this userId should be ignored
       userId: '1a400000000000000001111'
     };
+    
+    const NEW_REVIEW2 = _.merge({}, NEW_REVIEW, {id: '1a4000000000000000010002', objectId: PLACE1.id});
 
     it('User - deny to add to short review', function*() {
       let {agent} = yield (user1Promise);
@@ -102,6 +105,12 @@ describe(`/${COLLECTION_URL}/@reviews`, function () {
       user.storiesNumber.should.eq(userOld.storiesNumber + 1);
     });
 
+    it('User - review for different object with same title should have same slug', function*() {
+      let review1 = yield (Story.findByIdRequired(NEW_REVIEW.id));
+      let review2 = yield (Story.create(NEW_REVIEW2));
+      review1.slug.should.eq(review2.slug);
+    });
+
     it('User - deny to update to with short string', function*() {
       let {agent} = yield (user1Promise);
       yield (agent.put(`${COLLECTION_URL}/${NEW_REVIEW.id}`)
@@ -109,7 +118,7 @@ describe(`/${COLLECTION_URL}/@reviews`, function () {
         .expect(400));
     });
 
-    after(()=> Story.iDeleteById(NEW_REVIEW.id));
+    after(function*() { yield [Story.iDeleteById(NEW_REVIEW.id), Story.iDeleteById(NEW_REVIEW2.id)]; });
   });
 
   describe('PUT', ()=> {
