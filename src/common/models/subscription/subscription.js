@@ -6,7 +6,7 @@ import {propertiesFilter} from '../../utils/object';
 import _ from 'lodash';
 
 module.exports = (Subscription) => {
-  const ALLOWED_MODELS = ['User','Object'];
+  const ALLOWED_MODELS = ['user','Object'];
   Subscription.commonInit(Subscription);
   Subscription.disableAllRemotesExcept(Subscription, ['count', 'find']);
 
@@ -74,16 +74,17 @@ module.exports = (Subscription) => {
     //userId should exist
     let userId = App.getCurrentUserId();
     //findOne works without implicit and
-    let Subscription = yield (Subscription.findOne({where: {targetId, userId}}));
-    return Subscription ? yield (actionInternalDelete(targetId, userId)) : yield (actionInternalCreate(targetId, userId));
+    let sub = yield (Subscription.findOne({where: {targetId, userId}}));
+
+    return sub ? yield (actionInternalDelete(targetId,userId)) : yield (actionInternalCreate(targetId,userId));
   }
 
   function * actionCreate(targetId) {
     //userId should exist
     let userId = App.getCurrentUserId();
     //findOne works without implicit and
-    let Subscription = yield (Subscription.findOne({where: {targetId, userId}}));
-    if (Subscription) {
+    let sub = yield (Subscription.findOne({where: {targetId, userId}}));
+    if (sub) {
       throw ERRORS.badRequest('Subscription already exists.');
     }
     return yield (actionInternalCreate(targetId, userId));
@@ -102,6 +103,9 @@ module.exports = (Subscription) => {
     let now = new Date();
     yield (Subscription.create({targetId, userId, now}));
     let count = yield (Subscription.iSyncSubject(subjectType, targetId));
+    if (subjectType === 'Story') {
+      Subscription.syncUserFromStory(targetId);
+    }
     return {
       status: Subscription.RETURN_STATUS.CREATED,
       count: count
@@ -112,8 +116,8 @@ module.exports = (Subscription) => {
     //userId should exist
     let userId = App.getCurrentUserId();
     //findOne works without implicit and
-    let Subscription = yield (Subscription.findOne({where: {targetId, userId}}));
-    if (!Subscription) throw  ERRORS.notFound('No such Subscription');
+    let sub = yield (Subscription.findOne({where: {targetId, userId}}));
+    if (!sub) throw  ERRORS.notFound('No such Subscription');
     return yield (actionInternalDelete(targetId, userId));
   }
 

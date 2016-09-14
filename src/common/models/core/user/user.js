@@ -8,6 +8,7 @@ import {initPhotos} from './photo/photo'
 import {initSettings} from './settings/settings'
 import {initExtra} from './extra/extra'
 import {initObjects} from './objects/objects'
+import {initSubscriptions} from './subscriptions/subscriptions'
 
 module.exports = (User) => {
   User.observe('before save', timestampBehavior);
@@ -46,4 +47,5 @@ module.exports = (User) => {
   initSettings(User);
   initExtra(User);
   initObjects(User);
+  initSubscriptions(User);
 };

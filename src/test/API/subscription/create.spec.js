@@ -1,0 +1,64 @@
+import {api, user1,user2,user3, user1Promise,user2Promise, user3Promise} from '../../helpers/api';
+import {updateTimeouts} from '../timeout';
+import app from '../../helpers/app';
+let should = require('chai').should();
+
+import STORIES from  '../../fixtures/story';
+let STORY_WITHOUT_LIKES_USER3 = STORIES.withoutLikesUser3;
+
+import COMMENTS from  '../../fixtures/comment';
+let COMMENT_WITHOUT_LIKES_USER3 = COMMENTS.withoutLikesUser3;
+
+let Like = app.models.Like;
+let User = app.models.User;
+let Story = app.models.Story;
+let Comment = app.models.Comment;
+let Subscription = app.models.Subscription;
+
+const COLLECTION_URL = 'subscriptions';
+
+describe(`/${COLLECTION_URL}/create`, function () {
+  updateTimeouts(this);
+
+  it('Anonymous - deny to subscribe', () => {
+    return api.post(`${COLLECTION_URL}/${user1.id}`)
+      .expect(401)
+  });
+
+  it('Wrong targetId should be not found', () => {
+    return user1Promise.then(({agent}) => {
+      return agent.post(`${COLLECTION_URL}/wrong_id`)
+        .expect(404)
+    })
+  });
+
+  it('User - deny to create subscription to model story', () => {
+    return user1Promise.then(({agent}) => {
+      return agent.post(`${COLLECTION_URL}/${STORY_WITHOUT_LIKES_USER3.id}`)
+        .expect(400)
+    })
+  });
+
+  it('User - deny to create subscription to model comment', () => {
+    return user1Promise.then(({agent}) => {
+      return agent.post(`${COLLECTION_URL}/${COMMENT_WITHOUT_LIKES_USER3.id}`)
+        .expect(400)
+    })
+  });
+
+
+  it('User - deny to subscibe to self', () => {
+    return user1Promise.then(({agent}) => {
+      return agent.post(`${COLLECTION_URL}/${user1.id}`)
+        .expect(400)
+    })
+  });
+
+  it('User - allow Subscription', () => {
+    return user1Promise.then( ({agent}) => {
+      return agent.post(`${COLLECTION_URL}/${user2.id}`)
+        .expect(200)
+    })
+  });
+
+});
