@@ -9,12 +9,7 @@ let STORY_WITHOUT_LIKES_USER3 = STORIES.withoutLikesUser3;
 import COMMENTS from  '../../fixtures/comment';
 let COMMENT_WITHOUT_LIKES_USER3 = COMMENTS.withoutLikesUser3;
 
-let Like = app.models.Like;
-let User = app.models.User;
-let Story = app.models.Story;
-let Comment = app.models.Comment;
-let Subscription = app.models.Subscription;
-
+const {User, Subscription} = app.models;
 const COLLECTION_URL = 'subscriptions';
 
 describe(`/${COLLECTION_URL}/create`, function () {
@@ -54,11 +49,14 @@ describe(`/${COLLECTION_URL}/create`, function () {
     })
   });
 
-  it('User - allow Subscription', () => {
+  it.only('User - allow Subscription', () => {
     return user1Promise.then( ({agent}) => {
       return agent.post(`${COLLECTION_URL}/${user2.id}`)
         .expect(200)
     })
   });
 
+  after(function*() {
+    yield (Subscription.deleteAll({userId: user1.id, targetId: user2.id}));
+  });
 });
