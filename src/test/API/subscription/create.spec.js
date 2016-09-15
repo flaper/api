@@ -20,40 +20,35 @@ describe(`/${COLLECTION_URL}/create`, function () {
       .expect(401)
   });
 
-  it('Wrong targetId should be not found', () => {
-    return user1Promise.then(({agent}) => {
-      return agent.post(`${COLLECTION_URL}/wrong_id`)
-        .expect(404)
-    })
+  it('Wrong targetId should be not found', function* () {
+    let {agent} = yield (user1Promise);
+    yield (agent.post(`${COLLECTION_URL}/wrong_id`)
+        .expect(404));
   });
 
-  it('User - deny to create subscription to model story', () => {
-    return user1Promise.then(({agent}) => {
-      return agent.post(`${COLLECTION_URL}/${STORY_WITHOUT_LIKES_USER3.id}`)
-        .expect(400)
-    })
+  it('User - deny to create subscription to model story', function* () {
+    let {agent} = yield (user1Promise);
+    yield (agent.post(`${COLLECTION_URL}/${STORY_WITHOUT_LIKES_USER3.id}`)
+        .expect(400));
   });
 
-  it('User - deny to create subscription to model comment', () => {
-    return user1Promise.then(({agent}) => {
-      return agent.post(`${COLLECTION_URL}/${COMMENT_WITHOUT_LIKES_USER3.id}`)
-        .expect(400)
-    })
+  it('User - deny to create subscription to model comment', function* () {
+    let {agent} = yield (user1Promise);
+    yield (agent.post(`${COLLECTION_URL}/${COMMENT_WITHOUT_LIKES_USER3.id}`)
+      .expect(400))
   });
 
 
-  it('User - deny to subscibe to self', () => {
-    return user1Promise.then(({agent}) => {
-      return agent.post(`${COLLECTION_URL}/${user1.id}`)
-        .expect(400)
-    })
+  it('User - deny to subscibe to self', function* () {
+    let {agent} = yield (user1Promise);
+    yield (agent.post(`${COLLECTION_URL}/${user1.id}`)
+      .expect(400));
   });
 
-  it.only('User - allow Subscription', () => {
-    return user1Promise.then( ({agent}) => {
-      return agent.post(`${COLLECTION_URL}/${user2.id}`)
-        .expect(200)
-    })
+  it('User - allow Subscription', function* () {
+    let {agent} = yield (user1Promise);
+    yield (agent.post(`${COLLECTION_URL}/${user2.id}`)
+      .expect(200));
   });
 
   after(function*() {
