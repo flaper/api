@@ -19,16 +19,12 @@ module.exports = (Subscription) => {
     DELETED: 'deleted'
   };
 
-  // Subscription.iSyncSubject = (subjectType, id) => {
-  //   let Model = Subscription.app.models[subjectType];
-  //   let count;
-  //   return Subscription.count({targetId: id})
-  //     .then((c) => {
-  //       count = c;
-  //       return Model.updateAll({id: id}, {SubscriptionsNumber: count}, {skipIgnore: {SubscriptionsNumber: true}})
-  //     })
-  //     .then(() => count);
-  // };
+  Subscription.iSyncSubject = function* (subjectType, id) {
+    let Model = Subscription.app.models[subjectType];
+    let count = Subscription.count({targetId: id});
+    yield (Model.updateAll({id: id}, {SubscriptionsNumber: count}, {skipIgnore: {SubscriptionsNumber: true}}));
+    return count;
+  };
 
   Subscription.actionToggle = actionToggle;
   Subscription.actionCreate = actionCreate;
@@ -103,9 +99,6 @@ module.exports = (Subscription) => {
     let now = new Date();
     yield (Subscription.create({targetId, userId, now}));
     let count = yield (Subscription.iSyncSubject(subjectType, targetId));
-    if (subjectType === 'Story') {
-      Subscription.syncUserFromStory(targetId);
-    }
     return {
       status: Subscription.RETURN_STATUS.CREATED,
       count: count
