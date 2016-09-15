@@ -101,7 +101,7 @@ export class Fixture {
        * because e.g. Comments depends on Story to exist
        */
       const modelGroups = [row1,
-        ['user', 'Role', 'RoleMapping', 'Story'], ['Comment', 'Image'], ['Like']];
+        ['user', 'Role', 'RoleMapping', 'Story'], ['Comment', 'Image', 'Subscription'], ['Like']];
       let queue = new PromiseQueue(1, Infinity);
 
       modelGroups.forEach(group => {
