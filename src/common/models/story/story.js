@@ -39,7 +39,7 @@ module.exports = (Story) => {
   };
 
   Story.slugFilter = (story) => {
-    let filter = {status: 'active'};
+    let filter = {status: 'active', type: story.type};
     if (story.type === Story.TYPE.REVIEW){
       filter.objectId = story.objectId;
     }
@@ -47,7 +47,6 @@ module.exports = (Story) => {
   }
 
   Story.validatesInclusionOf('status', {in: Story.STATUSES});
-  Story.validatesInclusionOf('type', {in: Story.TYPES});
 
   Story.MAX_TAGS = 3;
   Story.MIN_LENGTH = {
@@ -73,9 +72,10 @@ module.exports = (Story) => {
     flapId: {},
     images: {newDefault: []}
   }));
+  Story.observe('before save', typeObserver);
   Story.observe('before save', Sanitize.observer('title', Sanitize.text));
-  Story.observe('before save', contentObserver);
   Story.observe('before save', minLengthObserver);
+  Story.observe('before save', contentObserver);
   Story.observe('before save', Sanitize.observer('tags', tagSanitize));
   Story.observe('before save', reviewObserver);
   Story.observe('before save', articleObserver);
@@ -85,6 +85,17 @@ module.exports = (Story) => {
   initStatusActions(Story);
   initGet(Story);
   initDelete(Story);
+
+  function* typeObserver(ctx){
+    if (ctx.isNewInstance){
+	let type = ctx.instance.type;
+	if (!Story.TYPES.includes(type)) throw ERRORS.badRequest(`Wrong type "${type}" for story`);
+	return;
+    }
+    if (ctx.instance){
+      delete ctx.instance.type;
+    }
+  }
 
   function minLengthObserver(ctx) {
     let type = ctx.instance ? ctx.instance.type : _.get(ctx, 'currentInstance.type');
@@ -174,7 +185,6 @@ module.exports = (Story) => {
       if (!ctx.instance.title)
         throw ERRORS.badRequest(`Title is required for article`);
     }
-
     // update existing instance
   }
 };

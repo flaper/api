@@ -8,7 +8,7 @@ import STORIES from  '../../fixtures/story';
 
 const COLLECTION_URL = 'subscriptions';
 
-describe(`/${COLLECTION_URL}/delete`, function () {
+describe.skip(`/${COLLECTION_URL}/delete`, function () {
   updateTimeouts(this);
   it('Anonymous - do not allow delete by id', () => {
     return api.del(`${COLLECTION_URL}/${user2.id}`)

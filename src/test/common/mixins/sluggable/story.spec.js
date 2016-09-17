@@ -74,13 +74,11 @@ describe(`Sluggable/Story`, function () {
   let date = m.date().toString();
   date = date.length === 1 ? '0' + date : date;
 
-  before(() => {
-    let p = Promise.resolve();
+  before(function*() {
     let options = {skipIgnore: {status: true}};
-    models.forEach(model => {
-      p = p.then(() => Story.create(model, options));
-    });
-    return p;
+    for (let model of models) {
+      yield (Story.create(model, options));
+    }
   });
 
   it('Denied slug', function* () {

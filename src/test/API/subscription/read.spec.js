@@ -6,7 +6,7 @@ let Subscription = app.models.Subscription;
 
 const COLLECTION_URL = 'subscriptions';
 
-describe(`/${COLLECTION_URL}/read`, function () {
+describe.skip(`/${COLLECTION_URL}/read`, function () {
   updateTimeouts(this);
 
   it('Anonymous - allow access to the list', () => {

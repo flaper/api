@@ -4,6 +4,7 @@ import app from '../../helpers/app';
 let should = require('chai').should();
 import STORIES from  '../../fixtures/story';
 import {Sanitize} from '../../../../src/libs/sanitize/Sanitize';
+import _ from 'lodash';
 
 let Story = app.models.Story;
 let User = app.models.user;
@@ -97,11 +98,20 @@ describe(`/${COLLECTION_URL}`, function () {
       //this userId should be ignored
       userId: '1a400000000000000001111'
     };
+    
+    const WRONG_STORY = _.merge({}, NEW_STORY, {id: '1a4000000000000000010010', type: 'wrong'});
 
     it('Anonymous - deny to add', () => {
       return api.post(COLLECTION_URL)
         .send(NEW_STORY)
         .expect(401)
+    });
+    
+    it('User - error to create with wrong type', function*() {
+      let {agent} = yield (user1Promise);
+      yield (agent.post(COLLECTION_URL)
+        .send(WRONG_STORY)
+        .expect(400));
     });
 
     it('User - allow to add', function*() {

@@ -39,7 +39,7 @@ describe(`/${COLLECTION_URL}/create`, function () {
   });
 
 
-  it('User - deny to subscibe to self', function* () {
+  it.skip('User - deny to subscibe to self', function* () {
     let {agent} = yield (user1Promise);
     yield (agent.post(`${COLLECTION_URL}/${user1.id}`)
       .expect(400));
