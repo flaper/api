@@ -20,6 +20,7 @@ before_install:
   - ssh-keyscan -H bitbucket.org >> ~/.ssh/known_hosts 2>/dev/null
   - git clone git@bitbucket.org:sklyukin/flaper.config.test.git build_config
   - cp build_config/src/server/config.local.json src/server/config.local.json
+  - npm install debug
 after_failure:
 #  - cat src/test/out/app.out
 #  - cat src/test/out/app.err
