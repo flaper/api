@@ -12,6 +12,7 @@ addons:
     - mongodb-org-server
 node_js:
   - "5.1"
+  - "6.6"
 services:
   - mongodb
 before_install:
