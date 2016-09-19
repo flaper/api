@@ -50,7 +50,8 @@ describe(`/${COLLECTION_URL}/@reviews/get`, function () {
   describe('GET by slug', () => {
     it.skip('Anonymous - allow access to the review by slug', function* () {
       let obj = yield (FObject.findByIdRequired(REVIEW1.objectId));
-      yield (api.get(`${COLLECTION_URL}/slug/${REVIEW1.slug}`)
+      let review = yield (Story.findByIdRequired(REVIEW1.id));
+      yield (api.get(`${COLLECTION_URL}/slug/${review.slug}`)
         .query({before_slug: obj.getPath()})
         .expect(200)
         .expect((res) => {
