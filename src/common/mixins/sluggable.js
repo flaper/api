@@ -17,7 +17,6 @@ module.exports = (Model, options) => {
 
   Model.getInitialSlug = Model.getInitialSlug || (model => model.title);
   Model.slugFilter = Model.slugFilter || (model => ({status: 'active'}));
-  Model.actionFindBySlug = actionFindBySlug;
 
   Model.observe('before save', slugObserver);
   Model.observe('before activate', (model)=> {
@@ -31,19 +30,19 @@ module.exports = (Model, options) => {
     Model.slugSuffix = Model.slugSuffixDate;
   }
 
-  Model.remoteMethod(
-    'actionFindBySlug',
-    {
-      description: `Find an active model instance by slug`,
-      http: {path: '/slug/:slug', verb: 'get'},
-      accepts: [
-        {arg: 'slug', type: 'string', required: true},
-        {arg: 'fields', type: 'object', required: false}
-      ],
-      returns: {root: true},
-      rest: {after: ERRORS.convertNullToNotFoundError}
-    }
-  );
+  Model.actionFindBySlug = Model.actionFindBySlug || actionFindBySlug;
+  Model.actionFindBySlug_remote = Model.actionFindBySlug_remote || {
+    description: `Find an active model instance by slug`,
+    http: {path: '/slug/:slug', verb: 'get'},
+    accepts: [
+      {arg: 'slug', type: 'string', required: true},
+      {arg: 'fields', type: 'object', required: false}
+    ],
+    returns: {root: true},
+    rest: {after: ERRORS.convertNullToNotFoundError}
+  };
+  
+  Model.remoteMethod( 'actionFindBySlug', Model.actionFindBySlug_remote);
   //we need to call slugObserver when creating new Model and activating status
   //another example maybe - when title has been changed (maybe after save hook)
   function slugObserver(ctx) {
@@ -118,7 +117,7 @@ module.exports = (Model, options) => {
     }
   }
 
-  function actionFindBySlug(slug, fields) {
+  function* actionFindBySlug(slug, fields) {
     let query = {slugLowerCase: slug.toLocaleLowerCase(), status: 'active'};
     if (fields) {
       _.forOwn(fields, (value, key) => {
@@ -128,7 +127,7 @@ module.exports = (Model, options) => {
       })
     }
     let filter = {where: query};
-    return Model.findOne(filter);
+    return yield (Model.findOne(filter));
   }
 
   function sanitizeString(str) {

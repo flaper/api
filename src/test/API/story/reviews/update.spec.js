@@ -15,38 +15,8 @@ let Story = app.models.Story;
 
 const COLLECTION_URL = 'stories';
 
-describe(`/${COLLECTION_URL}/@reviews`, function () {
+describe(`/${COLLECTION_URL}/@reviews/update`, function () {
   updateTimeouts(this);
-  describe('GET/HEAD', () => {
-    it('Anonymous - allow access to the object reviews', () => {
-      return api.get(COLLECTION_URL)
-        .query({filter: {where: {objectId: OBJ1.id}}})
-        .expect(200)
-        .expect((res) => {
-          let reviews = res.body;
-          reviews.length.should.least(2);
-          for (let review of reviews) {
-            review.type.should.eq('review');
-            review.status.should.eq('active');
-            review.objectId.should.eq(OBJ1.id);
-          }
-        })
-    });
-    it('Anonymous - allow access to the denied object reviews', () => {
-      return api.get(COLLECTION_URL)
-        .query({filter: {where: {objectId: OBJ1.id, status: Story.STATUS.DENIED}}})
-        .expect(200)
-        .expect((res) => {
-          let reviews = res.body;
-          reviews.length.should.least(1);
-          for (let review of reviews) {
-            review.type.should.eq('review');
-            review.status.should.eq('denied');
-            review.objectId.should.eq(OBJ1.id);
-          }
-        })
-    });
-  });
 
   describe('POST', () => {
     const NEW_REVIEW = {
