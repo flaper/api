@@ -39,7 +39,7 @@ export function initGet(Story) {
 
   Story.actionFindBySlug_remote = {
     description: `Поиск story по slug`,
-    http: {path: '/slug/:slug', verb: 'get'},
+    http: {path: '/slug', verb: 'get'},
     accepts: [
       {arg: 'slug', type: 'string', required: true},
       {arg: 'before_slug', type: 'string', required: false, description: 'Только для отзывов. Путь к объекту.'},
@@ -48,12 +48,9 @@ export function initGet(Story) {
     rest: {after: ERRORS.convertNullToNotFoundError}
   };
 
-
   function customFind(filter) {
     filter = filter ? filter : {};
-    if (!filter['order']) {
-      filter['order'] = 'created DESC';
-    }
+    filter.order = filter.order||'created DESC';
     if (!_.get(filter, 'where') || !objectHasDeepKey(filter.where, 'status')) {
       //by default we return only active stories
       return Story.scopeActive(filter);
@@ -70,7 +67,7 @@ export function initGet(Story) {
     //but it is possible to request active and deleted as well
     return Story.scopePublic.count(where);
   }
-  
+
   function* actionFindBySlug(slug, before_slug) {
     let query = {slugLowerCase: slug.toLocaleLowerCase(), status: 'active'};
     if (before_slug){

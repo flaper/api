@@ -52,7 +52,8 @@ describe(`/${COLLECTION_URL}`, function () {
 
   describe('GET by slug', () => {
     it('Anonymous - allow access to any by slug', () => {
-      return api.get(`${COLLECTION_URL}/slug/${encodeURIComponent(STORY1.slugLowerCase)}`)
+      return api.get(`${COLLECTION_URL}/slug`)
+        .query({slug: STORY1.slugLowerCase}) 
         .expect(200)
         .expect((res) => {
           let story = res.body;

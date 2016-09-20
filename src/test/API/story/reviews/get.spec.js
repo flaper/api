@@ -48,20 +48,16 @@ describe(`/${COLLECTION_URL}/@reviews/get`, function () {
   });
 
   describe('GET by slug', () => {
-    it.skip('Anonymous - allow access to the review by slug', function* () {
+    it('Anonymous - allow access to the review by slug', function* () {
       let obj = yield (FObject.findByIdRequired(REVIEW1.objectId));
       let review = yield (Story.findByIdRequired(REVIEW1.id));
-      yield (api.get(`${COLLECTION_URL}/slug/${review.slug}`)
-        .query({before_slug: obj.getPath()})
-        .expect(200)
+      yield (api.get(`${COLLECTION_URL}/slug`)
+        .query({slug: review.slug, before_slug: obj.getPath()})
+ 	.expect(200)
         .expect((res) => {
-          let reviews = res.body;
-          reviews.length.should.least(1);
-          for (let review of reviews) {
-            review.type.should.eq('review');
-            review.status.should.eq('denied');
-            review.objectId.should.eq(OBJ1.id);
-          }
+          let r = res.body;
+	  r.slug.should.eq(review.slug);
+	  r.objectId.should.eq(REVIEW1.objectId);
         }));
     });
   });
