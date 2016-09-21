@@ -40,16 +40,15 @@ describe(`/${COLLECTION_URL}/:id/status/delete`, function () {
       yield (Story.iSyncUser(STORY1.userId));
     });
 
-    it('User can delete his denied story', ()=> {
-      return user1Promise.then(({agent}) => {
-          return agent.put(`${COLLECTION_URL}/${STORY_DENIED1.id}/status/delete`)
-            .expect(200)
-            .expect((res) => {
-              let story = res.body;
-              story.status.should.be.eq(Story.STATUS.DELETED);
-            })
-        })
-        .then(() => returnStatus(STORY_DENIED1.id, Story.STATUS.DENIED));
+    it('User can delete his denied story', function*() {
+      let {agent} = yield (user1Promise);
+      yield (agent.put(`${COLLECTION_URL}/${STORY_DENIED1.id}/status/delete`)
+	.expect(200)
+	.expect(res => {
+	  let story = res.body;
+	  story.status.should.be.eq(Story.STATUS.DELETED);
+	}));
+      yield (returnStatus(STORY_DENIED1.id, Story.STATUS.DENIED));
     });
   });
 

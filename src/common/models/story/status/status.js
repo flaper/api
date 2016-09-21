@@ -42,23 +42,16 @@ export function initStatusActions(Story) {
     }
   );
 
-  function actionDeny(id) {
+  function* actionDeny(id) {
     //admin only can call this
-    let story;
-    return Story.findByIdRequired(id)
-      .then((s) => {
-        story = s;
-        if (story.status === Story.STATUS.ACTIVE) {
-          story.status = Story.STATUS.DENIED;
-          return story.save({skipIgnore: {status: true}})
-        } else {
-          throw ERRORS.forbidden('Only active stories can be denied');
-        }
-      })
-      .then((response) => {
-        Story.iSyncUser(story.userId);
-        return response;
-      })
+    let story = yield (Story.findByIdRequired(id));
+    if (story.status !== Story.STATUS.ACTIVE) 
+      throw ERRORS.forbidden('Only active stories can be denied');
+    story.status = Story.STATUS.DENIED;
+    yield (story.save({skipIgnore: {status: true}}));
+    // we don't wait to iSyncUser to finish
+    Story.iSyncUser(story.userId);
+    return story;
   }
 
   // to improve - should be no ACL check in action
@@ -84,26 +77,16 @@ export function initStatusActions(Story) {
     return story;
   }
 
-  function actionActivate(id) {
+  function* actionActivate(id) {
     //admin only can call this
-    let story;
-    return Story.findByIdRequired(id)
-      .then((s) => {
-        story = s;
-        if (story.status === Story.STATUS.DENIED) {
-          return Story.notifyObserversOf('before activate', story);
-        } else {
-          throw ERRORS.forbidden('Only denied stories can be activated again');
-        }
-      })
-      .then(() => {
-        story.status = Story.STATUS.ACTIVE;
-        return story.save({skipIgnore: {status: true}});
-      })
-      .then((response) => {
-        Story.iSyncUser(story.userId);
-        return response;
-      })
+    let story = yield (Story.findByIdRequired(id));
+    if (story.status !== Story.STATUS.DENIED)
+      throw ERRORS.forbidden('Only denied stories can be activated again');
+    yield (Story.notifyObserversOf('before activate', story));
+    story.status = Story.STATUS.ACTIVE;
+    yield (story.save({skipIgnore: {status: true}}));
+    Story.iSyncUser(story.userId);
+    return story;
   }
 
 }
