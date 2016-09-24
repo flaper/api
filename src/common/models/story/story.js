@@ -1,8 +1,8 @@
 import {setCurrentUserId} from '../../behaviors/currentUser'
 import {applyIdToType} from '../../behaviors/idToType'
 import {ignoreUpdatedIfNoChanges, ignoreProperties, setProperty} from '../../behaviors/propertiesHelper'
-import {Sanitize} from '@flaper/markdown';
-import {FlaperMark} from '../../../libs/markdown/markdown'
+import {SanitizeHelper} from '../../../libs/sanitize/SanitizeHelper.js';
+import {FlaperMark, Sanitize} from '@flaper/markdown';
 import {initStatusActions} from './status/status';
 import {initGet} from './get/get';
 import {initSyncUser} from './methods/syncUser';
@@ -73,10 +73,10 @@ module.exports = (Story) => {
     images: {newDefault: []}
   }));
   Story.observe('before save', typeObserver);
-  Story.observe('before save', Sanitize.observer('title', Sanitize.text));
+  Story.observe('before save', SanitizeHelper.observer('title', Sanitize.text));
   Story.observe('before save', minLengthObserver);
   Story.observe('before save', contentObserver);
-  Story.observe('before save', Sanitize.observer('tags', tagSanitize));
+  Story.observe('before save', SanitizeHelper.observer('tags', tagSanitize));
   Story.observe('before save', reviewObserver);
   Story.observe('before save', articleObserver);
   Story.observe('after save', afterSaveObserver);
@@ -104,12 +104,12 @@ module.exports = (Story) => {
       // e.g. just updating comments number
       return Promise.resolve();
     }
-    let observer = Sanitize.alphaMinLengthObserver('content', Story.MIN_LENGTH[type]);
+    let observer = SanitizeHelper.alphaMinLengthObserver('content', Story.MIN_LENGTH[type]);
     return observer(ctx);
   }
 
   function* contentObserver(ctx) {
-    let sanitizeContent = Sanitize.observer('content', Sanitize.html);
+    let sanitizeContent = SanitizeHelper.observer('content', Sanitize.html);
 
     let value = yield (sanitizeContent(ctx));
     if (!value)

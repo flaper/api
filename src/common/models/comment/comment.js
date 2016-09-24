@@ -1,11 +1,11 @@
 import {setCurrentUserId} from '../../behaviors/currentUser'
 import {applyIdToType} from '../../behaviors/idToType'
-import {Sanitize} from '@flaper/markdown';
+import {SanitizeHelper} from '../../../libs/sanitize/SanitizeHelper';
 import {initDefaultScope} from './methods/defaultScope';
 import {initCustomDelete} from './methods/customDelete';
 import {initSyncSubject} from './methods/syncSubject';
 import {ignoreProperties, ignoreUpdatedIfNoChanges, setProperty} from '../../behaviors/propertiesHelper'
-import {FlaperMark} from '../../../libs/markdown/markdown'
+import {FlaperMark, Sanitize} from '@flaper/markdown';
 import {ERRORS} from '../../utils/errors';
 
 import _ from 'lodash';
@@ -39,7 +39,7 @@ module.exports = (Comment) => {
   Comment.observe('before save', contentObserver);
 
   function * contentObserver(ctx) {
-    let sanitizeContent = Sanitize.observer('content', Sanitize.html);
+    let sanitizeContent = SanitizeHelper.observer('content', Sanitize.html);
 
     let value = yield(sanitizeContent(ctx));
     if (value) {
