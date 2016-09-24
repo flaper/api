@@ -7,7 +7,6 @@ module.exports = (CommonModel) => {
   CommonModel.commonInit = commonInit;
   CommonModel.disableAllRemotesExcept = disableAllRemotesExcept;
 
-
   function commonInit(Model) {
     disableSomeRemotes(Model);
     CommonModel.commonDisableRemoteScope(Model, 'scopeAll');

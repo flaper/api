@@ -26,9 +26,9 @@ export function disableAllRemotesExcept(Model, except = []) {
 }
 
 export function disableRemoteScope(Model, scope) {
-  Model.disableRemoteMethod(`__get__${scope}`, true);
   Model.disableRemoteMethod(`__create__${scope}`, true);
-  Model.disableRemoteMethod(`__delete__${scope}`, true);
   Model.disableRemoteMethod(`__count__${scope}`, true);
+  Model.disableRemoteMethod(`__delete__${scope}`, true);
+  Model.disableRemoteMethod(`__get__${scope}`, true);
 }
 

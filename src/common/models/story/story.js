@@ -55,7 +55,6 @@ module.exports = (Story) => {
   };
 
   Story.disableAllRemotesExcept(Story, ['find', 'findById', 'updateAttributes', 'count', 'exists', 'create']);
-  Story.disableRemoteMethod('deleteById', true);
 
   Story.disableRemoteMethod('__get__user', false);
 
