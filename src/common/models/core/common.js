@@ -25,10 +25,15 @@ export function disableAllRemotesExcept(Model, except = []) {
   });
 }
 
-export function disableRemoteScope(Model, scope) {
-  Model.disableRemoteMethod(`__create__${scope}`, true);
-  Model.disableRemoteMethod(`__count__${scope}`, true);
-  Model.disableRemoteMethod(`__delete__${scope}`, true);
-  Model.disableRemoteMethod(`__get__${scope}`, true);
+export function disableRemoteScope(Model, scope, param = true) {
+  Model.disableRemoteMethod(`__create__${scope}`, param);
+  Model.disableRemoteMethod(`__count__${scope}`, param);
+  Model.disableRemoteMethod(`__delete__${scope}`, param);
+  Model.disableRemoteMethod(`__destroyById__${scope}`, param);
+  Model.disableRemoteMethod(`__get__${scope}`, param);
+  Model.disableRemoteMethod(`__findById__${scope}`, param);
+  Model.disableRemoteMethod(`__link__${scope}`, param);
+  Model.disableRemoteMethod(`__unlink__${scope}`, param);
+  Model.disableRemoteMethod(`__updateById__${scope}`, param);
 }
 
