@@ -6,9 +6,7 @@ import {Sanitize} from '@flaper/markdown';
 import IMAGES from  '../../fixtures/image';
 import _ from 'lodash';
 
-let Comment = app.models.Comment;
-let Story = app.models.Story;
-let Image = app.models.Image;
+const {Comment, Story, Image} = app.models;
 
 const COLLECTION_URL = 'comments';
 

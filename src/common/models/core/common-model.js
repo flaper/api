@@ -9,13 +9,16 @@ module.exports = (CommonModel) => {
 
   function disableAllRemotesExcept(Model, except = []) {
     let remotes = {
-      updateAttributes: false,
+      updateAttributes: false, // false - instance метод
       exists: true,
       deleteById: true,
       findById: true,
       create: true,
       count: true,
-      find: true
+      find: true,
+      replaceById: true,
+      replaceOrCreate: true,
+      upsertWithWhere: true,
     };
 
     _.forOwn(remotes, (value, key) => {

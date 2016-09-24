@@ -23,7 +23,7 @@ module.exports = (Comment) => {
 
   Comment.validatesInclusionOf('status', {in: Comment.STATUSES});
 
-  //Comment.disableRemoteMethod('updateAttributes', false);
+  Comment.disableAllRemotesExcept(Comment, ['find', 'findById', 'count', 'exists', 'create', 'updateAttributes']);
   Comment.disableRemoteMethod('__get__subject', false);
 
   Comment.disableRemoteMethod('__get__user', false);
