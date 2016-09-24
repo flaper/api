@@ -3,7 +3,7 @@ import {api, user1, user1Promise, user2, user2Promise, adminPromise} from '../..
 import app from '../../../helpers/app';
 import STORIES from  '../../../fixtures/story';
 import FOBJECTS from  '../../../fixtures/fObject';
-import {Sanitize} from '../../../../../src/libs/sanitize/Sanitize';
+import {Sanitize} from '@flaper/markdown';
 import _ from 'lodash';
 
 const OBJ1 = FOBJECTS.obj1;

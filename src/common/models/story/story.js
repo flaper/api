@@ -1,7 +1,7 @@
 import {setCurrentUserId} from '../../behaviors/currentUser'
 import {applyIdToType} from '../../behaviors/idToType'
 import {ignoreUpdatedIfNoChanges, ignoreProperties, setProperty} from '../../behaviors/propertiesHelper'
-import {Sanitize} from '../../../libs/sanitize/Sanitize';
+import {Sanitize} from '@flaper/markdown';
 import {FlaperMark} from '../../../libs/markdown/markdown'
 import {initStatusActions} from './status/status';
 import {initGet} from './get/get';

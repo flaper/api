@@ -1,4 +1,4 @@
-import {Sanitize} from '../../../src/libs/sanitize/Sanitize';
+import {Sanitize} from '@flaper/markdown';
 import app from '../../server/server';
 import _ from 'lodash'
 

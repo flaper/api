@@ -1,7 +1,7 @@
-import {Sanitize} from "../../libs/sanitize/Sanitize"
+import {Sanitize} from '@flaper/markdown';
 import moment from 'moment-timezone';
-import {ERRORS} from '../utils/errors'
-import _ from 'lodash'
+import {ERRORS} from '../utils/errors';
+import _ from 'lodash';
 
 //mixin suppose that Model have 'status' property and 'active' status
 module.exports = (Model, options) => {

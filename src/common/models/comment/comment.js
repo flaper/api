@@ -1,6 +1,6 @@
 import {setCurrentUserId} from '../../behaviors/currentUser'
 import {applyIdToType} from '../../behaviors/idToType'
-import {Sanitize} from '../../../libs/sanitize/Sanitize';
+import {Sanitize} from '@flaper/markdown';
 import {initDefaultScope} from './methods/defaultScope';
 import {initCustomDelete} from './methods/customDelete';
 import {initSyncSubject} from './methods/syncSubject';

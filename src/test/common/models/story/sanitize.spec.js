@@ -1,7 +1,7 @@
 import app from '../../../helpers/app';
 let should = require('chai').should();
 import STORIES from  '../../../fixtures/story';
-import {Sanitize} from '../../../../../src/libs/sanitize/Sanitize';
+import {Sanitize} from '@flaper/markdown';
 import sanitizeHtml from 'sanitize-html';
 
 let Story = app.models.Story;

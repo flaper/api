@@ -2,7 +2,7 @@ import {api, user1, user1Promise, user2, user2Promise, adminPromise} from '../..
 import {updateTimeouts} from '../timeout';
 import app from '../../helpers/app';
 let should = require('chai').should();
-import {Sanitize} from '../../../../src/libs/sanitize/Sanitize';
+import {Sanitize} from '@flaper/markdown';
 import _ from 'lodash';
 
 let Comment = app.models.Comment;
