@@ -1,16 +1,8 @@
-import {RoleService} from '../../services/roleService';
+import {RoleService} from '../../services/roleService.js';
+import {disableAllRemotesExcept} from '../core/common.js';
 
 module.exports = (Role) => {
-  Role.disableRemoteMethod('createChangeStream', true);
-  Role.disableRemoteMethod('deleteById', true);
-  Role.disableRemoteMethod('updateAll', true);
-  Role.disableRemoteMethod('upsert', true);
-  Role.disableRemoteMethod('exists', true);
-  Role.disableRemoteMethod('findById', true);
-  Role.disableRemoteMethod('create', true);
-  Role.disableRemoteMethod('count', true);
-  Role.disableRemoteMethod('findOne', true);
-  Role.disableRemoteMethod('updateAttributes', false);
+  disableAllRemotesExcept(Role, ['find']);
 
   Role.disableRemoteMethod('__create__principals', false);
   Role.disableRemoteMethod('__link__principals', false);
