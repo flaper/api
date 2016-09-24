@@ -54,6 +54,7 @@ module.exports = (Story) => {
     review: 256
   };
 
+  Story.disableAllRemotesExcept(Story, ['find', 'findById', 'updateAttributes', 'count', 'exists', 'create']);
   Story.disableRemoteMethod('deleteById', true);
 
   Story.disableRemoteMethod('__get__user', false);
@@ -70,7 +71,8 @@ module.exports = (Story) => {
     lastActive: {newDefault: (data) => data.created},
     commentsNumber: {newDefault: 0},
     flapId: {},
-    images: {newDefault: []}
+    images: {newDefault: []},
+    answer: {}, // официальный ответ компании
   }));
   Story.observe('before save', typeObserver);
   Story.observe('before save', SanitizeHelper.observer('title', Sanitize.text));
