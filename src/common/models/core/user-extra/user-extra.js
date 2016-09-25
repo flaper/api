@@ -1,4 +1,5 @@
 import _ from 'lodash';
+
 module.exports = (UserExtra) => {
   UserExtra.commonInit(UserExtra);
   UserExtra.PROPERTIES = {

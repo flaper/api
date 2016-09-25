@@ -1,4 +1,4 @@
-import {App} from '../../../../services/App';
+import {App} from '../../../../services/App.js';
 import {OBJECT_PERMISSIONS} from '@flaper/consts';
 
 export function initPermissions(FObject) {
@@ -26,6 +26,6 @@ export function initPermissions(FObject) {
     const P = OBJECT_PERMISSIONS;
     if (!isOwner)
       return [P.INFO_CHANGE];
-    return [P.LOGO, P.ANSER, P.INFO_CHANGE, P.IMAGE_UPLOAD, P.IMAGE_REMOVE, P.OWNERS_ADD, P.OWNERS_REMOVE];
+    return [P.LOGO, P.ANSWER, P.INFO_CHANGE, P.IMAGE_UPLOAD, P.IMAGE_REMOVE, P.OWNERS_ADD, P.OWNERS_REMOVE];
   }
 }

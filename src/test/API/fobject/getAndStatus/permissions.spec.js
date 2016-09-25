@@ -29,7 +29,7 @@ describe(`/${COLLECTION_URL}/@permissions`, function () {
       .expect(200)
       .expect(res=>{
 	let permissions = res.body;
-	permissions.length.should.eq(1);
+	permissions.length.should.least(1);
       }));
   });
 });

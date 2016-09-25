@@ -1,4 +1,4 @@
-import {App} from '../../../../services/App';
+import {App} from '../../../../services/App.js';
 import {ERRORS} from '../../../../utils/errors';
 import _ from 'lodash';
 
@@ -33,55 +33,49 @@ export function initObjects(User) {
 
   User.remoteMethod('getObjectsIds', {
     http: {verb: 'get', path: '/:id/objectsIds'},
-    description: 'Get objects which user own',
+    description: 'Список объектов, которыми управляет пользователь',
     accessType: 'EXECUTE',
     accepts: {arg: 'id', type: 'string', description: 'User Id', required: true},
     returns: {root: true}
   });
 
-  function addObject(id, objectId) {
+  function* addObject(id, objectId) {
     let userId = App.getCurrentUserId();
-    return hasAccessForbidden(userId, objectId)
-      .then(() => {
-        let UserExtra = User.app.models.UserExtra;
-        return UserExtra.addObject(id, objectId);
-      });
+    yield (hasAccessForbidden(userId, objectId));
+    let UserExtra = User.app.models.UserExtra;
+    return yield (UserExtra.addObject(id, objectId));
   }
 
-  function removeObject(id, objectId) {
+  function* removeObject(id, objectId) {
     let userId = App.getCurrentUserId();
-    return hasAccessForbidden(userId, objectId)
-      .then(() => {
-        let UserExtra = User.app.models.UserExtra;
-        return UserExtra.removeObject(id, objectId);
-      });
+    yield (hasAccessForbidden(userId, objectId));
+    let UserExtra = User.app.models.UserExtra;
+    return yield (UserExtra.removeObject(id, objectId));
   }
 
   function* getObjectsIds(id) {
+    console.log('method');
     let UserExtra = User.app.models.UserExtra;
     return yield (UserExtra.getObjectsIds(id));
   }
 
-  function hasAccessForbidden(userId, objectId) {
-    return hasAccess(userId, objectId)
-      .then((hasAccess) => {
-        if (!hasAccess) throw ERRORS.forbidden('You are not owner of this object');
-        return true;
-      });
+  function* hasAccessForbidden(userId, objectId) {
+    let access = yield (hasAccess(userId, objectId));
+    if (!access)
+      throw ERRORS.forbidden('You are not owner of this object');
+    return true;
   }
 
-  function hasAccess(userId, objectId) {
-    let isSales;
-    let isOwner;
-    let promises = [];
-    promises.push(App.isSales().then(value => isSales = value));
-    promises.push(User.isOwner(userId, objectId).then(value => isOwner = value));
-    return Promise.all(promises)
-      .then(() => isSales || isOwner)
+  function* hasAccess(userId, objectId) {
+    // isSales первый, пока не обновлен getCurrentContext
+    let isSales = yield (App.isSales());
+    if (isSales)
+      return true;
+    return yield (User.isOwner(userId, objectId));
   }
 
-  function isOwner(userId, objectId) {
-    return User.getObjectsIds(userId)
-      .then(objs => objs.includes(objectId));
+  function* isOwner(userId, objectId) {
+    let ids = yield (User.getObjectsIds(userId));
+    return ids.includes(objectId);
   }
 }

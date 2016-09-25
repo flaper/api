@@ -5,7 +5,7 @@ import _ from 'lodash';
 let should = require('chai').should();
 import OBJECTS from  '../../fixtures/fObject.js';
 
-let User = app.models.User;
+const {User} = app.models;
 
 describe(`/users/:id/objects`, function () {
   updateTimeouts(this);
@@ -18,30 +18,27 @@ describe(`/users/:id/objects`, function () {
     return `users/${id}/objectsIds`;
   }
 
-  before(() => {
-    return user1Promise.then(({agent}) => {
-      return agent.get(_getUrl(user1.id))
-        .expect(200)
-        .expect(res => {
-          let objects = res.body;
-          objects.length.should.eq(0);
-        })
-    })
+  before(function*() {
+    let {agent} = yield (user1Promise);
+    return yield (agent.get(_getUrl(user1.id))
+      .expect(200)
+      .expect(res => {
+	let ids = res.body;
+	ids.length.should.eq(0);
+      }));
   });
 
   describe('GET', () => {
-    it('User - deny foreign access', () => {
-      return user1Promise.then(({agent}) => {
-        return agent.get(_getUrl(user2.id))
-          .expect(401);
-      });
+    it('User - deny foreign access', function*() {
+      let {agent} = yield (user1Promise);
+      yield (agent.get(_getUrl(user2.id))
+	.expect(401));
     });
 
-    it('User - allow access to his list', () => {
-      return user1Promise.then(({agent}) => {
-        return agent.get(_getUrl(user1.id))
-          .expect(200);
-      });
+    it('User - allow access to his list', function*() {
+      let {agent} = yield (user1Promise);
+      yield (agent.get(_getUrl(user1.id))
+	.expect(200));
     });
 
     it('Sales - allow access to anyone list', () => {
@@ -152,10 +149,10 @@ describe(`/users/:id/objects`, function () {
     });
   });
 
-  after(() => {
+  after(function*() {
     let promises = [];
     promises.push(User.updateExtraValue(user1.id, 'objects', []));
     promises.push(User.updateExtraValue(user2.id, 'objects', []));
-    return Promise.all(promises);
+    return yield (promises);
   })
 });

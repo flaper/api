@@ -1,3 +1,4 @@
+import {coModel} from '../../../../server/extend/framework.js';
 import {timestampBehavior} from '../../../behaviors/timestamps.js';
 import {applyIdToType} from '../../../behaviors/idToType';
 import {findByIdRequired} from '../methods/findMethods';
@@ -12,6 +13,7 @@ import {initSubscriptions} from './subscriptions/subscriptions';
 import {disableAllRemotesExcept, disableRemoteScope} from '../common.js';
 
 module.exports = (User) => {
+  coModel(User);
   User.observe('before save', timestampBehavior);
   applyIdToType(User);
   User.findByIdRequired = findByIdRequired;

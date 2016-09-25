@@ -9,8 +9,7 @@ import _ from 'lodash';
 import moment from 'moment';
 import {returnProperties} from '../../commonModel/helper'
 
-let User = app.models.User;
-let ManageRequest = app.models.ManageRequest;
+const {User, ManageRequest} = app.models;
 const COLLECTION_URL = 'ManageRequests';
 const OBJECT_WITHOUT_MR = OBJECTS.obj_without_manage_requests;
 const REQUEST2 = REQUESTS.request2;

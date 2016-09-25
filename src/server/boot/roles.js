@@ -18,11 +18,10 @@ module.exports = (app) => {
       if (!userId) {
         return reject(); // do not allow anonymous users
       }
-
+      
       method(userId).then((result) => {
-        if (result) {
+        if (result)
           return cb(null, true);
-        }
         reject();
       });
     };

@@ -1,5 +1,5 @@
-import {App} from '../../../../services/App';
-import {ERRORS} from '../../../../utils/errors';
+import {App} from '../../../../services/App.js';
+import {ERRORS} from '../../../../utils/errors.js';
 import moment from 'moment';
 
 export function initStatusActions(ManageRequest) {
