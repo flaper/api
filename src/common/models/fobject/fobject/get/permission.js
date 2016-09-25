@@ -26,6 +26,6 @@ export function initPermissions(FObject) {
     const P = OBJECT_PERMISSIONS;
     if (!isOwner)
       return [P.INFO_CHANGE];
-    return [P.LOGO, P.ANSWER, P.INFO_CHANGE, P.IMAGE_UPLOAD, P.IMAGE_REMOVE, P.OWNERS_ADD, P.OWNERS_REMOVE];
+    return [P.OWNER, P.LOGO, P.ANSWER, P.INFO_CHANGE, P.IMAGE_UPLOAD, P.IMAGE_REMOVE, P.OWNERS_ADD, P.OWNERS_REMOVE];
   }
 }

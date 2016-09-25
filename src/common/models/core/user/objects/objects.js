@@ -54,7 +54,6 @@ export function initObjects(User) {
   }
 
   function* getObjectsIds(id) {
-    console.log('method');
     let UserExtra = User.app.models.UserExtra;
     return yield (UserExtra.getObjectsIds(id));
   }
