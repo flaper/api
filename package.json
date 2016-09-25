@@ -16,7 +16,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@flaper/consts": "^0.1.3",
+    "@flaper/consts": "^0.2.1",
     "@flaper/markdown": "^1.1.0",
     "aws-sdk": "^2.2.26",
     "babel-cli": "^6.0.0",
