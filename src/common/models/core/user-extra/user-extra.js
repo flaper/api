@@ -37,23 +37,20 @@ module.exports = (UserExtra) => {
       })
   }
 
-  function addObject(userId, objectId) {
+  function* addObject(userId, objectId) {
     let id = userId.toString();
     let objId = objectId.toString();
     const PROP_OBJECT = UserExtra.PROPERTIES.objects;
-    return getObjectsIds(userId)
-      .then((objs) => {
-        if (objs.includes(objId)) return objs;
-        return new Promise((resolve, reject) => {
-          let collection = getCollection();
-          collection.findOneAndUpdate({userId: id},
-            {$push: {[PROP_OBJECT]: objId}},
-            {upsert: true, returnOriginal: false}, (err, result) => {
-              if (err) return reject(err);
-              resolve(result.value.objects);
-            })
-        })
-      })
+    let objs = yield (getObjectsIds(userId));
+    if (objs.includes(objId)) return objs;
+    return yield (new Promise((resolve, reject) => {
+      let collection = getCollection();
+      collection.findOneAndUpdate({userId: id}, {$push: {[PROP_OBJECT]: objId}},
+	{upsert: true, returnOriginal: false}, (err, result) => {
+	  if (err) return reject(err);
+	  resolve(result.value.objects);
+	})})
+    );
   }
 
   function removeObject(userId, objId) {

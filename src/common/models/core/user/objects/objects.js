@@ -57,9 +57,9 @@ export function initObjects(User) {
       });
   }
 
-  function getObjectsIds(id) {
+  function* getObjectsIds(id) {
     let UserExtra = User.app.models.UserExtra;
-    return UserExtra.getObjectsIds(id);
+    return yield (UserExtra.getObjectsIds(id));
   }
 
   function hasAccessForbidden(userId, objectId) {
