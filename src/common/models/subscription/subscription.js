@@ -6,7 +6,8 @@ import {propertiesFilter} from '../../utils/object';
 import _ from 'lodash';
 
 module.exports = (Subscription) => {
-  const ALLOWED_MODELS = ['user','Object'];
+  const ALLOWED_MODELS = ['user','FObject'];
+  const MAX_SUBSCRIPTIONS_PER_DAY = 10;
   Subscription.commonInit(Subscription);
   Subscription.disableAllRemotesExcept(Subscription, ['count', 'find']);
 
@@ -20,9 +21,9 @@ module.exports = (Subscription) => {
   };
 
   Subscription.iSyncSubject = function* (subjectType, id) {
-    let Model = Subscription.app.models[subjectType];
+    // let Model = Subscription;
     let count = Subscription.count({targetId: id});
-    yield (Model.updateAll({id: id}, {SubscriptionsNumber: count}, {skipIgnore: {SubscriptionsNumber: true}}));
+    yield (Subscription.updateAll({id: id}, {SubscriptionsNumber: count}, {skipIgnore: {SubscriptionsNumber: true}}));
     return count;
   };
 
@@ -87,17 +88,21 @@ module.exports = (Subscription) => {
   }
 
   function * actionInternalCreate(targetId, userId) {
-    let IdToType = Subscription.app.models.IdToType;
-    let idToType = yield (IdToType.findByIdRequired(targetId));
-    let subjectType = idToType.type;
+    let IdToType = Subscription.app.models.IdToType,
+        idToType = yield (IdToType.findByIdRequired(targetId)),
+        restrictSpan = Date.now() - (24*60*60*1000),
+        recentSubscriptionsCount =yield (Subscription.count({userId:userId,created:{gte:restrictSpan}})),
+        subjectType = idToType.type;
+    if (recentSubscriptionsCount > MAX_SUBSCRIPTIONS_PER_DAY) {
+      throw ERRORS.forbidden(`Only ${MAX_SUBSCRIPTIONS_PER_DAY} subscriptions allowed per day`);
+    }
     if (!ALLOWED_MODELS.includes(subjectType)) {
       throw ERRORS.badRequest(`Subscriptions are not allowed for type '${subjectType}'.`)
     }
-    if (targetId === userId) {
-      throw ERRORS.badRequest('Cannot subscribe to yourself');
+    if (targetId.toString() === userId.toString()) {
+      throw ERRORS.badRequest('Can not subscribe to yourself');
     }
-    let now = new Date();
-    yield (Subscription.create({targetId, userId, now}));
+    yield (Subscription.create({targetId, userId,subjectType}));
     let count = yield (Subscription.iSyncSubject(subjectType, targetId));
     return {
       status: Subscription.RETURN_STATUS.CREATED,
