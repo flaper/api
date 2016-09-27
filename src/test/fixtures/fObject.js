@@ -3,7 +3,7 @@ import app from '../../server/server';
 let FObject = app.models.FObject;
 
 let fobjects = {
-  "obj1": {
+  obj1: {
     "id": "1a7000000000000000001001",
     "title": "Титаник",
     //this slug actually will be generated anyway, it just to use in test
@@ -25,7 +25,7 @@ let fobjects = {
     "created": 1450716334311,
     "updated": 1450716334311
   },
-  "place1": {
+  place1: {
     "id": "1a7000000000000000001002",
     "title": "Русские блины",
     "mainDomain": FObject.DOMAINS.PLACES,
@@ -51,31 +51,31 @@ let fobjects = {
     "created": 1450718334311,
     "updated": 1450718334311
   },
-  "obj3": {
+  obj3: {
     "id": "1a7000000000000000001003",
     "title": "Тестовый объект3",
     "mainDomain": FObject.DOMAINS.PLACES,
     "created": 1450616334311,
     "updated": 1450616334311
   },
-  "obj_without_region": {
+  obj_without_region: {
     "id": "1a7000000000000000001004",
     "title": "Тестовый объект3",
     "mainDomain": FObject.DOMAINS.PLACES,
     "created": 1450616334311,
     "updated": 1450616334311
   },
-  "obj_without_manage_requests": {
+  obj_without_manage_requests: {
     "id": "1a7000000000000000001005",
     "title": "Объект без запросов на управление",
     "mainDomain": FObject.DOMAINS.PLACES
   },
-  "obj_without_owners": {
+  obj_without_owners: {
     "id": "1a7000000000000000001006",
     "title": "Объект без владельцев",
     "mainDomain": FObject.DOMAINS.PLACES
   },
-  "deleted1": {
+  deleted1: {
     "id": "1a7000000000000000001020",
     "mainDomain": FObject.DOMAINS.PLACES,
     "status": FObject.STATUS.DELETED,

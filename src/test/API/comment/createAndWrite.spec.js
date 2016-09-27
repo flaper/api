@@ -4,7 +4,9 @@ import app from '../../helpers/app';
 let should = require('chai').should();
 import {Sanitize} from '@flaper/markdown';
 import IMAGES from  '../../fixtures/image';
+import STORIES from  '../../fixtures/story.js';
 import _ from 'lodash';
+const STORY1 = STORIES.test1;
 
 const {Comment, Story, Image} = app.models;
 
@@ -16,7 +18,7 @@ describe(`/${COLLECTION_URL}/POST&PUT`, function () {
   const NEW_COMMENT = {
     id: '1a5000000000000000010001',
     content: "test **comment**",
-    subjectId: "1a4000000000000000001001"
+    subjectId: STORY1.id,
   };
 
   it('Anonymous - deny to add', () => {

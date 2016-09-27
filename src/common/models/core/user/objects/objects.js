@@ -61,7 +61,7 @@ export function initObjects(User) {
   function* hasAccessForbidden(userId, objectId) {
     let access = yield (hasAccess(userId, objectId));
     if (!access)
-      throw ERRORS.forbidden('You are not owner of this object');
+      throw ERRORS.forbidden('Вы не являетесь владельцем данного объекта');
     return true;
   }
 
@@ -74,7 +74,9 @@ export function initObjects(User) {
   }
 
   function* isOwner(userId, objectId) {
+    if (!userId||!objectId)
+      throw ERRORS.badRequest('userId и objectId должны быть указаны');
     let ids = yield (User.getObjectsIds(userId));
-    return ids.includes(objectId);
+    return ids.includes(objectId.toString());
   }
 }

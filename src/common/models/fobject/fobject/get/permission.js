@@ -3,6 +3,7 @@ import {OBJECT_PERMISSIONS} from '@flaper/consts';
 
 export function initPermissions(FObject) {
   FObject.getPermissions = getPermissions;
+  FObject.iGetPermissions = iGetPermissions;
 
   FObject.remoteMethod(
     'getPermissions',
@@ -19,6 +20,10 @@ export function initPermissions(FObject) {
 
   function* getPermissions(objectId) {
     let userId = App.getCurrentUserId();
+    return yield iGetPermissions(objectId, userId);
+  }
+
+  function* iGetPermissions(objectId, userId) {
     if (!userId)
       return [];
     const {User} = FObject.app.models;

@@ -1,3 +1,4 @@
+import {App} from '../../services/App.js'
 import {setCurrentUserId} from '../../behaviors/currentUser'
 import {applyIdToType} from '../../behaviors/idToType'
 import {SanitizeHelper} from '../../../libs/sanitize/SanitizeHelper';
@@ -7,6 +8,7 @@ import {initSyncSubject} from './methods/syncSubject';
 import {ignoreProperties, ignoreUpdatedIfNoChanges, setProperty} from '../../behaviors/propertiesHelper'
 import {FlaperMark, Sanitize} from '@flaper/markdown';
 import {ERRORS} from '../../utils/errors';
+import {OBJECT_PERMISSIONS} from '@flaper/consts';
 
 import _ from 'lodash';
 
@@ -28,15 +30,17 @@ module.exports = (Comment) => {
 
   Comment.disableRemoteMethod('__get__user', false);
   Comment.observe('before save', ignoreUpdatedIfNoChanges(['content']));
-  Comment.observe('before save', setCurrentUserId);
-  Comment.observe('before save', subjectObserver);
-
   Comment.observe('before save', ignoreProperties({
     status: {newDefault: Comment.STATUS.ACTIVE},
     contentHTML: {},
-    shortInline: {}
+    shortInline: {},
+    isAnswer: {},
   }));
+  Comment.observe('before save', setCurrentUserId);
+  Comment.observe('before save', subjectObserver);
+
   Comment.observe('before save', contentObserver);
+  Comment.observe('after save', answerObserver);
 
   function * contentObserver(ctx) {
     let sanitizeContent = SanitizeHelper.observer('content', Sanitize.html);
@@ -55,15 +59,15 @@ module.exports = (Comment) => {
   initCustomDelete(Comment);
   initSyncSubject(Comment);
 
-  let ignoreSubjectChange = ignoreProperties({subjectId: {}, subjectType: {}});
-
   function * subjectObserver(ctx) {
     if (!(ctx.instance && ctx.isNewInstance)) {
+      let ignoreSubjectChange = ignoreProperties({subjectId: {}, subjectType: {}});
       return yield (ignoreSubjectChange(ctx));
     }
+    let userId = ctx.instance.userId;
 
     let app = Comment.app;
-    let IdToType = app.models.IdToType;
+    const {IdToType, User, FObject} = app.models;
     let subjectId = ctx.instance.subjectId;
     if (!subjectId) throw ERRORS.badRequest("SubjectId should exist");
 
@@ -74,6 +78,26 @@ module.exports = (Comment) => {
       throw ERRORS.badRequest(`Comments are not allowed for type '${type}'.`);
     }
     let Model = app.models[type];
-    return yield (Model.findByIdRequired(subjectId));
+    let model = yield (Model.findByIdRequired(subjectId));
+
+    // официальный ответ компании
+    if (type!=='Story' || !model.objectId)
+      return;
+    let isOwner = yield (User.isOwner(userId, model.objectId));
+    if (!isOwner)
+      return;
+    let permissions = yield (FObject.iGetPermissions(model.objectId, userId));
+    if (!permissions.includes(OBJECT_PERMISSIONS.ANSWER))
+      throw ERRORS.badRequest('Нет разрешений на оставление официальных ответов');
+    setProperty(ctx, 'isAnswer', true);
+    ctx.hookState.isAnswer = true;
+  }
+  
+  function* answerObserver(ctx){
+    if (!ctx.hookState.isAnswer)
+      return;
+    let id = ctx.instance.subjectId;
+    const {Story} = Comment.app.models;
+    yield (Story.updateAll({id}, {answer: ctx.instance.__data}, {skipIgnore: {answer: true}}));
   }
 };

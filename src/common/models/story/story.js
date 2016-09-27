@@ -1,6 +1,6 @@
 import {setCurrentUserId} from '../../behaviors/currentUser'
 import {applyIdToType} from '../../behaviors/idToType'
-import {ignoreUpdatedIfNoChanges, ignoreProperties, setProperty} from '../../behaviors/propertiesHelper'
+import {ignoreUpdatedIfNoChanges, ignoreProperties, setProperty} from '../../behaviors/propertiesHelper.js'
 import {SanitizeHelper} from '../../../libs/sanitize/SanitizeHelper.js';
 import {FlaperMark, Sanitize} from '@flaper/markdown';
 import {initStatusActions} from './status/status';
@@ -71,7 +71,7 @@ module.exports = (Story) => {
     commentsNumber: {newDefault: 0},
     flapId: {},
     images: {newDefault: []},
-    answer: {}, // официальный ответ компании
+    answer: {}, // официальный ответ, только для объектов
   }));
   Story.observe('before save', typeObserver);
   Story.observe('before save', SanitizeHelper.observer('title', Sanitize.text));

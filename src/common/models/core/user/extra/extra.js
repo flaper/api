@@ -1,5 +1,5 @@
-import {App} from '../../../../services/App';
-import {ERRORS} from '../../../../utils/errors';
+import {App} from '../../../../services/App.js';
+import {ERRORS} from '../../../../utils/errors.js';
 import _ from 'lodash';
 
 export function initExtra(User) {
@@ -17,25 +17,23 @@ export function initExtra(User) {
     returns: {root: true}
   });
 
-  function getExtra(id) {
-    let UserExtra = User.app.models.UserExtra;
-    return UserExtra.findOne({where: {userId: id}})
-      .then((extra) => {
-        let data = extra ? extra : {};
-        data = _.pick(data, UserExtra.PROPERTIES_FOR_API);
-        return data;
-      })
+  function* getExtra(id) {
+    const {UserExtra} = User.app.models;
+    let extra = yield (UserExtra.findOne({where: {userId: id}}));
+    let data = extra ? extra : {};
+    data = _.pick(data, UserExtra.PROPERTIES_FOR_API);
+    return data;
   }
 
-  //is not supposed for API
+  // is not supposed for API
   function updateExtraValue(userId, name, value) {
-    let UserExtra = User.app.models.UserExtra;
+    const {UserExtra} = User.app.models;
     return UserExtra.updateValue(userId, name, value);
   }
 
-  //is not supposed for API
+  // is not supposed for API
   function updateExtraValueToLeast(userId, name, value) {
-    let UserExtra = User.app.models.UserExtra;
+    const {UserExtra} = User.app.models;
     return UserExtra.updateValueToLeast(userId, name, value);
   }
 }
