@@ -1,8 +1,8 @@
 import {setCurrentUserId} from '../../behaviors/currentUser'
 import {applyIdToType} from '../../behaviors/idToType'
-import {ignoreUpdatedIfNoChanges, ignoreProperties, setProperty} from '../../behaviors/propertiesHelper'
-import {Sanitize} from '../../../libs/sanitize/Sanitize';
-import {FlaperMark} from '../../../libs/markdown/markdown'
+import {ignoreUpdatedIfNoChanges, ignoreProperties, setProperty} from '../../behaviors/propertiesHelper.js'
+import {SanitizeHelper} from '../../../libs/sanitize/SanitizeHelper.js';
+import {FlaperMark, Sanitize} from '@flaper/markdown';
 import {initStatusActions} from './status/status';
 import {initGet} from './get/get';
 import {initSyncUser} from './methods/syncUser';
@@ -39,7 +39,7 @@ module.exports = (Story) => {
   };
 
   Story.slugFilter = (story) => {
-    let filter = {status: 'active'};
+    let filter = {status: 'active', type: story.type};
     if (story.type === Story.TYPE.REVIEW){
       filter.objectId = story.objectId;
     }
@@ -47,7 +47,6 @@ module.exports = (Story) => {
   }
 
   Story.validatesInclusionOf('status', {in: Story.STATUSES});
-  Story.validatesInclusionOf('type', {in: Story.TYPES});
 
   Story.MAX_TAGS = 3;
   Story.MIN_LENGTH = {
@@ -55,7 +54,7 @@ module.exports = (Story) => {
     review: 256
   };
 
-  Story.disableRemoteMethod('deleteById', true);
+  Story.disableAllRemotesExcept(Story, ['find', 'findById', 'updateAttributes', 'count', 'exists', 'create']);
 
   Story.disableRemoteMethod('__get__user', false);
 
@@ -71,12 +70,14 @@ module.exports = (Story) => {
     lastActive: {newDefault: (data) => data.created},
     commentsNumber: {newDefault: 0},
     flapId: {},
-    images: {newDefault: []}
+    images: {newDefault: []},
+    answer: {}, // официальный ответ, только для объектов
   }));
-  Story.observe('before save', Sanitize.observer('title', Sanitize.text));
-  Story.observe('before save', contentObserver);
+  Story.observe('before save', typeObserver);
+  Story.observe('before save', SanitizeHelper.observer('title', Sanitize.text));
   Story.observe('before save', minLengthObserver);
-  Story.observe('before save', Sanitize.observer('tags', tagSanitize));
+  Story.observe('before save', contentObserver);
+  Story.observe('before save', SanitizeHelper.observer('tags', tagSanitize));
   Story.observe('before save', reviewObserver);
   Story.observe('before save', articleObserver);
   Story.observe('after save', afterSaveObserver);
@@ -86,6 +87,17 @@ module.exports = (Story) => {
   initGet(Story);
   initDelete(Story);
 
+  function* typeObserver(ctx){
+    if (ctx.isNewInstance){
+	let type = ctx.instance.type;
+	if (!Story.TYPES.includes(type)) throw ERRORS.badRequest(`Wrong type "${type}" for story`);
+	return;
+    }
+    if (ctx.instance){
+      delete ctx.instance.type;
+    }
+  }
+
   function minLengthObserver(ctx) {
     let type = ctx.instance ? ctx.instance.type : _.get(ctx, 'currentInstance.type');
     if (!type) {
@@ -93,12 +105,12 @@ module.exports = (Story) => {
       // e.g. just updating comments number
       return Promise.resolve();
     }
-    let observer = Sanitize.alphaMinLengthObserver('content', Story.MIN_LENGTH[type]);
+    let observer = SanitizeHelper.alphaMinLengthObserver('content', Story.MIN_LENGTH[type]);
     return observer(ctx);
   }
 
   function* contentObserver(ctx) {
-    let sanitizeContent = Sanitize.observer('content', Sanitize.html);
+    let sanitizeContent = SanitizeHelper.observer('content', Sanitize.html);
 
     let value = yield (sanitizeContent(ctx));
     if (!value)
@@ -174,7 +186,6 @@ module.exports = (Story) => {
       if (!ctx.instance.title)
         throw ERRORS.badRequest(`Title is required for article`);
     }
-
     // update existing instance
   }
 };

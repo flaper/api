@@ -1,29 +1,11 @@
 import {timestampBehavior} from '../../behaviors/timestamps.js';
-import {findByIdRequired, findOneRequired} from './methods/findMethods'
-import _ from 'lodash';
+import {findByIdRequired, findOneRequired} from './methods/findMethods.js';
+import {disableAllRemotesExcept, disableRemoteScope} from './common.js';
 
 module.exports = (CommonModel) => {
   CommonModel.observe('before save', timestampBehavior);
   CommonModel.commonInit = commonInit;
   CommonModel.disableAllRemotesExcept = disableAllRemotesExcept;
-
-  function disableAllRemotesExcept(Model, except = []) {
-    let remotes = {
-      updateAttributes: false,
-      exists: true,
-      deleteById: true,
-      findById: true,
-      create: true,
-      count: true,
-      find: true
-    };
-
-    _.forOwn(remotes, (value, key) => {
-      if (except.indexOf(key) === -1) {
-        Model.disableRemoteMethod(key, value);
-      }
-    });
-  }
 
   function commonInit(Model) {
     disableSomeRemotes(Model);
@@ -64,11 +46,5 @@ module.exports = (CommonModel) => {
     Model.disableRemoteMethod('findOne', true);
   }
 
-  CommonModel.commonDisableRemoteScope = (Model, scope) => {
-    Model.disableRemoteMethod(`__get__${scope}`, true);
-    Model.disableRemoteMethod(`__create__${scope}`, true);
-    Model.disableRemoteMethod(`__delete__${scope}`, true);
-    Model.disableRemoteMethod(`__count__${scope}`, true);
-  }
-
+  CommonModel.commonDisableRemoteScope = disableRemoteScope;
 };

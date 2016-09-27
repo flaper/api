@@ -10,10 +10,7 @@ const ObjectID = require('mongodb').ObjectID;
 module.exports = (Image) => {
   Image.commonInit(Image);
   applyIdToType(Image);
-  Image.disableRemoteMethod('create', true);
-  Image.disableRemoteMethod('upsert', true);
-  Image.disableRemoteMethod('deleteById', true);
-  Image.disableRemoteMethod('updateAttributes', false);
+  Image.disableAllRemotesExcept(Image, ['find', 'findById', 'count', 'exists']);
   Image.disableRemoteMethod('__get__object', false);
   Image.disableRemoteMethod('__get__user', false);
 

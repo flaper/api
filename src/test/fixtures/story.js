@@ -1,11 +1,11 @@
-import {Sanitize} from '../../../src/libs/sanitize/Sanitize';
+import {Sanitize} from '@flaper/markdown';
 import app from '../../server/server';
 import _ from 'lodash'
 
 let Story = app.models.Story;
 
 let stories = {
-  "test1": {
+  test1: {
     "id": "1a4000000000000000001001",
     "type": 'article',
     "userId": "1a1000000000000000001001",
@@ -16,7 +16,7 @@ let stories = {
     "created": 1450716334311,
     "updated": 1450716334311
   },
-  "test2": {
+  test2: {
     "id": "1a4000000000000000001002",
     "type": 'article',
     "userId": "1a1000000000000000001001",
@@ -25,7 +25,7 @@ let stories = {
     "created": 1450718334311,
     "updated": 1450718334311
   },
-  "test3": {
+  test3: {
     "id": "1a4000000000000000001003",
     "type": 'article',
     "userId": "1a1000000000000000001002",
@@ -34,7 +34,7 @@ let stories = {
     "created": 1450616334311,
     "updated": 1450616334311
   },
-  "denied1": {
+  denied1: {
     "id": "1a4000000000000000001010",
     "type": 'article',
     "status": Story.STATUS.DENIED,
@@ -42,7 +42,7 @@ let stories = {
     "title": "Отклоненная статья",
     "content": "Содержимое отклоненной статьи."
   },
-  "deleted1": {
+  deleted1: {
     "id": "1a4000000000000000001020",
     "type": 'article',
     "status": Story.STATUS.DELETED,
@@ -50,7 +50,7 @@ let stories = {
     "title": "Удаленная статья",
     "content": "Содержимое удаленной статьи."
   },
-  "withoutId": {
+  withoutId: {
     "type": 'article',
     "status": Story.STATUS.ACTIVE,
     "userId": "1a1000000000000000001001",
@@ -58,7 +58,7 @@ let stories = {
     "content": "Содержимое статьи без id в фикстурах."
   },
   //2 means second user
-  "withoutLikesUser3": {
+  withoutLikesUser3: {
     "type": 'article',
     "id": "1a4000000000000000001030",
     "status": Story.STATUS.ACTIVE,
@@ -66,7 +66,7 @@ let stories = {
     "title": "Статья без лайков",
     "content": "Содержимое статьи без лайков."
   },
-  "withoutActiveComments": {
+  withoutActiveComments: {
     "type": 'article',
     "id": "1a4000000000000000001040",
     "status": Story.STATUS.ACTIVE,
@@ -74,7 +74,7 @@ let stories = {
     "title": "Статья без комментариев",
     "content": "Содержимое статьи без комментариев."
   },
-  "review1": {
+  review1: {
     "type": 'review',
     "id": "1a4000000000000000002001",
     "status": Story.STATUS.ACTIVE,
@@ -84,7 +84,7 @@ let stories = {
     "rating": 8,
     "objectId": '1a7000000000000000001001'
   },
-  "review2": {
+  review2: {
     "type": 'review',
     "id": "1a4000000000000000002002",
     "status": Story.STATUS.ACTIVE,
@@ -94,7 +94,7 @@ let stories = {
     "rating": 9,
     "objectId": '1a7000000000000000001001'
   },
-  "review3": {
+  review3: {
     "type": 'review',
     "id": "1a4000000000000000002003",
     "status": Story.STATUS.ACTIVE,
@@ -104,7 +104,7 @@ let stories = {
     "rating": 7,
     "objectId": '1a7000000000000000001002'
   },
-  "denied_review1": {
+  denied_review1: {
     "type": 'review',
     "id": "1a4000000000000000002010",
     "status": Story.STATUS.DENIED,

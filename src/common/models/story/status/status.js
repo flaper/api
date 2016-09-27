@@ -42,71 +42,51 @@ export function initStatusActions(Story) {
     }
   );
 
-  function actionDeny(id) {
+  function* actionDeny(id) {
     //admin only can call this
-    let story;
-    return Story.findByIdRequired(id)
-      .then((s) => {
-        story = s;
-        if (story.status === Story.STATUS.ACTIVE) {
-          story.status = Story.STATUS.DENIED;
-          return story.save({skipIgnore: {status: true}})
-        } else {
-          throw ERRORS.forbidden('Only active stories can be denied');
-        }
-      })
-      .then((response) => {
-        Story.iSyncUser(story.userId);
-        return response;
-      })
+    let story = yield (Story.findByIdRequired(id));
+    if (story.status !== Story.STATUS.ACTIVE) 
+      throw ERRORS.forbidden('Only active stories can be denied');
+    story.status = Story.STATUS.DENIED;
+    yield (story.save({skipIgnore: {status: true}}));
+    // we don't wait to iSyncUser to finish
+    Story.iSyncUser(story.userId);
+    return story;
   }
 
-  //to improve - should be no ACL check in action
-  function actionDelete(id) {
-    //$owner and admin can only call this
-    //$owner can from ACTIVE / DENIED status, admin can from DENIED status
-    let promises = [];
-    let story = null;
-    let isAdmin;//if not admin - it will be owner, because of ACL
-    promises.push(Story.findByIdRequired(id)
-      .then(s => story = s));
-    promises.push(App.isAdmin().then(res => isAdmin = res));
-    return Promise.all(promises)
-      .then(() => {
-        if ((isAdmin && story.status === Story.STATUS.DENIED) ||
-          (!isAdmin && ([Story.STATUS.ACTIVE, Story.STATUS.DENIED].indexOf(story.status) > -1) )) {
-          story.status = Story.STATUS.DELETED;
-          return story.save({skipIgnore: {status: true}})
-        } else {
-          throw ERRORS.forbidden();
-        }
-      })
-      .then((response) => {
-        Story.iSyncUser(story.userId);
-        return response;
-      })
+  // to improve - should be no ACL check in action
+  function* actionDelete(id) {
+    // $owner and admin can only call this
+    let userId = App.getCurrentUserId().toString();
+    // if not admin - it will be owner, because of ACL
+    let isAdmin = yield (App.isAdmin());
+    let story = yield (Story.findByIdRequired(id));
+
+    // admin can from DENIED status, and ACTIVE status for his stories
+    // $owner can from ACTIVE / DENIED status,
+    if ((isAdmin && !(story.status === Story.STATUS.DENIED || 
+	   (story.userId.toString() === userId && story.status === Story.STATUS.ACTIVE) )) ||
+	 (!isAdmin && ![Story.STATUS.ACTIVE, Story.STATUS.DENIED].includes(story.status)) ) 
+    {
+      throw ERRORS.forbidden();
+    }
+    story.status = Story.STATUS.DELETED;
+    yield (story.save({skipIgnore: {status: true}}));
+    // we don't wait to iSyncUser to finish
+    Story.iSyncUser(story.userId);
+    return story;
   }
 
-  function actionActivate(id) {
+  function* actionActivate(id) {
     //admin only can call this
-    let story;
-    return Story.findByIdRequired(id)
-      .then((s) => {
-        story = s;
-        if (story.status === Story.STATUS.DENIED) {
-          return Story.notifyObserversOf('before activate', story);
-        } else {
-          throw ERRORS.forbidden('Only denied stories can be activated again');
-        }
-      })
-      .then(() => {
-        story.status = Story.STATUS.ACTIVE;
-        return story.save({skipIgnore: {status: true}});
-      })
-      .then((response) => {
-        Story.iSyncUser(story.userId);
-        return response;
-      })
+    let story = yield (Story.findByIdRequired(id));
+    if (story.status !== Story.STATUS.DENIED)
+      throw ERRORS.forbidden('Only denied stories can be activated again');
+    yield (Story.notifyObserversOf('before activate', story));
+    story.status = Story.STATUS.ACTIVE;
+    yield (story.save({skipIgnore: {status: true}}));
+    Story.iSyncUser(story.userId);
+    return story;
   }
 
 }

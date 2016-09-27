@@ -39,9 +39,8 @@ export class RoleService {
   static isSales(userId) {
     return RoleService.isSuper(userId)
       .then(isSuper => {
-        if (isSuper) {
+        if (isSuper) 
           return true;
-        }
         let roleId = rolesBynames['sales'].id;
         return RoleMapping.findOne({where: {roleId: roleId, principalId: userId}})
           .then(mapping => !!mapping)

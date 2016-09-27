@@ -29,7 +29,7 @@ export class App {
   static getCurrentUserId() {
     let context = loopback.getCurrentContext();
     if (!context) {
-      //so it is console app.
+      // т.е. консольное приложение
       return null;
     }
     let accessToken = context.get('accessToken');
@@ -57,7 +57,7 @@ export class App {
     return userId ? RoleService.isSuper(userId) : Promise.resolve(false);
   }
 
-  ///fixtures
+  // fixtures
   static isFixturesLoading() {
     return fixturesLoading;
   }

@@ -3,7 +3,7 @@ import {updateTimeouts} from '../timeout';
 import app from '../../helpers/app';
 let should = require('chai').should();
 import STORIES from  '../../fixtures/story';
-import {Sanitize} from '../../../../src/libs/sanitize/Sanitize';
+import {Sanitize} from '@flaper/markdown';
 
 let Story = app.models.Story;
 

@@ -1,29 +1,9 @@
-import sanitizeHtml from 'sanitize-html';
-import striptags from 'striptags';
+import {Sanitize} from '@flaper/markdown';
 
-export class Sanitize {
-  /**
-   * @description difference with Sanitize.text is that current method encode '"<> etc to html entities
-   * @param dirty
-   * @returns {*}
-   */
-  static html(dirty) {
-    return sanitizeHtml(dirty, {
-      allowedTags: [],
-      allowedAttributes: [],
-      textFilter: function (text) {
-        return text.replace(/&quot;/g, '\"');
-      }
-    }).trim();
-  }
-
-  static text(dirty) {
-    return striptags(dirty).trim();
-  }
-
+export class SanitizeHelper {
   static observer(property, func) {
     return (ctx) => {
-      return Sanitize.sanitize(ctx, property, func);
+      return SanitizeHelper.sanitize(ctx, property, func);
     }
   }
 
@@ -47,13 +27,7 @@ export class Sanitize {
     return Promise.resolve(value);
   }
 
-  static symbolsNumber(data) {
-    let text = Sanitize.html(data);
-    text = text.replace(/[^A-Za-z0-9а-яёА-ЯЁ]/g, '');
-    return text.length;
-  }
-
-  //alphaNumerical length
+  // alphaNumerical length
   static alphaMinLengthObserver(property, length) {
     return function (ctx) {
       let options = ctx.options || {};
@@ -74,14 +48,5 @@ export class Sanitize {
       }
       return Promise.resolve();
     }
-  }
-
-  static fakerIncreaseAlphaLength(str, length) {
-    let repeat = Math.ceil(length / Sanitize.symbolsNumber(str));
-    //to prevent right strings be completed removed by e.g. unclosed <script> tag
-    let s = Sanitize.html(str);
-    let result = s;
-    for (let i = 1; i < repeat; i++) result += '\n' + s;
-    return result;
   }
 }

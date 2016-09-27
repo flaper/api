@@ -3,7 +3,7 @@ import {api, user1, user1Promise, user2, user2Promise, adminPromise} from '../..
 import app from '../../../helpers/app';
 import STORIES from  '../../../fixtures/story';
 import FOBJECTS from  '../../../fixtures/fObject';
-import {Sanitize} from '../../../../../src/libs/sanitize/Sanitize';
+import {Sanitize} from '@flaper/markdown';
 import _ from 'lodash';
 
 const OBJ1 = FOBJECTS.obj1;
@@ -15,38 +15,8 @@ let Story = app.models.Story;
 
 const COLLECTION_URL = 'stories';
 
-describe(`/${COLLECTION_URL}/@reviews`, function () {
+describe(`/${COLLECTION_URL}/@reviews/update`, function () {
   updateTimeouts(this);
-  describe('GET/HEAD', () => {
-    it('Anonymous - allow access to the object reviews', () => {
-      return api.get(COLLECTION_URL)
-        .query({filter: {where: {objectId: OBJ1.id}}})
-        .expect(200)
-        .expect((res) => {
-          let reviews = res.body;
-          reviews.length.should.least(2);
-          for (let review of reviews) {
-            review.type.should.eq('review');
-            review.status.should.eq('active');
-            review.objectId.should.eq(OBJ1.id);
-          }
-        })
-    });
-    it('Anonymous - allow access to the denied object reviews', () => {
-      return api.get(COLLECTION_URL)
-        .query({filter: {where: {objectId: OBJ1.id, status: Story.STATUS.DENIED}}})
-        .expect(200)
-        .expect((res) => {
-          let reviews = res.body;
-          reviews.length.should.least(1);
-          for (let review of reviews) {
-            review.type.should.eq('review');
-            review.status.should.eq('denied');
-            review.objectId.should.eq(OBJ1.id);
-          }
-        })
-    });
-  });
 
   describe('POST', () => {
     const NEW_REVIEW = {
@@ -61,6 +31,8 @@ describe(`/${COLLECTION_URL}/@reviews`, function () {
     };
     
     const NEW_REVIEW2 = _.merge({}, NEW_REVIEW, {id: '1a4000000000000000010002', objectId: PLACE1.id});
+    const NEW_STORY = _.merge({}, NEW_REVIEW, {id: '1a4000000000000000010003', type: 'article', 
+      content: Sanitize.fakerIncreaseAlphaLength("test story", 1000)});
 
     it('User - deny to add to short review', function*() {
       let {agent} = yield (user1Promise);
@@ -105,10 +77,12 @@ describe(`/${COLLECTION_URL}/@reviews`, function () {
       user.storiesNumber.should.eq(userOld.storiesNumber + 1);
     });
 
-    it('User - review for different object with same title should have same slug', function*() {
+    it('User - review for different object with same title and new story should have same slug', function*() {
       let review1 = yield (Story.findByIdRequired(NEW_REVIEW.id));
       let review2 = yield (Story.create(NEW_REVIEW2));
+      let story = yield (Story.create(NEW_STORY));
       review1.slug.should.eq(review2.slug);
+      story.slug.should.eq(review1.slug);
     });
 
     it('User - deny to update to with short string', function*() {
@@ -118,7 +92,10 @@ describe(`/${COLLECTION_URL}/@reviews`, function () {
         .expect(400));
     });
 
-    after(function*() { yield [Story.iDeleteById(NEW_REVIEW.id), Story.iDeleteById(NEW_REVIEW2.id)]; });
+    after(function*() { 
+      let ids = [NEW_REVIEW.id, NEW_REVIEW2.id, NEW_STORY.id];
+      yield (ids.map(id=>Story.iDeleteById(id)));
+    });
   });
 
   describe('PUT', ()=> {

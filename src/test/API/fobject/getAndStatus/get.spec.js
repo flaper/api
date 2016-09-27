@@ -71,43 +71,36 @@ describe(`/${COLLECTION_URL}/@get`, function () {
   });
 
   describe('COUNT', () => {
-    it('Should return active, than deleted, than both, then check sum', () => {
+    it('Should return active, than deleted, than both, then check sum', function*() {
       let activeCount = 0;
       let deletedCount = 0;
       let totalCount = 0;
-      return user1Promise.then(({agent}) => {
-          return agent.get(`${COLLECTION_URL}/count`)
-            .expect(200)
-            .expect((res) => {
-              let data = res.body;
-              activeCount = data.count;
-              activeCount.should.be.least(1);
-            })
-        })
-        .then(() => {
-          return user1Promise.then(({agent}) => {
-            return agent.get(`${COLLECTION_URL}/count`)
-              .query({where: {status: FObject.STATUS.DELETED}})
-              .expect(200)
-              .expect((res) => {
-                let data = res.body;
-                deletedCount = data.count;
-                deletedCount.should.be.least(1);
-              })
-          })
-        })
-        .then(() => {
-          return user1Promise.then(({agent}) => {
-            return agent.get(`${COLLECTION_URL}/count`)
-              .query({where: {or: {0: {status: FObject.STATUS.ACTIVE}, 1: {status: FObject.STATUS.DELETED}}}})
-              .expect(200)
-              .expect((res) => {
-                let data = res.body;
-                totalCount = data.count;
-                totalCount.should.be.eq(activeCount + deletedCount);
-              })
-          })
-        })
+      let {agent} = yield (user1Promise);
+      yield (agent.get(`${COLLECTION_URL}/count`)
+	.expect(200)
+	.expect((res) => {
+	  let data = res.body;
+	  activeCount = data.count;
+	  activeCount.should.be.least(1);
+	}));
+      agent = (yield (user1Promise)).agent;
+      yield (agent.get(`${COLLECTION_URL}/count`)
+	.query({where: {status: FObject.STATUS.DELETED}})
+	.expect(200)
+	.expect((res) => {
+	  let data = res.body;
+	  deletedCount = data.count;
+	  deletedCount.should.be.least(1);
+	}));
+      agent = (yield (user1Promise)).agent;
+      yield (agent.get(`${COLLECTION_URL}/count`)
+	.query({where: {or: {0: {status: FObject.STATUS.ACTIVE}, 1: {status: FObject.STATUS.DELETED}}}})
+	.expect(200)
+	.expect((res) => {
+	  let data = res.body;
+	  totalCount = data.count;
+	  totalCount.should.be.eq(activeCount + deletedCount);
+	}));
     })
   })
 });

@@ -54,7 +54,7 @@ describe(`/${COLLECTION_URL}/`, function () {
 
     it('Anonymous - deny findOne', () => {
       return api.get(`${COLLECTION_URL}/findOne`)
-        .expect(200);
+        .expect(404);
     });
   });
 

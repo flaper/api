@@ -1,5 +1,5 @@
 import app from '../server/server';
-import {FlaperMark} from '../libs/markdown/markdown'
+import {FlaperMark} from '@flaper/markdown';
 let Story = app.models.Story;
 import co from 'co';
 

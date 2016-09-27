@@ -1,7 +1,7 @@
 import app from '../server/server';
-import {Sanitize} from '../libs/sanitize/Sanitize'
+import {Sanitize} from '@flaper/markdown'
 let Story = app.models.Story;
-//simple query to establish mongodb connection
+// simple query to establish mongodb connection
 Story.count().then((total) => {
   console.log('total records', total);
   let collection = Story.dataSource.connector.collection('Story');

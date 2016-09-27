@@ -5,6 +5,8 @@ export function initSlug(FObject) {
   FObject.slugSuffix = slugSuffix;
   FObject.disableRemoteMethod('actionFindBySlug', true);
   FObject.findBySlug = findBySlug;
+  FObject.prototype.getPath = getPath;
+  FObject.actionFindByPath = actionFindByPath;
 
   FObject.remoteMethod(
     'findBySlug',
@@ -56,5 +58,27 @@ export function initSlug(FObject) {
     }
     let filter = {where: query};
     return FObject.findOne(filter);
+  }
+
+  function getPath() {
+    let {mainDomain, region, slug} = this;
+    let path = mainDomain+'/'; 
+    if (mainDomain === FObject.DOMAINS.PLACES)
+      path += region+'/';
+    path += slug;
+    return path;
+  }
+  
+  function* actionFindByPath(path) {
+    let parts = path.split('/');
+    if (parts.length<2 || parts.length>3) 
+      throw ERRORS.badRequest('Путь к объекту может содержать только 2 или 3 части');
+    let query = {slugLowerCase: parts.pop().toLocaleLowerCase()};
+    if (parts.length === 2)
+      query.region = parts.pop();
+    query.mainDomain = parts.pop(); 
+    if (query.region&&(query.mainDomain !== FObject.DOMAINS.PLACES))
+      throw ERRORS.badRequest('Только места могут содержать регион в пути');
+    return yield (FObject.findOne({where: query}));
   }
 }

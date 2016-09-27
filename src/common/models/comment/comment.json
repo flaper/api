@@ -32,6 +32,9 @@
     "subjectType": {
       "type": "string",
       "required": true
+    },
+    "isAnswer": {
+      "type": "boolean"
     }
   },
   "validations": [],

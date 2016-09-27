@@ -1,6 +1,6 @@
 import {ERRORS} from '../../utils/errors';
 import {App} from '../../services/App';
-import {FlaperMark} from '../../../libs/markdown/markdown'
+import {FlaperMark} from '@flaper/markdown';
 import {ignoreProperties, setProperty} from '../../behaviors/propertiesHelper'
 import _ from 'lodash';
 
