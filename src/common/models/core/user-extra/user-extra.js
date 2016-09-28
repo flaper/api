@@ -28,14 +28,13 @@ module.exports = (UserExtra) => {
         })
     })
   }
-
-  function updateValueToLeast(userId, name, value) {
-    return UserExtra.findOne({where: {userId}})
-      .then(extra => {
-        let current = _.get(extra, name);
-        if (!current || current < value) return updateValue(userId, name, value);
-        return current;
-      })
+  
+  // обновить значение до value, если текущее меньше или не задано
+  function* updateValueToLeast(userId, name, value) {
+    let extra = yield (UserExtra.findOne({where: {userId}}));
+    let current = _.get(extra, name);
+    if (!current || current < value) return yield (updateValue(userId, name, value));
+    return current;
   }
 
   function* addObject(userId, objectId) {

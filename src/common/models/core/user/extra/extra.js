@@ -32,8 +32,8 @@ export function initExtra(User) {
   }
 
   // is not supposed for API
-  function updateExtraValueToLeast(userId, name, value) {
+  function* updateExtraValueToLeast(userId, name, value) {
     const {UserExtra} = User.app.models;
-    return UserExtra.updateValueToLeast(userId, name, value);
+    return yield (UserExtra.updateValueToLeast(userId, name, value));
   }
 }

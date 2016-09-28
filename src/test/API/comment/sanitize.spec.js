@@ -20,20 +20,19 @@ describe(`/${COLLECTION_URL}/@sanitize`, function () {
     subjectId: STORY1.id,
   };
 
-  it('Comment should be sanitized', () => {
-    return user1Promise.then(({agent}) => {
-      return agent.post(COLLECTION_URL)
-        .send(NEW_COMMENT)
-        .expect(200)
-        .expect((res) => {
-          let comment = res.body;
-          '\'test\' "comment"'.should.eq(comment.content);
-        })
-    })
+  it('Comment should be sanitized', function*() {
+    let {agent} = yield (user1Promise);
+    yield (agent.post(COLLECTION_URL)
+      .send(NEW_COMMENT)
+      .expect(200)
+      .expect((res) => {
+	let comment = res.body;
+	'\'test\' "comment"'.should.eq(comment.content);
+      }));
   });
 
-  after(()=> {
-    return Comment.deleteById(NEW_COMMENT.id)
-      .then(Comment.iSyncSubject('Story', NEW_COMMENT.subjectId))
+  after(function*() {
+    yield (Comment.deleteById(NEW_COMMENT.id));
+    yield (Comment.iSyncSubject('Story', NEW_COMMENT.subjectId));
   });
 });
