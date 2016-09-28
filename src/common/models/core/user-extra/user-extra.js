@@ -68,9 +68,9 @@ module.exports = (UserExtra) => {
     })
   }
 
-  function getObjectsIds(id) {
-    return UserExtra.findOne({where: {userId: id}})
-      .then(extra => _.get(extra, 'objects', []))
+  function* getObjectsIds(id) {
+    let extra = yield (UserExtra.findOne({where: {userId: id}}));
+    return _.get(extra, 'objects', []);
   }
 
   function getCollection() {
