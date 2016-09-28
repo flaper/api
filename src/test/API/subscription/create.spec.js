@@ -37,7 +37,7 @@ describe(`/${COLLECTION_URL}/create`, function () {
     yield (agent.post(`${COLLECTION_URL}/${COMMENT_WITHOUT_LIKES_USER3.id}`)
       .expect(400))
   });
-  it.only('User - allow to toggle subscription', function* () {
+  it('User - allow to toggle subscription', function* () {
     let {agent} = yield (user1Promise);
     yield (agent.post(`${COLLECTION_URL}/toggle/${user2.id}`)
       .expect(200));

@@ -6,7 +6,7 @@ let should = require('chai').should();
 import STORIES from  '../../fixtures/story.js';
 import _ from 'lodash';
 
-const {Story, UserExtra} = app.models;
+const {Comment, Story, UserExtra} = app.models;
 const REVIEW1 = STORIES.review1;
 
 const COLLECTION_URL = 'comments';
@@ -41,5 +41,7 @@ describe(`/${COLLECTION_URL}/@answer`, function () {
 
   after(function*(){
     yield (UserExtra.updateValue(user1.id, 'objects', objectsIdsBefore));
+    yield (Comment.deleteById(NEW_ANSWER.id));
+    yield (Comment.iSyncSubject('Story', NEW_ANSWER.subjectId));
   });
 });
