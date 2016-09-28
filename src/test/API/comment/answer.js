@@ -31,8 +31,9 @@ describe(`/${COLLECTION_URL}/@answer`, function () {
       .send(NEW_ANSWER)
       .expect(200)
       .expect(res=>{
-         let comment = res.body;
-         true.should.eq(comment.isAnswer);
+	let comment = res.body;
+        true.should.eq(comment.isAnswer);
+	comment.status.should.eq(Comment.STATUS.LAST_ANSWER);
       }));
     let story = yield (Story.findByIdRequired(REVIEW1.id));
     should.exist(story.answer);

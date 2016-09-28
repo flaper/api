@@ -19,6 +19,8 @@ module.exports = (Comment) => {
 
   Comment.STATUS = {
     ACTIVE: 'active',
+    // last_answer - последний комментарий, являющийся официальным ответом, не отображается в общем списке комментариев
+    LAST_ANSWER: 'last_answer', 
     DELETED: 'deleted'
   };
   Comment.STATUSES = _.values(Comment.STATUS);
@@ -90,6 +92,7 @@ module.exports = (Comment) => {
     if (!permissions.includes(OBJECT_PERMISSIONS.ANSWER))
       throw ERRORS.badRequest('Нет разрешений на оставление официальных ответов');
     setProperty(ctx, 'isAnswer', true);
+    setProperty(ctx, 'status', Comment.STATUS.LAST_ANSWER);
     ctx.hookState.isAnswer = true;
   }
   
