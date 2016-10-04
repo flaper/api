@@ -44,7 +44,7 @@ module.exports = (Story) => {
       filter.objectId = story.objectId;
     }
     return filter;
-  }
+  };
 
   Story.validatesInclusionOf('status', {in: Story.STATUSES});
 

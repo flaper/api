@@ -6,10 +6,8 @@ import STORIES from  '../../fixtures/story';
 import {Sanitize} from '@flaper/markdown';
 import _ from 'lodash';
 
-let Story = app.models.Story;
+let {Account, Image, Story} = app.models;
 let User = app.models.user;
-let Account = app.models.Account;
-let Image = app.models.Image;
 
 const COLLECTION_URL = 'stories';
 const STORY1 = STORIES.test1;
@@ -53,7 +51,7 @@ describe(`/${COLLECTION_URL}`, function () {
   describe('GET by slug', () => {
     it('Anonymous - allow access to any by slug', () => {
       return api.get(`${COLLECTION_URL}/slug`)
-        .query({slug: STORY1.slugLowerCase}) 
+        .query({slug: STORY1.slugLowerCase})
         .expect(200)
         .expect((res) => {
           let story = res.body;
@@ -99,7 +97,7 @@ describe(`/${COLLECTION_URL}`, function () {
       //this userId should be ignored
       userId: '1a400000000000000001111'
     };
-    
+
     const WRONG_STORY = _.merge({}, NEW_STORY, {id: '1a4000000000000000010010', type: 'wrong'});
 
     it('Anonymous - deny to add', () => {
@@ -107,7 +105,7 @@ describe(`/${COLLECTION_URL}`, function () {
         .send(NEW_STORY)
         .expect(401)
     });
-    
+
     it('User - error to create with wrong type', function*() {
       let {agent} = yield (user1Promise);
       yield (agent.post(COLLECTION_URL)

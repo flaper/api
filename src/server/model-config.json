@@ -9,6 +9,7 @@
       "../common/models/core/user",
       "../common/models/core/user-settings",
       "../common/models/core/user-extra",
+      "../common/models/audit",
       "../common/models/auth",
       "../common/models/comment",
       "../common/models/fobject/fobject",
@@ -64,6 +65,10 @@
     "public": false
   },
   "CommonModel": {
+    "dataSource": "mongo",
+    "public": false
+  },
+  "Audit": {
     "dataSource": "mongo",
     "public": false
   },
