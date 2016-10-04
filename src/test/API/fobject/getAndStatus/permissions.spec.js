@@ -4,7 +4,7 @@ import app from '../../../helpers/app';
 let should = require('chai').should();
 import OBJECTS from  '../../../fixtures/fObject';
 
-let FObject = app.models.FObject;
+let {FObject} = app.models;
 const COLLECTION_URL = 'objects';
 const OBJECT1 = OBJECTS.obj1;
 const PLACE1 = OBJECTS.place1;
@@ -17,8 +17,8 @@ describe(`/${COLLECTION_URL}/@permissions`, function () {
       .query()
       .expect(200)
       .expect(res => {
-	let permissions = res.body;
-	permissions.length.should.eq(0);
+        let permissions = res.body;
+        permissions.length.should.eq(0);
       }));
   });
 
@@ -27,9 +27,9 @@ describe(`/${COLLECTION_URL}/@permissions`, function () {
     yield (agent.get(`${COLLECTION_URL}/${OBJECT1.id}/permissions`)
       .query()
       .expect(200)
-      .expect(res=>{
-	let permissions = res.body;
-	permissions.length.should.least(1);
+      .expect(res=> {
+        let permissions = res.body;
+        permissions.length.should.least(1);
       }));
   });
 });

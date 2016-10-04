@@ -1,8 +1,9 @@
 import {App} from '../../../../services/App.js';
 import {OBJECT_PERMISSIONS} from '@flaper/consts';
 
-export function initPermissions(FObject) {
+export function initOwners(FObject) {
   FObject.getPermissions = getPermissions;
+  FObject.getOwners = getOwners;
   FObject.iGetPermissions = iGetPermissions;
 
   FObject.remoteMethod(
@@ -18,6 +19,20 @@ export function initPermissions(FObject) {
     }
   );
 
+  FObject.remoteMethod(
+    'getOwners',
+    {
+      http: {path: '/:id/owners', verb: 'get'},
+      description: `Список владельцев объекта`,
+      accessType: 'READ',
+      accepts: {
+        arg: 'id', type: 'string', description: 'ID объекта'
+      },
+      returns: {root: true}
+    }
+  );
+
+
   function* getPermissions(objectId) {
     let userId = App.getCurrentUserId();
     return yield iGetPermissions(objectId, userId);
@@ -32,5 +47,11 @@ export function initPermissions(FObject) {
     if (!isOwner)
       return [P.INFO_CHANGE];
     return [P.OWNER, P.LOGO, P.ANSWER, P.INFO_CHANGE, P.IMAGE_UPLOAD, P.IMAGE_REMOVE, P.OWNERS_ADD, P.OWNERS_REMOVE];
+  }
+
+  function * getOwners(objectId) {
+    const {UserExtra} = FObject.app.models;
+    let users = yield (UserExtra.find({where: {objects: objectId}}));
+    return users.map(user=>user.userId);
   }
 }

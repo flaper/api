@@ -17,10 +17,10 @@ describe(`/${COLLECTION_URL}/@answer`, function () {
   const NEW_ANSWER = {
     id: '1a5000000000000000010001',
     content: "официальный ответ на инциндент",
-    subjectId: REVIEW1.id,
+    subjectId: REVIEW1.id
   };
 
-  before(function*(){
+  before(function*() {
     objectsIdsBefore = yield (UserExtra.getObjectsIds(user1.id));
     yield (UserExtra.updateValue(user1.id, 'objects', [REVIEW1.objectId]));
   });
@@ -30,17 +30,17 @@ describe(`/${COLLECTION_URL}/@answer`, function () {
     yield (agent.post(COLLECTION_URL)
       .send(NEW_ANSWER)
       .expect(200)
-      .expect(res=>{
-	let comment = res.body;
+      .expect(res=> {
+        let comment = res.body;
         true.should.eq(comment.isAnswer);
-	comment.status.should.eq(Comment.STATUS.LAST_ANSWER);
+        comment.status.should.eq(Comment.STATUS.LAST_ANSWER);
       }));
     let story = yield (Story.findByIdRequired(REVIEW1.id));
     should.exist(story.answer);
     story.answer.id.toString().should.eq(NEW_ANSWER.id);
   });
 
-  after(function*(){
+  after(function*() {
     yield (UserExtra.updateValue(user1.id, 'objects', objectsIdsBefore));
     yield (Comment.deleteById(NEW_ANSWER.id));
     yield (Comment.iSyncSubject('Story', NEW_ANSWER.subjectId));

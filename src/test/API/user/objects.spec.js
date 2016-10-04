@@ -23,8 +23,8 @@ describe(`/users/:id/objects`, function () {
     return yield (agent.get(_getUrl(user1.id))
       .expect(200)
       .expect(res => {
-	let ids = res.body;
-	ids.length.should.eq(0);
+        let ids = res.body;
+        ids.length.should.eq(0);
       }));
   });
 
@@ -32,13 +32,13 @@ describe(`/users/:id/objects`, function () {
     it('User - deny foreign access', function*() {
       let {agent} = yield (user1Promise);
       yield (agent.get(_getUrl(user2.id))
-	.expect(401));
+        .expect(401));
     });
 
     it('User - allow access to his list', function*() {
       let {agent} = yield (user1Promise);
       yield (agent.get(_getUrl(user1.id))
-	.expect(200));
+        .expect(200));
     });
 
     it('Sales - allow access to anyone list', () => {

@@ -1,7 +1,7 @@
 import {applyIdToType} from '../../../behaviors/idToType'
 import {ignoreUpdatedIfNoChanges, ignoreProperties, setProperty} from '../../../behaviors/propertiesHelper'
 import {initGet} from './get/get.js';
-import {initPermissions} from './get/permission.js';
+import {initOwners} from './get/owners.js';
 import {initSlug} from './slug/slug';
 import {initFlapSync} from './flap/sync';
 import _ from 'lodash';
@@ -29,7 +29,7 @@ module.exports = (FObject) => {
   FObject.observe('before save', regionObserver);
 
   initGet(FObject);
-  initPermissions(FObject);
+  initOwners(FObject);
   initSlug(FObject);
   initFlapSync(FObject);
 
