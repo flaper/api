@@ -4,7 +4,8 @@ import {ignoreUpdatedIfNoChanges, ignoreProperties, setProperty} from '../../beh
 import {SanitizeHelper} from '../../../libs/sanitize/SanitizeHelper.js';
 import {FlaperMark, Sanitize} from '@flaper/markdown';
 import {initStatusActions} from './status/status';
-import {initGet} from './get/get';
+import {initGet} from './get/get.js';
+import {initAudit} from './get/audit.js';
 import {initSyncUser} from './methods/syncUser';
 import {initDelete} from './methods/internalDelete';
 import {ERRORS} from '../../utils/errors';
@@ -85,6 +86,7 @@ module.exports = (Story) => {
   initSyncUser(Story);
   initStatusActions(Story);
   initGet(Story);
+  initAudit(Story);
   initDelete(Story);
 
   function* typeObserver(ctx) {

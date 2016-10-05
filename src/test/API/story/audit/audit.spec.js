@@ -21,7 +21,7 @@ describe(`${COLLECTION_URL}/@audit`, function () {
   };
 
   before(function* () {
-    yield Audit.deleteAll({});
+    yield Audit.deleteAll({subjectId: NEW_STORY.id});
   });
 
   it('User - allow to add', function*() {
@@ -61,6 +61,17 @@ describe(`${COLLECTION_URL}/@audit`, function () {
     // yield wait(100);
     let audits = yield (Audit.find({where: {subjectId: NEW_STORY.id}}));
     audits.length.should.eq(3);
+  });
+
+  it('Story audit method should return 3 changes', function*() {
+    let {agent} = yield (user1Promise);
+    yield (agent.get(`${COLLECTION_URL}/${NEW_STORY.id}/audit`)
+        .expect(200)
+        .expect(res=> {
+          let changes = res.body;
+          changes.length.should.eq(3);
+        })
+    );
   });
 
   after(function*() {
