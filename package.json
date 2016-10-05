@@ -66,6 +66,7 @@
   "devDependencies": {
     "chai": "^3.4.0",
     "co-mocha": "^1.1.3",
+    "co-wait": "0.0.0",
     "jshint": "^2.9.2",
     "mocha": "^2.3.3",
     "mochawesome": "^1.2.1",

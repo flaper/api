@@ -40,7 +40,7 @@ module.exports = (Story) => {
 
   Story.slugFilter = (story) => {
     let filter = {status: 'active', type: story.type};
-    if (story.type === Story.TYPE.REVIEW){
+    if (story.type === Story.TYPE.REVIEW) {
       filter.objectId = story.objectId;
     }
     return filter;
@@ -87,13 +87,13 @@ module.exports = (Story) => {
   initGet(Story);
   initDelete(Story);
 
-  function* typeObserver(ctx){
-    if (ctx.isNewInstance){
-	let type = ctx.instance.type;
-	if (!Story.TYPES.includes(type)) throw ERRORS.badRequest(`Wrong type "${type}" for story`);
-	return;
+  function* typeObserver(ctx) {
+    if (ctx.isNewInstance) {
+      let type = ctx.instance.type;
+      if (!Story.TYPES.includes(type)) throw ERRORS.badRequest(`Wrong type "${type}" for story`);
+      return;
     }
-    if (ctx.instance){
+    if (ctx.instance) {
       delete ctx.instance.type;
     }
   }
