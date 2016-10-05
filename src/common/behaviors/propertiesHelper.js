@@ -1,4 +1,4 @@
-import {App} from '../services/App';
+import {App} from '../services/App.js';
 import _ from 'lodash';
 
 export function setProperty(ctx, property, value) {

@@ -1,0 +1,41 @@
+{
+  "name": "Audit",
+  "base": "PersistedModel",
+  "idInjection": false,
+  "strict": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "userId": {
+      "type": "string",
+      "required": true
+    },
+    "type": {
+      "type": "string",
+      "required": true
+    },
+    "subjectId": {
+      "type": "string",
+      "required": true
+    },
+    "fields": {
+    },
+    "created": {
+      "type": "date",
+      "required": true
+    }
+  },
+  "hidden": {
+    "id": true
+  },
+  "validations": [],
+  "methods": {
+  },
+  "indexes": {
+    "subjectId_index": {
+      "subjectId": 1,
+      "created": -1
+    }
+  }
+}

@@ -4,7 +4,8 @@ import {ignoreUpdatedIfNoChanges, ignoreProperties, setProperty} from '../../beh
 import {SanitizeHelper} from '../../../libs/sanitize/SanitizeHelper.js';
 import {FlaperMark, Sanitize} from '@flaper/markdown';
 import {initStatusActions} from './status/status';
-import {initGet} from './get/get';
+import {initGet} from './get/get.js';
+import {initAudit} from './get/audit.js';
 import {initSyncUser} from './methods/syncUser';
 import {initDelete} from './methods/internalDelete';
 import {ERRORS} from '../../utils/errors';
@@ -40,11 +41,11 @@ module.exports = (Story) => {
 
   Story.slugFilter = (story) => {
     let filter = {status: 'active', type: story.type};
-    if (story.type === Story.TYPE.REVIEW){
+    if (story.type === Story.TYPE.REVIEW) {
       filter.objectId = story.objectId;
     }
     return filter;
-  }
+  };
 
   Story.validatesInclusionOf('status', {in: Story.STATUSES});
 
@@ -85,15 +86,16 @@ module.exports = (Story) => {
   initSyncUser(Story);
   initStatusActions(Story);
   initGet(Story);
+  initAudit(Story);
   initDelete(Story);
 
-  function* typeObserver(ctx){
-    if (ctx.isNewInstance){
-	let type = ctx.instance.type;
-	if (!Story.TYPES.includes(type)) throw ERRORS.badRequest(`Wrong type "${type}" for story`);
-	return;
+  function* typeObserver(ctx) {
+    if (ctx.isNewInstance) {
+      let type = ctx.instance.type;
+      if (!Story.TYPES.includes(type)) throw ERRORS.badRequest(`Wrong type "${type}" for story`);
+      return;
     }
-    if (ctx.instance){
+    if (ctx.instance) {
       delete ctx.instance.type;
     }
   }

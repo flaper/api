@@ -18,7 +18,7 @@ export function initGet(Story) {
     'customFind',
     {
       http: {path: '/', verb: 'get'},
-      description: `Find all stories matched by filter, by default with '${Story.STATUS.ACTIVE}' status.`,
+      description: `Возвращает все story удовлетваряющие фильтру, по умолчанию со статусом - '${Story.STATUS.ACTIVE}'.`,
       accessType: 'READ',
       accepts: {
         arg: 'filter',
@@ -50,7 +50,7 @@ export function initGet(Story) {
 
   function customFind(filter) {
     filter = filter ? filter : {};
-    filter.order = filter.order||'created DESC';
+    filter.order = filter.order || 'created DESC';
     if (!_.get(filter, 'where') || !objectHasDeepKey(filter.where, 'status')) {
       //by default we return only active stories
       return Story.scopeActive(filter);
@@ -70,12 +70,12 @@ export function initGet(Story) {
 
   function* actionFindBySlug(slug, before_slug) {
     let query = {slugLowerCase: slug.toLocaleLowerCase(), status: 'active'};
-    if (before_slug){
-	const FObject = Story.app.models.FObject;
-        let object = yield (FObject.actionFindByPath(before_slug));
-	if (!object)
-          throw ERRORS.badRequest('Объект к отзыву не может быть найден');
-        query.objectId = object.id.toString();
+    if (before_slug) {
+      const FObject = Story.app.models.FObject;
+      let object = yield (FObject.actionFindByPath(before_slug));
+      if (!object)
+        throw ERRORS.badRequest('Объект к отзыву не может быть найден');
+      query.objectId = object.id.toString();
     }
     let filter = {where: query};
     return yield (Story.findOne(filter));

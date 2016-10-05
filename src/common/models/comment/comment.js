@@ -20,7 +20,7 @@ module.exports = (Comment) => {
   Comment.STATUS = {
     ACTIVE: 'active',
     // last_answer - последний комментарий, являющийся официальным ответом, не отображается в общем списке комментариев
-    LAST_ANSWER: 'last_answer', 
+    LAST_ANSWER: 'last_answer',
     DELETED: 'deleted'
   };
   Comment.STATUSES = _.values(Comment.STATUS);
@@ -83,7 +83,7 @@ module.exports = (Comment) => {
     let model = yield (Model.findByIdRequired(subjectId));
 
     // официальный ответ компании
-    if (type!=='Story' || !model.objectId)
+    if (type !== 'Story' || !model.objectId)
       return;
     let isOwner = yield (User.isOwner(userId, model.objectId));
     if (!isOwner)
@@ -95,12 +95,14 @@ module.exports = (Comment) => {
     setProperty(ctx, 'status', Comment.STATUS.LAST_ANSWER);
     ctx.hookState.isAnswer = true;
   }
-  
-  function* answerObserver(ctx){
+
+  function* answerObserver(ctx) {
     if (!ctx.hookState.isAnswer)
       return;
-    let id = ctx.instance.subjectId;
+    let {id, subjectId} = ctx.instance;
     const {Story} = Comment.app.models;
-    yield (Story.updateAll({id}, {answer: ctx.instance.__data}, {skipIgnore: {answer: true}}));
+    yield (Story.updateAll({id: subjectId}, {answer: ctx.instance.__data}, {skipIgnore: {answer: true}}));
+    yield (Comment.updateAll({subjectId: subjectId, status: Comment.STATUS.LAST_ANSWER, id: {neq: id}},
+      {status: Comment.STATUS.ACTIVE}, {skipIgnore: {status: true}}));
   }
 };
