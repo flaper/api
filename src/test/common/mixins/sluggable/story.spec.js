@@ -7,7 +7,7 @@ import _ from 'lodash';
 let Story = app.models.Story;
 const STORY1 = STORIES.test1;
 
-describe.only(`Sluggable/Story`, function () {
+describe(`Sluggable/Story`, function () {
   //start of the slug
   const SLUG1 = 'для-теста-slug';
   const TITLE1 = 'Для теста slug';
@@ -81,14 +81,23 @@ describe.only(`Sluggable/Story`, function () {
     status: Story.STATUS.ACTIVE
   };
 
-  let models = [NEW_DENIED_STORY, NEW_ACTIVE_STORY1, NEW_ACTIVE_STORY2, NEW_ACTIVE_STORY3,
-    NEW_ACTIVE_STORY4, NEW_ACTIVE_STORY5, NEW_ACTIVE_STORY10, START_WITH_TILDA, START_WITH_TILDA2];
+  const SHORT_SLUG = {
+    id: '1a7000000000000000010013',
+    type: 'article',
+    title: 'ab',
+    content: STORY1.content,
+    status: Story.STATUS.ACTIVE
+  };
+
+  let models = [NEW_DENIED_STORY, NEW_ACTIVE_STORY1, NEW_ACTIVE_STORY2, NEW_ACTIVE_STORY3, NEW_ACTIVE_STORY4,
+    NEW_ACTIVE_STORY5, NEW_ACTIVE_STORY10, START_WITH_TILDA, START_WITH_TILDA2, SHORT_SLUG];
   let m = moment().tz('Europe/Moscow');
   let year = m.year();
   let month = (m.month() + 1).toString();
   month = month.length === 1 ? '0' + month : month;
   let date = m.date().toString();
   date = date.length === 1 ? '0' + date : date;
+  const YEAR = (new Date()).getFullYear();
 
   before(function*() {
     let options = {skipIgnore: {status: true}};
@@ -146,7 +155,12 @@ describe.only(`Sluggable/Story`, function () {
 
   it('Only tilda', function*() {
     let obj = yield (Story.findById(START_WITH_TILDA2.id));
-    obj.slugLowerCase.should.include((new Date()).getFullYear());
+    obj.slugLowerCase.should.include(YEAR);
+  });
+
+  it('Short slug', function*() {
+    let obj = yield (Story.findById(SHORT_SLUG.id));
+    obj.slugLowerCase.should.include(`${SHORT_SLUG.title}-${YEAR}`);
   });
 
   after(()=> Story.deleteAll({id: {inq: _.map(models, 'id')}}));
