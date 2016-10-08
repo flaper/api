@@ -78,6 +78,11 @@
     "object": {
       "type": "belongsTo",
       "model": "FObject"
+    },
+    "audit": {
+      "type": "hasMany",
+      "model": "Audit",
+      "foreignKey": "subjectId"
     }
   },
   "acls": [
