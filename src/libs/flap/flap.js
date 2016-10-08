@@ -1,5 +1,4 @@
 import app from '../../server/server';
-import {App} from '../../common/services/App';
 import {FlapMap} from './map';
 import {FlapAPI} from './api';
 import {ERRORS} from '../../common/utils/errors';
@@ -17,9 +16,7 @@ function getInt(flapId) {
 }
 
 export class Flap {
-  static * syncObject(flapId) {
-    let currentUserId = App.getCurrentUserId();
-    currentUserId = currentUserId ? currentUserId.toString() : null;
+  static * syncObject(flapId, currentUserId) {
     let id = getInt(flapId);
     let FObject = app.models.FObject;
 

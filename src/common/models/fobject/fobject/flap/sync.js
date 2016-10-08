@@ -1,3 +1,4 @@
+import {App} from '../../../../services/App';
 import {Flap} from '../../../../../libs/flap/flap';
 
 export function initFlapSync(FObject) {
@@ -12,6 +13,8 @@ export function initFlapSync(FObject) {
   });
 
   function* flapSync(id) {
-    return yield (Flap.syncObject(id));
+    let currentUserId = App.getCurrentUserId();
+    currentUserId = currentUserId ? currentUserId.toString() : null;
+    return yield (Flap.syncObject(id, currentUserId));
   }
 }
