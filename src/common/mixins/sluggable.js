@@ -3,7 +3,7 @@ import moment from 'moment-timezone';
 import {ERRORS} from '../utils/errors';
 import _ from 'lodash';
 
-//mixin suppose that Model have 'status' property and 'active' status
+// mixin suppose that Model have 'status' property and 'active' status
 module.exports = (Model, options) => {
   const SLUG_SEPARATOR = '-';
   const MULTIPLE_SEPARATORS_REGEX = /-{2,}/g;
@@ -41,10 +41,10 @@ module.exports = (Model, options) => {
     returns: {root: true},
     rest: {after: ERRORS.convertNullToNotFoundError}
   };
-  
+
   Model.remoteMethod( 'actionFindBySlug', Model.actionFindBySlug_remote);
-  //we need to call slugObserver when creating new Model and activating status
-  //another example maybe - when title has been changed (maybe after save hook)
+  // we need to call slugObserver when creating new Model and activating status
+  // another example maybe - when title has been changed (maybe after save hook)
   function slugObserver(ctx) {
     if (ctx.instance && ctx.isNewInstance) {
       return generateSlugWrapper(ctx.instance, Model.getInitialSlug(ctx.instance));
@@ -80,7 +80,7 @@ module.exports = (Model, options) => {
     let slug = baseSlug;
     let slugLowerCase = baseSlug.toLocaleLowerCase();
     let postfix = 1;
-    //if empty
+    // if empty
     if (!slug) nextSlug();
 
     return nextIteration()
