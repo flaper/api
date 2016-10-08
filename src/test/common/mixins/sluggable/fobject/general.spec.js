@@ -78,70 +78,51 @@ describe(`Sluggable/FObject/@general`, function () {
   let models = [NEW_DELETED_FILM, NEW_FILM1, NEW_FILM2, NEW_BOOK1, NEW_BOOK2, NEW_BOOK_WITH_YEAR,
     NEW_BOOK_WITH_YEAR2, NEW_BOOK_WITH_YEAR3];
 
-  before(() => {
-    let p = Promise.resolve();
+  before(function* () {
     let options = {skipIgnore: {status: true}};
-    models.forEach(model => {
-      p = p.then(() => FObject.create(model, options));
-    });
-    return p;
+    for (let model of models)
+      yield (FObject.create(model, options));
   });
 
-  it('Deleted object', () => {
-    return FObject.findById(NEW_DELETED_FILM.id)
-      .then((obj) => {
-        //it is not required, just current logic - slug will be generated, although it will not influence others
-        obj.slugLowerCase.should.eq(SLUG1);
-      })
+  it('Deleted object', function*() {
+    let obj = yield (FObject.findById(NEW_DELETED_FILM.id));
+    // it is not required, just current logic - slug will be generated, although it will not influence others
+    obj.slugLowerCase.should.eq(SLUG1);
   });
 
-  it('Film1', () => {
-    return FObject.findById(NEW_FILM1.id)
-      .then((obj) => {
-        obj.slugLowerCase.should.eq(SLUG1);
-      })
+  it('Film1', function*() {
+    let obj = yield (FObject.findById(NEW_FILM1.id));
+    obj.slugLowerCase.should.eq(SLUG1);
   });
 
-  it('Film2', () => {
-    return FObject.findById(NEW_FILM2.id)
-      .then((obj) => {
-        obj.slugLowerCase.should.eq(`${SLUG1}-2`);
-      })
+  it('Film2', function* () {
+    let obj = yield (FObject.findById(NEW_FILM2.id));
+    obj.slugLowerCase.should.eq(`${SLUG1}-2`);
   });
 
-  it('Book1', () => {
-    return FObject.findById(NEW_BOOK1.id)
-      .then((obj) => {
-        obj.slugLowerCase.should.eq(SLUG1);
-      })
+  it('Book1', function*() {
+    let obj = yield (FObject.findById(NEW_BOOK1.id));
+    obj.slugLowerCase.should.eq(SLUG1);
   });
 
-  it('Book2', () => {
-    return FObject.findById(NEW_BOOK2.id)
-      .then((obj) => {
-        obj.slugLowerCase.should.eq(`${SLUG1}-2`);
-      })
+  it('Book2', function*() {
+    let obj = yield (FObject.findById(NEW_BOOK2.id));
+    obj.slugLowerCase.should.eq(`${SLUG1}-2`);
   });
 
-  it('Book with year', () => {
-    return FObject.findById(NEW_BOOK_WITH_YEAR.id)
-      .then((obj) => {
-        obj.slugLowerCase.should.eq(`${SLUG1}-${YEAR}`);
-      })
+  it('Book with year', function*() {
+    let obj = yield (FObject.findById(NEW_BOOK_WITH_YEAR.id));
+    obj.slugLowerCase.should.eq(`${SLUG1}-${YEAR}`);
   });
 
-  it('Book with year2', () => {
-    return FObject.findById(NEW_BOOK_WITH_YEAR2.id)
-      .then((obj) => {
-        obj.slugLowerCase.should.eq(`${SLUG1}-${YEAR}-2`);
-      })
+  it('Book with year2', function*() {
+    let obj = yield (FObject.findById(NEW_BOOK_WITH_YEAR2.id));
+    obj.slugLowerCase.should.eq(`${SLUG1}-${YEAR}-2`);
   });
 
-  it('Book with year3', () => {
-    return FObject.findById(NEW_BOOK_WITH_YEAR3.id)
-      .then((obj) => {
-        obj.slugLowerCase.should.eq(`${SLUG1}-${YEAR+1}`);
-      })
+  it('Book with year3', function*() {
+    let obj = yield (FObject.findById(NEW_BOOK_WITH_YEAR3.id));
+    obj.slugLowerCase.should.eq(`${SLUG1}-${YEAR + 1}`);
   });
 
   after(()=> FObject.deleteAll({id: {inq: _.map(models, 'id')}}));
