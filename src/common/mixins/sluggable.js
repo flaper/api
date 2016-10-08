@@ -32,17 +32,17 @@ module.exports = (Model, options) => {
 
   Model.actionFindBySlug = Model.actionFindBySlug || actionFindBySlug;
   Model.actionFindBySlug_remote = Model.actionFindBySlug_remote || {
-    description: `Find an active model instance by slug`,
-    http: {path: '/slug/:slug', verb: 'get'},
-    accepts: [
-      {arg: 'slug', type: 'string', required: true},
-      {arg: 'fields', type: 'object', required: false}
-    ],
-    returns: {root: true},
-    rest: {after: ERRORS.convertNullToNotFoundError}
-  };
+      description: `Find an active model instance by slug`,
+      http: {path: '/slug/:slug', verb: 'get'},
+      accepts: [
+        {arg: 'slug', type: 'string', required: true},
+        {arg: 'fields', type: 'object', required: false}
+      ],
+      returns: {root: true},
+      rest: {after: ERRORS.convertNullToNotFoundError}
+    };
 
-  Model.remoteMethod( 'actionFindBySlug', Model.actionFindBySlug_remote);
+  Model.remoteMethod('actionFindBySlug', Model.actionFindBySlug_remote);
   // we need to call slugObserver when creating new Model and activating status
   // another example maybe - when title has been changed (maybe after save hook)
   function slugObserver(ctx) {
@@ -97,7 +97,7 @@ module.exports = (Model, options) => {
         slug = baseSlug;
       } else {
         ++postfix;
-        slug = baseSlug + SLUG_SEPARATOR + postfix
+        slug = baseSlug + (baseSlug ? SLUG_SEPARATOR : '') + postfix;
       }
       slugLowerCase = slug.toLocaleLowerCase();
     }
@@ -133,7 +133,7 @@ module.exports = (Model, options) => {
   function sanitizeString(str) {
     return Sanitize.text(str.toString()) //toString for integer .e.g
       .replace(/_/g, SLUG_SEPARATOR)
-      .replace(/[^A-Za-z0-9а-яёА-ЯЁ_\-\s]/g, ' ')
+      .replace(/[^A-Za-z0-9а-яёА-ЯЁ_\s]/g, ' ')
       .trim()
       .replace(/[\s]/g, SLUG_SEPARATOR)
       .replace(MULTIPLE_SEPARATORS_REGEX, SLUG_SEPARATOR)
