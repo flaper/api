@@ -89,8 +89,16 @@ describe(`Sluggable/Story`, function () {
     status: Story.STATUS.ACTIVE
   };
 
+  const TITLE_EQ_ID = {
+    id: '1a7000000000000000010014',
+    type: 'article',
+    title: '568223c429f1cff2027d8d4e',
+    content: STORY1.content,
+    status: Story.STATUS.ACTIVE
+  };
+
   let models = [NEW_DENIED_STORY, NEW_ACTIVE_STORY1, NEW_ACTIVE_STORY2, NEW_ACTIVE_STORY3, NEW_ACTIVE_STORY4,
-    NEW_ACTIVE_STORY5, NEW_ACTIVE_STORY10, START_WITH_TILDA, START_WITH_TILDA2, SHORT_SLUG];
+    NEW_ACTIVE_STORY5, NEW_ACTIVE_STORY10, START_WITH_TILDA, START_WITH_TILDA2, SHORT_SLUG, TITLE_EQ_ID];
   let m = moment().tz('Europe/Moscow');
   let year = m.year();
   let month = (m.month() + 1).toString();
@@ -161,6 +169,11 @@ describe(`Sluggable/Story`, function () {
   it('Short slug', function*() {
     let obj = yield (Story.findById(SHORT_SLUG.id));
     obj.slugLowerCase.should.include(`${SHORT_SLUG.title}-${YEAR}`);
+  });
+
+  it('Title equal ObjectId', function*() {
+    let obj = yield (Story.findById(TITLE_EQ_ID.id));
+    obj.slugLowerCase.should.include(`${TITLE_EQ_ID.title}-${YEAR}`);
   });
 
   after(()=> Story.deleteAll({id: {inq: _.map(models, 'id')}}));

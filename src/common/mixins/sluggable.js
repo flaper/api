@@ -81,7 +81,7 @@ module.exports = (Model, options) => {
     let slugLowerCase = baseSlug.toLocaleLowerCase();
     let postfix = 1;
     // if empty
-    if (!slug || slug.length < 3) nextSlug();
+    if (!slug || slug.length < 3 || /^[a-f0-9]{24}$/.test(slug)) nextSlug();
 
     return nextIteration()
       .then(data => {
