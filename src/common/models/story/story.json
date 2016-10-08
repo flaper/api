@@ -7,10 +7,7 @@
   },
   "mixins": {
     "Sluggable": {},
-    "Likable": {},
-    "Auditable": {
-      "pick": ["status", "type", "title", "content", "rating", "objectId", "userId"]
-    }
+    "Likable": {}
   },
   "properties": {
     "status": {

@@ -5,7 +5,8 @@ import {SanitizeHelper} from '../../../libs/sanitize/SanitizeHelper.js';
 import {FlaperMark, Sanitize} from '@flaper/markdown';
 import {initStatusActions} from './status/status';
 import {initGet} from './get/get.js';
-import {initAudit} from './get/audit.js';
+import {initAuditRest} from './get/audit.js';
+import {enableAudit} from '../../behaviors/auditable.js';
 import {initSyncUser} from './methods/syncUser';
 import {initDelete} from './methods/internalDelete';
 import {ERRORS} from '../../utils/errors';
@@ -14,6 +15,7 @@ import _ from 'lodash';
 module.exports = (Story) => {
   Story.commonInit(Story);
   applyIdToType(Story);
+  enableAudit(Story, {pick: ["status", "type", "title", "content", "rating", "objectId", "userId"]});
 
   Story.STATUS = {
     ACTIVE: 'active',
@@ -86,7 +88,7 @@ module.exports = (Story) => {
   initSyncUser(Story);
   initStatusActions(Story);
   initGet(Story);
-  initAudit(Story);
+  initAuditRest(Story);
   initDelete(Story);
 
   function* typeObserver(ctx) {

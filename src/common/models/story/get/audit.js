@@ -1,4 +1,4 @@
-export function initAudit(Story) {
+export function initAuditRest(Story) {
   Story.getAudit = getAudit;
 
   Story.remoteMethod(
