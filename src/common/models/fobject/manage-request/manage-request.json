@@ -48,17 +48,10 @@
       "permission": "DENY"
     },
     {
-      "accessType": "READ",
       "principalType": "ROLE",
       "principalId": "$authenticated",
       "permission": "ALLOW",
-      "property": "customFind"
-    },
-    {
-      "principalType": "ROLE",
-      "principalId": "$authenticated",
-      "permission": "ALLOW",
-      "property": "customCreate"
+      "property": ["customFind", "customCreate"]
     },
     {
       "principalType": "ROLE",
@@ -70,7 +63,7 @@
       "principalType": "ROLE",
       "principalId": "super",
       "permission": "ALLOW",
-      "property": ["actionApprove", "actionDeny"]
+      "property": ["customCount", "actionApprove", "actionDeny"]
     }
   ],
   "methods": {},
