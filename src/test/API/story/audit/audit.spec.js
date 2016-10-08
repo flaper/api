@@ -24,7 +24,7 @@ describe(`${COLLECTION_URL}/@audit`, function () {
     yield Audit.deleteAll({subjectId: NEW_STORY.id});
   });
 
-  it('User - allow to add', function*() {
+  it('User - create story should create 0 audits', function*() {
     let {agent} = yield (user1Promise);
     yield (agent.post(COLLECTION_URL)
       .send(NEW_STORY)

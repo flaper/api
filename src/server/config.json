@@ -6,21 +6,22 @@
   },
   "port": 4000,
   "remoting": {
-    "rest": {
-      "normalizeHttpPath": false,
-      "xml": false
+    "context": false,
+    "cors": false,
+    "errorHandler": {
+      "disableStackTrace": false
     },
     "json": {
       "strict": false,
       "limit": "100kb"
     },
+    "rest": {
+      "normalizeHttpPath": false,
+      "xml": false
+    },
     "urlencoded": {
       "extended": true,
       "limit": "100kb"
-    },
-    "cors": false,
-    "errorHandler": {
-      "disableStackTrace": false
     }
   },
   "legacyExplorer": false,

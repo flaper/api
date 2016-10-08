@@ -20,20 +20,22 @@ export class App {
 
   static isWebServer() {
     if (!isWebServer) {
-      //when we have many observers, context just disappearing sometimes
-      isWebServer = loopback.getCurrentContext() ? true : false;
+      const LoopBackContext = require('loopback-context');
+      // when we have many observers, context just disappearing sometimes
+      isWebServer = LoopBackContext.getCurrentContext() ? true : false;
     }
     return isWebServer;
   }
 
   static getCurrentUserId() {
-    let context = loopback.getCurrentContext();
-    if (!context) {
+    const LoopBackContext = require('loopback-context');
+    let ctx = LoopBackContext.getCurrentContext();
+    if (!ctx) {
       // т.е. консольное приложение
       return null;
     }
-    let accessToken = context.get('accessToken');
-    return accessToken ? accessToken.userId : context.userId;
+    let accessToken = ctx.get('accessToken');
+    return accessToken ? accessToken.userId : ctx.userId;
   }
 
   static getCurrentUser(workaroundUserId) {
