@@ -37,3 +37,12 @@ export function disableRemoteScope(Model, scope, param = true) {
   Model.disableRemoteMethod(`__updateById__${scope}`, param);
 }
 
+export function disableRemoteRelation(Model, relation, except = []) {
+  let methods = ['create', 'link', 'unlink', 'exists', 'destroyById', 'findById', 'updateById', 'get', 'count',
+    'delete'];
+  for (let method of methods) {
+    if (!except.includes(method))
+      Model.disableRemoteMethod(`__${method}__${relation}`);
+  }
+
+}

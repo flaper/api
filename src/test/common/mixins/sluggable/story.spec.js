@@ -65,14 +65,47 @@ describe(`Sluggable/Story`, function () {
     status: Story.STATUS.ACTIVE
   };
 
-  let models = [NEW_DENIED_STORY, NEW_ACTIVE_STORY1, NEW_ACTIVE_STORY2, NEW_ACTIVE_STORY3,
-    NEW_ACTIVE_STORY4, NEW_ACTIVE_STORY5, NEW_ACTIVE_STORY10];
+  const START_WITH_TILDA = {
+    id: '1a7000000000000000010011',
+    type: 'article',
+    title: '  -хорошее--имя--',
+    content: STORY1.content,
+    status: Story.STATUS.ACTIVE
+  };
+
+  const START_WITH_TILDA2 = {
+    id: '1a7000000000000000010012',
+    type: 'article',
+    title: '--',
+    content: STORY1.content,
+    status: Story.STATUS.ACTIVE
+  };
+
+  const SHORT_SLUG = {
+    id: '1a7000000000000000010013',
+    type: 'article',
+    title: 'ab',
+    content: STORY1.content,
+    status: Story.STATUS.ACTIVE
+  };
+
+  const TITLE_EQ_ID = {
+    id: '1a7000000000000000010014',
+    type: 'article',
+    title: '568223c429f1cff2027d8d4e',
+    content: STORY1.content,
+    status: Story.STATUS.ACTIVE
+  };
+
+  let models = [NEW_DENIED_STORY, NEW_ACTIVE_STORY1, NEW_ACTIVE_STORY2, NEW_ACTIVE_STORY3, NEW_ACTIVE_STORY4,
+    NEW_ACTIVE_STORY5, NEW_ACTIVE_STORY10, START_WITH_TILDA, START_WITH_TILDA2, SHORT_SLUG, TITLE_EQ_ID];
   let m = moment().tz('Europe/Moscow');
   let year = m.year();
   let month = (m.month() + 1).toString();
   month = month.length === 1 ? '0' + month : month;
   let date = m.date().toString();
   date = date.length === 1 ? '0' + date : date;
+  const YEAR = (new Date()).getFullYear();
 
   before(function*() {
     let options = {skipIgnore: {status: true}};
@@ -102,33 +135,46 @@ describe(`Sluggable/Story`, function () {
     story.slugLowerCase.should.eq(`${SLUG1}-${year}-${month}`);
   });
 
-  it('Active slug4', () => {
-    return Story.findById(NEW_ACTIVE_STORY4.id)
-      .then((story) => {
-        story.slugLowerCase.should.eq(`${SLUG1}-${year}-${month}-${date}`);
-      })
+  it('Active slug4', function* () {
+    let story = yield (Story.findById(NEW_ACTIVE_STORY4.id));
+    story.slugLowerCase.should.eq(`${SLUG1}-${year}-${month}-${date}`);
   });
 
-  it('Active slug5', () => {
-    return Story.findById(NEW_ACTIVE_STORY5.id)
-      .then((story) => {
-        story.slugLowerCase.should.eq(`${SLUG1}-${year}-${month}-${date}-2`);
-      })
+  it('Active slug5', function*() {
+    let story = yield (Story.findById(NEW_ACTIVE_STORY5.id));
+    story.slugLowerCase.should.eq(`${SLUG1}-${year}-${month}-${date}-2`);
   });
 
-  it('After active deleted', () => {
-    return Story.actionActivate(NEW_DENIED_STORY.id)
-      .then((story) => {
-        story.status.should.eq(Story.STATUS.ACTIVE);
-        story.slugLowerCase.should.eq(`${SLUG1}-${year}-${month}-${date}-3`);
-      })
+  it('After active deleted', function*() {
+    let story = yield (Story.actionActivate(NEW_DENIED_STORY.id));
+    story.status.should.eq(Story.STATUS.ACTIVE);
+    story.slugLowerCase.should.eq(`${SLUG1}-${year}-${month}-${date}-3`);
   });
 
-  it('Active slug6', () => {
-    return Story.findById(NEW_ACTIVE_STORY10.id)
-      .then((story) => {
-        story.slug.should.eq('Идеи-для-творчества');
-      })
+  it('Active slug6', function*() {
+    let story = yield (Story.findById(NEW_ACTIVE_STORY10.id));
+    story.slug.should.eq('Идеи-для-творчества');
   });
+
+  it('Start with tilda', function*() {
+    let obj = yield (Story.findById(START_WITH_TILDA.id));
+    obj.slugLowerCase.should.eq(`хорошее-имя`);
+  });
+
+  it('Only tilda', function*() {
+    let obj = yield (Story.findById(START_WITH_TILDA2.id));
+    obj.slugLowerCase.should.include(YEAR);
+  });
+
+  it('Short slug', function*() {
+    let obj = yield (Story.findById(SHORT_SLUG.id));
+    obj.slugLowerCase.should.include(`${SHORT_SLUG.title}-${YEAR}`);
+  });
+
+  it('Title equal ObjectId', function*() {
+    let obj = yield (Story.findById(TITLE_EQ_ID.id));
+    obj.slugLowerCase.should.include(`${TITLE_EQ_ID.title}-${YEAR}`);
+  });
+
   after(()=> Story.deleteAll({id: {inq: _.map(models, 'id')}}));
 });

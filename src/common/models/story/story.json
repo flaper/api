@@ -7,10 +7,7 @@
   },
   "mixins": {
     "Sluggable": {},
-    "Likable": {},
-    "Auditable": {
-      "pick": ["status", "type", "title", "content", "rating", "objectId", "userId"]
-    }
+    "Likable": {}
   },
   "properties": {
     "status": {
@@ -81,6 +78,11 @@
     "object": {
       "type": "belongsTo",
       "model": "FObject"
+    },
+    "audit": {
+      "type": "hasMany",
+      "model": "Audit",
+      "foreignKey": "subjectId"
     }
   },
   "acls": [

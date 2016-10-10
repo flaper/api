@@ -10,7 +10,8 @@
         "credentials": true,
         "maxAge": 86400
       }
-    }
+    },
+    "loopback-context#per-request": {}
   },
   "session": {},
   "auth": {},

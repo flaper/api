@@ -24,7 +24,7 @@ describe(`${COLLECTION_URL}/@audit`, function () {
     yield Audit.deleteAll({subjectId: NEW_STORY.id});
   });
 
-  it('User - allow to add', function*() {
+  it('User - create story should create 0 audits', function*() {
     let {agent} = yield (user1Promise);
     yield (agent.post(COLLECTION_URL)
       .send(NEW_STORY)
@@ -64,8 +64,7 @@ describe(`${COLLECTION_URL}/@audit`, function () {
   });
 
   it('Story audit method should return 3 changes', function*() {
-    let {agent} = yield (user1Promise);
-    yield (agent.get(`${COLLECTION_URL}/${NEW_STORY.id}/audit`)
+    yield (api.get(`${COLLECTION_URL}/${NEW_STORY.id}/audit`)
         .expect(200)
         .expect(res=> {
           let changes = res.body;
@@ -73,6 +72,17 @@ describe(`${COLLECTION_URL}/@audit`, function () {
         })
     );
   });
+
+  it('Count audit should return 3', function*() {
+    yield (api.get(`${COLLECTION_URL}/${NEW_STORY.id}/audit/count`)
+        .expect(200)
+        .expect(res=> {
+          let {count} = res.body;
+          count.should.eq(3);
+        })
+    );
+  });
+
 
   after(function*() {
     yield ([Story.iDeleteById(NEW_STORY.id)]);

@@ -2,21 +2,22 @@ import {App} from '../services/App.js';
 import _ from 'lodash';
 import co from 'co';
 
-//mixin suppose that Model have 'status' property and 'active' status
-module.exports = (Model, options) => {
+// auditable suppose that Model have 'status' property and 'active' status
+// not a mixins because of getCurrentContext issues
+export function enableAudit(Model, options) {
   Model.observe('before save', auditableBefore);
   Model.observe('after save', auditable);
 
   function* auditableBefore(ctx) {
-    let id = _.get(ctx, 'where.id');
+    // workaround for getCurrentContext
+    ctx.hookState.currentUserId = App.getCurrentUserId();
     if (ctx.isNewInstance || !ctx.currentInstance)
       return;
     ctx.hookState.audit = {data: filter(ctx.currentInstance.__data), userId: ctx.currentInstance.userId}
   }
 
+  // асинхронный метод
   function auditable(ctx) {
-    let userId = App.getCurrentUserId();
-    // асинхронный метод
     if (ctx.isNewInstance || !ctx.hookState.audit || !ctx.instance)
       return Promise.resolve();
     let oldData = ctx.hookState.audit.data;
@@ -38,8 +39,7 @@ module.exports = (Model, options) => {
           created: ctx.instance.created
         });
       }
-      // remove after update for getCurrentContext
-      userId = userId || ctx.instance.userId;
+      let userId = ctx.hookState.currentUserId;
       Audit.create({subjectId: id, userId, type, fields: diff, created: new Date()});
     }
   }
@@ -57,4 +57,4 @@ module.exports = (Model, options) => {
     });
     return diff;
   }
-};
+}

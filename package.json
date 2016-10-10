@@ -1,6 +1,6 @@
 {
   "name": "FlaperAPI",
-  "version": "0.5.1",
+  "version": "0.6.3",
   "main": "dist/server/server.js",
   "scripts": {
     "prestart": "rm -fR dist && rsync -av --exclude test src/* dist  && ./node_modules/.bin/babel src --out-dir dist --ignore test/*",
@@ -41,6 +41,7 @@
     "loopback-boot": "^2.6.5",
     "loopback-component-passport": "^1.6.0",
     "loopback-connector-mongodb": "1.13.2",
+    "loopback-context": "^1.0.0",
     "loopback-datasource-juggler": "^2.45.2",
     "lwip": "0.0.8",
     "marked": "^0.3.5",
