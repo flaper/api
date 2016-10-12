@@ -11,6 +11,8 @@ let User = app.models.user;
 
 const COLLECTION_URL = 'stories';
 const STORY1 = STORIES.test1;
+const STORY_DENIED1 = STORIES.denied1;
+const STORY_DELETED1 = STORIES.deleted1;
 
 describe(`/${COLLECTION_URL}`, function () {
   updateTimeouts(this);
@@ -63,6 +65,49 @@ describe(`/${COLLECTION_URL}`, function () {
     it('Anonymous - wrong slug should return 404', function*() {
       yield (api.get(`${COLLECTION_URL}/slug/wrong_slug`)
         .expect(404));
+    });
+
+    it('Active story should not accept id as slug', function*() {
+      yield (api.get(`${COLLECTION_URL}/slug`)
+        .query({slug: STORY1.id})
+        .expect(404))
+    });
+
+    it('Denied story should accept id as slug', function*() {
+      yield (api.get(`${COLLECTION_URL}/slug`)
+        .query({slug: STORY_DENIED1.id})
+        .expect(200)
+        .expect((res) => {
+          let story = res.body;
+          story.id.should.eq(STORY_DENIED1.id);
+        }));
+    });
+
+    it('Anonymous should not see delete story by id as slug', function*() {
+      yield (api.get(`${COLLECTION_URL}/slug`)
+        .query({slug: STORY_DELETED1.id})
+        .expect(404));
+    });
+
+    it('Author story should see his deleted story by id as slug', function*() {
+      let {agent} = yield (user1Promise);
+      yield (agent.get(`${COLLECTION_URL}/slug`)
+        .query({slug: STORY_DELETED1.id})
+        .expect(200));
+    });
+
+    it('Another user should not see deleted story by id as slug', function*() {
+      let {agent} = yield (user2Promise);
+      yield (agent.get(`${COLLECTION_URL}/slug`)
+        .query({slug: STORY_DELETED1.id})
+        .expect(404));
+    });
+
+    it('Admin user should see deleted story by id as slug', function*() {
+      let {agent} = yield (adminPromise);
+      yield (agent.get(`${COLLECTION_URL}/slug`)
+        .query({slug: STORY_DELETED1.id})
+        .expect(200));
     });
   });
 
@@ -139,8 +184,8 @@ describe(`/${COLLECTION_URL}`, function () {
     it('User - deny to foreign update', function*() {
       let {agent} = yield (user2Promise);
       yield (agent.put(`${COLLECTION_URL}/${NEW_STORY.id}`)
-          .send({})
-          .expect(401));
+        .send({})
+        .expect(401));
     });
 
     let newTitle = "NEW TITLE";
