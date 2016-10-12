@@ -83,6 +83,9 @@ export function initGet(Story) {
       if (!object)
         throw ERRORS.badRequest('Объект к отзыву не может быть найден');
       query.objectId = object.id.toString();
+      query.type = Story.TYPE.REVIEW;
+    } else {
+      query.type = Story.TYPE.ARTICLE;
     }
     let filter = {where: query};
     let story = yield (Story.findOne(filter));

@@ -17,8 +17,8 @@ const COLLECTION_URL = 'stories';
 describe(`/${COLLECTION_URL}/@reviews/get`, function () {
   updateTimeouts(this);
   describe('GET/HEAD', () => {
-    it('Anonymous - allow access to the object reviews', () => {
-      return api.get(COLLECTION_URL)
+    it('Anonymous - allow access to the object reviews', function*() {
+      yield (api.get(COLLECTION_URL)
         .query({filter: {where: {objectId: OBJ1.id}}})
         .expect(200)
         .expect((res) => {
@@ -29,10 +29,11 @@ describe(`/${COLLECTION_URL}/@reviews/get`, function () {
             review.status.should.eq('active');
             review.objectId.should.eq(OBJ1.id);
           }
-        })
+        }));
     });
-    it('Anonymous - allow access to the denied object reviews', () => {
-      return api.get(COLLECTION_URL)
+
+    it('Anonymous - allow access to the denied object reviews', function* () {
+      yield (api.get(COLLECTION_URL)
         .query({filter: {where: {objectId: OBJ1.id, status: Story.STATUS.DENIED}}})
         .expect(200)
         .expect((res) => {
@@ -43,7 +44,7 @@ describe(`/${COLLECTION_URL}/@reviews/get`, function () {
             review.status.should.eq('denied');
             review.objectId.should.eq(OBJ1.id);
           }
-        })
+        }));
     });
   });
 
@@ -53,12 +54,20 @@ describe(`/${COLLECTION_URL}/@reviews/get`, function () {
       let review = yield (Story.findByIdRequired(REVIEW1.id));
       yield (api.get(`${COLLECTION_URL}/slug`)
         .query({slug: review.slug, before_slug: obj.getPath()})
- 	.expect(200)
+        .expect(200)
         .expect((res) => {
           let r = res.body;
-	  r.slug.should.eq(review.slug);
-	  r.objectId.should.eq(REVIEW1.objectId);
+          r.slug.should.eq(review.slug);
+          r.objectId.should.eq(REVIEW1.objectId);
         }));
+    });
+
+    it('Anonymous - deny access to the review by slug withou object path', function* () {
+      let obj = yield (FObject.findByIdRequired(REVIEW1.objectId));
+      let review = yield (Story.findByIdRequired(REVIEW1.id));
+      yield (api.get(`${COLLECTION_URL}/slug`)
+        .query({slug: review.slug})
+        .expect(404));
     });
   });
 });
