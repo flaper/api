@@ -35,7 +35,8 @@ export class App {
       return null;
     }
     let accessToken = ctx.get('accessToken');
-    return accessToken ? accessToken.userId : ctx.userId;
+    let userId = accessToken ? accessToken.userId : ctx.userId;
+    return userId ? userId.toString() : null;
   }
 
   static getCurrentUser(workaroundUserId) {

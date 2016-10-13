@@ -37,12 +37,13 @@ export function initGet(Story) {
     returns: {arg: 'count', type: 'number'}
   });
 
+  // Переопределяет метод по-умолчанию для sluggable.js
   Story.actionFindBySlug_remote = {
     description: `Поиск story по slug`,
     http: {path: '/slug', verb: 'get'},
     accepts: [
       {arg: 'slug', type: 'string', required: true},
-      {arg: 'before_slug', type: 'string', required: false, description: 'Только для отзывов. Путь к объекту.'},
+      {arg: 'before_slug', type: 'string', required: false, description: 'Только для отзывов. Путь к объекту.'}
     ],
     returns: {root: true},
     rest: {after: ERRORS.convertNullToNotFoundError}
@@ -69,15 +70,32 @@ export function initGet(Story) {
   }
 
   function* actionFindBySlug(slug, before_slug) {
-    let query = {slugLowerCase: slug.toLocaleLowerCase(), status: 'active'};
+    let userId = App.getCurrentUserId();
+    let isAdmin = yield App.isAdmin();
+    let slugLowerCase = slug.toLocaleLowerCase();
+    // реальный slug не может принимать значения похожие на id, см. sluggable.js
+    // следовательно передан id
+    let isId = /^[0-9a-f]{24}$/.test(slugLowerCase);
+    let query = isId ? {id: slugLowerCase} : {slugLowerCase, status: 'active'};
     if (before_slug) {
       const FObject = Story.app.models.FObject;
       let object = yield (FObject.actionFindByPath(before_slug));
       if (!object)
         throw ERRORS.badRequest('Объект к отзыву не может быть найден');
       query.objectId = object.id.toString();
+      query.type = Story.TYPE.REVIEW;
+    } else {
+      query.type = Story.TYPE.ARTICLE;
     }
     let filter = {where: query};
-    return yield (Story.findOne(filter));
+    let story = yield (Story.findOne(filter));
+    if (!story || !isId)
+      return story;
+    // isId === true
+    if (story.status === Story.STATUS.DENIED ||
+      story.status === Story.STATUS.DELETED && (isAdmin || story.userId.toString() === userId)) {
+      return story;
+    }
+    return null;
   }
 }
