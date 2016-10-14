@@ -1,15 +1,18 @@
+import co from 'co';
 export function initSyncObject(Story) {
   Story.observe('after save', syncObject);
 
   Story.iSyncObject = iSyncObject;
 
-  function* iSyncObject(objectId) {
-    if (!objectId) throw 'iSyncObject всегда должен иметь objectId';
+  function iSyncObject(objectId) {
+    return co(function *() {
+      if (!objectId) throw 'iSyncObject всегда должен иметь objectId';
 
-    // { rating: ..,, reviewsNumber: ...}
-    let data = yield (countRatingData(objectId));
-    let {FObject} = Story.app.models;
-    yield (FObject.updateAll({id: objectId}, data));
+      // { rating: ..,, reviewsNumber: ...}
+      let data = yield (countRatingData(objectId));
+      let {FObject} = Story.app.models;
+      yield (FObject.updateAll({id: objectId}, data));
+    });
   }
 
   function* syncObject(ctx) {

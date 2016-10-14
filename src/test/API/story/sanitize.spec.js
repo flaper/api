@@ -3,8 +3,9 @@ import {updateTimeouts} from '../timeout';
 import app from '../../helpers/app';
 let should = require('chai').should();
 import {Sanitize} from '@flaper/markdown';
+import co from 'co';
 
-let Story = app.models.Story;
+let {Story} = app.models;
 
 const COLLECTION_URL = 'stories';
 //can be out for API test folder

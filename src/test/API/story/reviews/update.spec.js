@@ -112,18 +112,17 @@ describe(`/${COLLECTION_URL}/@reviews/update`, function () {
     });
 
     it('User - allow to update rating for review', function*() {
-      let {agent} = yield (user1Promise);
-      yield (agent.put(`${COLLECTION_URL}/${REVIEW1.id}`)
-          .send({rating: 1})
-          .expect(200)
-          .expect(res => {
-            let story = res.body;
-            story.rating.should.eq(1);
-          })
-      );
-      let review = yield (Story.findById(REVIEW1.id));
+      let {agent} = yield user1Promise;
+      yield agent.put(`${COLLECTION_URL}/${REVIEW1.id}`)
+        .send({rating: 1})
+        .expect(200)
+        .expect(res => {
+          let story = res.body;
+          story.rating.should.eq(1);
+        });
+      let review = yield Story.findById(REVIEW1.id);
       yield (review.updateAttributes({rating: REVIEW1.rating}));
-      review = yield (Story.findById(REVIEW1.id));
+      review = yield Story.findById(REVIEW1.id);
       review.rating.should.eq(REVIEW1.rating)
     });
 
