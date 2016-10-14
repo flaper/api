@@ -6,10 +6,8 @@ export function initDelete(Story) {
    * @param id
    */
   function* iDeleteById(id) {
-    let story = yield (Story.findByIdRequired(id));
-    yield (Story.deleteById(id));
-    let tasks = [];
-    tasks.push(Story.iSyncUser(story.userId));
-    tasks.push(Story.iSyncObject(story.objectId));
+    let story = yield Story.findByIdRequired(id);
+    yield Story.deleteById(id);
+    yield Story.iSyncAll(story);
   }
 }
