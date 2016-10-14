@@ -71,6 +71,8 @@ module.exports = (Story) => {
     contentHTML: {},
     shortInline: {},
     shortText: {},
+    domain: {},
+    region: {},
     views: {},
     viewsRecent: {},
     lastActive: {newDefault: (data) => data.created},
@@ -159,7 +161,10 @@ module.exports = (Story) => {
       if (ctx.instance.type !== Story.TYPE.REVIEW)
         return;
       verifyRating(ctx.instance.rating);
-      yield verifyFObject(ctx.instance.objectId);
+      let obj = yield verifyFObject(ctx.instance.objectId);
+      ctx.instance.domain = [obj.mainDomain];
+      if (obj.region)
+        ctx.instance.region = obj.region;
       return;
     }
 
@@ -188,6 +193,7 @@ module.exports = (Story) => {
       let obj = yield FObject.findById(objectId);
       if (!obj)
         throw ERRORS.badRequest(`Object with id ${objectId} does not exists`);
+      return obj;
     });
   }
 
