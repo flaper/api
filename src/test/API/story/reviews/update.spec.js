@@ -11,7 +11,7 @@ const PLACE1 = FOBJECTS.place1;
 const REVIEW1 = STORIES.review1;
 const REVIEW2 = STORIES.review2;
 let User = app.models.user;
-let Story = app.models.Story;
+let {FObject, Story} = app.models;
 
 const COLLECTION_URL = 'stories';
 
@@ -31,8 +31,10 @@ describe(`/${COLLECTION_URL}/@reviews/update`, function () {
     };
 
     const NEW_REVIEW2 = _.merge({}, NEW_REVIEW, {id: '1a4000000000000000010002', objectId: PLACE1.id});
-    const NEW_STORY = _.merge({}, NEW_REVIEW, {id: '1a4000000000000000010003', type: 'article',
-      content: Sanitize.fakerIncreaseAlphaLength("test story", 1000)});
+    const NEW_STORY = _.merge({}, NEW_REVIEW, {
+      id: '1a4000000000000000010003', type: 'article',
+      content: Sanitize.fakerIncreaseAlphaLength("test story", 1000)
+    });
 
     it('User - deny to add to short review', function*() {
       let {agent} = yield (user1Promise);
@@ -64,6 +66,7 @@ describe(`/${COLLECTION_URL}/@reviews/update`, function () {
 
     it('User - allow to add', function*() {
       let userOld = yield (User.findByIdRequired(user1.id));
+      let objectOld = yield (FObject.findByIdRequired(NEW_REVIEW.objectId));
       let {agent} = yield (user1Promise);
       yield (agent.post(COLLECTION_URL)
         .send(NEW_REVIEW)
@@ -75,6 +78,8 @@ describe(`/${COLLECTION_URL}/@reviews/update`, function () {
         }));
       let user = yield (User.findByIdRequired(user1.id));
       user.storiesNumber.should.eq(userOld.storiesNumber + 1);
+      let object = yield (FObject.findByIdRequired(NEW_REVIEW.objectId));
+      object.reviewsNumber.should.eq(objectOld.reviewsNumber + 1);
     });
 
     it('User - review for different object with same title and new story should have same slug', function*() {

@@ -7,7 +7,8 @@ import {initStatusActions} from './status/status';
 import {initGet} from './get/get.js';
 import {initAuditRest} from './get/audit.js';
 import {enableAudit} from '../../behaviors/auditable.js';
-import {initSyncUser} from './methods/syncUser';
+import {initSyncUser} from './methods/syncUser.js';
+import {initSyncObject} from './methods/syncObject.js';
 import {initDelete} from './methods/internalDelete';
 import {ERRORS} from '../../utils/errors';
 import _ from 'lodash';
@@ -87,6 +88,7 @@ module.exports = (Story) => {
   Story.observe('after save', afterSaveObserver);
 
   initSyncUser(Story);
+  initSyncObject(Story);
   initStatusActions(Story);
   initGet(Story);
   initAuditRest(Story);
