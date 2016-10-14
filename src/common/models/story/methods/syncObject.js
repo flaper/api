@@ -9,7 +9,7 @@ export function initSyncObject(Story) {
       if (!objectId) throw 'iSyncObject всегда должен иметь objectId';
 
       // { rating: ..,, reviewsNumber: ...}
-      let data = yield (countRatingData(objectId));
+      let data = yield countRatingData(objectId);
       let {FObject} = Story.app.models;
       yield (FObject.updateAll({id: objectId}, data));
     });
@@ -20,7 +20,7 @@ export function initSyncObject(Story) {
       return;
     }
     //for new review we sync object
-    yield (Story.iSyncObject(ctx.instance.objectId));
+    yield Story.iSyncObject(ctx.instance.objectId);
   }
 
   function countRatingData(objectId) {

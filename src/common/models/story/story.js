@@ -13,6 +13,7 @@ import {initSyncAll} from './methods/syncAll.js';
 import {initDelete} from './methods/internalDelete';
 import {ERRORS} from '../../utils/errors';
 import _ from 'lodash';
+import co from 'co';
 
 module.exports = (Story) => {
   Story.commonInit(Story);
@@ -158,7 +159,7 @@ module.exports = (Story) => {
       if (ctx.instance.type !== Story.TYPE.REVIEW)
         return;
       verifyRating(ctx.instance.rating);
-      yield (verifyFObject(ctx.instance.objectId));
+      yield verifyFObject(ctx.instance.objectId);
       return;
     }
 
@@ -179,13 +180,15 @@ module.exports = (Story) => {
       throw ERRORS.badRequest('Invalid rating');
   }
 
-  function* verifyFObject(objectId) {
-    if (!objectId)
-      throw ERRORS.badRequest('Invalid objectId');
-    let FObject = Story.app.models.FObject;
-    let obj = yield (FObject.findById(objectId));
-    if (!obj)
-      throw ERRORS.badRequest(`Object with id ${objectId} does not exists`);
+  function verifyFObject(objectId) {
+    return co(function*() {
+      if (!objectId)
+        throw ERRORS.badRequest('Invalid objectId');
+      let FObject = Story.app.models.FObject;
+      let obj = yield FObject.findById(objectId);
+      if (!obj)
+        throw ERRORS.badRequest(`Object with id ${objectId} does not exists`);
+    });
   }
 
   function * articleObserver(ctx) {

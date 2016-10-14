@@ -22,6 +22,6 @@ export function initSyncUser(Story) {
       return;
     }
     //for new story we sync user
-    return yield (Story.iSyncUser(ctx.instance.userId));
+    yield Story.iSyncUser(ctx.instance.userId);
   }
 }

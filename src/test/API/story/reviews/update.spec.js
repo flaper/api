@@ -121,7 +121,8 @@ describe(`/${COLLECTION_URL}/@reviews/update`, function () {
           story.rating.should.eq(1);
         });
       let review = yield Story.findById(REVIEW1.id);
-      yield (review.updateAttributes({rating: REVIEW1.rating}));
+      review.rating = REVIEW1.rating;
+      yield review.save();
       review = yield Story.findById(REVIEW1.id);
       review.rating.should.eq(REVIEW1.rating)
     });
