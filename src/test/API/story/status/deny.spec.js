@@ -26,24 +26,19 @@ describe(`/${COLLECTION_URL}/:id/status/deny`, function () {
     })
   });
 
-  it('Admin can deny active story', ()=> {
-    let storiesNumberBefore;
-    return User.findByIdRequired(user1.id)
-      .then(user => storiesNumberBefore = user.storiesNumber)
-      .then(() => {
-        return adminPromise.then(({agent}) => {
-          return agent.put(`${COLLECTION_URL}/${STORY1.id}/status/deny`)
-            .expect(200)
-            .expect((res) => {
-              let story = res.body;
-              story.status.should.be.eq(Story.STATUS.DENIED);
-            })
-        })
-      })
-      .then(() => User.findByIdRequired(user1.id))
-      .then(user => user.storiesNumber.should.eq(storiesNumberBefore - 1))
-      .then(() => returnStatus(STORY1.id, Story.STATUS.ACTIVE))
-      .then(() => Story.iSyncUser(STORY1.userId))
+  it('Admin can deny active story', function*() {
+    let oldUser = yield User.findByIdRequired(user1.id);
+    let {agent} = yield adminPromise;
+    yield agent.put(`${COLLECTION_URL}/${STORY1.id}/status/deny`)
+      .expect(200)
+      .expect((res) => {
+        let story = res.body;
+        story.status.should.be.eq(Story.STATUS.DENIED);
+      });
+    let user = yield User.findByIdRequired(user1.id);
+    user.storiesNumber.should.eq(oldUser.storiesNumber - 1);
+    yield returnStatus(STORY1.id, Story.STATUS.ACTIVE);
+    yield Story.iSyncAll(STORY1);
   });
 
   it('Admin cannot deny already denied story', () => {

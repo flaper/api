@@ -9,6 +9,7 @@ import {initAuditRest} from './get/audit.js';
 import {enableAudit} from '../../behaviors/auditable.js';
 import {initSyncUser} from './methods/syncUser.js';
 import {initSyncObject} from './methods/syncObject.js';
+import {initSyncAll} from './methods/syncAll.js';
 import {initDelete} from './methods/internalDelete';
 import {ERRORS} from '../../utils/errors';
 import _ from 'lodash';
@@ -89,6 +90,7 @@ module.exports = (Story) => {
 
   initSyncUser(Story);
   initSyncObject(Story);
+  initSyncAll(Story);
   initStatusActions(Story);
   initGet(Story);
   initAuditRest(Story);

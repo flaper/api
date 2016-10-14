@@ -19,75 +19,75 @@ describe(`/${COLLECTION_URL}/:id/status/delete`, function () {
     it('User cannot delete foreign story', function*() {
       let {agent} = yield (user2Promise);
       yield (agent.put(`${COLLECTION_URL}/${STORY1.id}/status/delete`)
-	.expect(401));
+        .expect(401));
     });
 
     it('User can delete his active story', function*() {
       let userBefore = yield (User.findByIdRequired(user1.id));
       let {agent} = yield (user1Promise);
       yield (agent.put(`${COLLECTION_URL}/${STORY1.id}/status/delete`)
-	.expect(200)
-	.expect(res => {
-	  let story = res.body;
-	  story.status.should.be.eq(Story.STATUS.DELETED);
-	  //there was bug likesNumber disappeared, so let's check it too
-	  should.exist(story.content);
-	  should.exist(story.likesNumber);
-	}));
+        .expect(200)
+        .expect(res => {
+          let story = res.body;
+          story.status.should.be.eq(Story.STATUS.DELETED);
+          //there was bug likesNumber disappeared, so let's check it too
+          should.exist(story.content);
+          should.exist(story.likesNumber);
+        }));
       let user = yield (User.findByIdRequired(user1.id));
       user.storiesNumber.should.eq(userBefore.storiesNumber - 1);
       yield (returnStatus(STORY1.id, Story.STATUS.ACTIVE));
-      yield (Story.iSyncUser(STORY1.userId));
+      yield (Story.iSyncAll(STORY1));
     });
 
     it('User can delete his denied story', function*() {
       let {agent} = yield (user1Promise);
       yield (agent.put(`${COLLECTION_URL}/${STORY_DENIED1.id}/status/delete`)
-	.expect(200)
-	.expect(res => {
-	  let story = res.body;
-	  story.status.should.be.eq(Story.STATUS.DELETED);
-	}));
+        .expect(200)
+        .expect(res => {
+          let story = res.body;
+          story.status.should.be.eq(Story.STATUS.DELETED);
+        }));
       yield (returnStatus(STORY_DENIED1.id, Story.STATUS.DENIED));
     });
   });
 
 
   describe('ADMIN', () => {
-    it('Admin cannot delete foreign active story', function* () {
+    it('Admin cannot delete foreign active story', function*() {
       let {agent} = yield (adminPromise);
       yield (agent.put(`${COLLECTION_URL}/${STORY1.id}/status/delete`)
-	.expect(403));
+        .expect(403));
     });
 
-    it('Admin can delete his active story', function* () {
+    it('Admin can delete his active story', function*() {
       const NEW_ADMIN_STORY = {
-	id: '1a4000000000000000010010',
-	type: 'article',
-	title: "New admin story for test",
-	content: STORY1.content,
-	userId: admin.id
+        id: '1a4000000000000000010010',
+        type: 'article',
+        title: "New admin story for test",
+        content: STORY1.content,
+        userId: admin.id
       };
       yield (Story.create(NEW_ADMIN_STORY));
       let {agent} = yield (adminPromise);
       yield (agent.put(`${COLLECTION_URL}/${NEW_ADMIN_STORY.id}/status/delete`)
-	.expect(200)
-	.expect(res => {
-	  let story = res.body;
-	  story.status.should.be.eq(Story.STATUS.DELETED);
-	}));
+        .expect(200)
+        .expect(res => {
+          let story = res.body;
+          story.status.should.be.eq(Story.STATUS.DELETED);
+        }));
       yield (Story.iDeleteById(NEW_ADMIN_STORY.id));
     });
 
-    it('Admin can delete denied story', function* () {
+    it('Admin can delete denied story', function*() {
       let {agent} = yield (adminPromise);
       yield (agent.put(`${COLLECTION_URL}/${STORY_DENIED1.id}/status/delete`)
-	.expect(200)
-	.expect((res) => {
-	  let story = res.body;
-	  story.status.should.be.eq(Story.STATUS.DELETED);
-	}));
-       yield (returnStatus(STORY_DENIED1.id, Story.STATUS.DENIED));
+        .expect(200)
+        .expect((res) => {
+          let story = res.body;
+          story.status.should.be.eq(Story.STATUS.DELETED);
+        }));
+      yield (returnStatus(STORY_DENIED1.id, Story.STATUS.DENIED));
     });
   });
 });

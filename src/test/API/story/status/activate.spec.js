@@ -50,6 +50,6 @@ describe(`/${COLLECTION_URL}/:id/status/activate`, function () {
     let user = yield (User.findByIdRequired(user1.id));
     user.storiesNumber.should.eq(storiesNumberBefore + 1);
     yield (returnStatus(STORY_DENIED1.id, Story.STATUS.DENIED));
-    yield (Story.iSyncUser(STORY1.userId));
+    yield (Story.iSyncAll(STORY1));
   });
 });
