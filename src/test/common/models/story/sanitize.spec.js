@@ -28,5 +28,7 @@ describe(`models/story/@sanitize`, function () {
       })
   });
 
-  after(()=> Story.iDeleteById(NEW_STORY.id));
+  after(function*() {
+    yield (Story.iDeleteById(NEW_STORY.id));
+  });
 });

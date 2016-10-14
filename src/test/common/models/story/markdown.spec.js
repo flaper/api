@@ -38,5 +38,7 @@ describe(`models/story/@markdown`, function () {
       })
   });
 
-  after(()=> Story.iDeleteById(NEW_STORY.id));
+  after(function*() {
+    yield (Story.iDeleteById(NEW_STORY.id));
+  });
 });
