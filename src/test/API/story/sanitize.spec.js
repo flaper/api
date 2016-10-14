@@ -11,7 +11,7 @@ const COLLECTION_URL = 'stories';
 describe(`/${COLLECTION_URL}/@sanitize`, function () {
   updateTimeouts(this);
   const NEW_STORY = {
-    id: '1a4000000000000000010001',
+    id: '1a4000000000000000010061',
     type: 'article',
     title: "New story <em>for test",
     content: "Nice <b>content</b> for test"

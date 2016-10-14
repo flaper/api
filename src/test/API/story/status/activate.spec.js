@@ -38,23 +38,18 @@ describe(`/${COLLECTION_URL}/:id/status/activate`, function () {
     })
   });
 
-  it('Admin can activate denied story', () => {
-    let storiesNumberBefore;
-    return User.findByIdRequired(user1.id)
-      .then(user => storiesNumberBefore = user.storiesNumber)
-      .then(() => {
-        return adminPromise.then(({agent}) => {
-          return agent.put(`${COLLECTION_URL}/${STORY_DENIED1.id}/status/activate`)
-            .expect(200)
-            .expect((res) => {
-              let story = res.body;
-              story.status.should.be.eq(Story.STATUS.ACTIVE);
-            })
-        })
-      })
-      .then(() => User.findByIdRequired(user1.id))
-      .then(user => user.storiesNumber.should.eq(storiesNumberBefore + 1))
-      .then(() => returnStatus(STORY_DENIED1.id, Story.STATUS.DENIED))
-      .then(() => Story.iSyncUser(STORY1.userId))
+  it('Admin can activate denied story', function*() {
+    let storiesNumberBefore = (yield (User.findByIdRequired(user1.id))).storiesNumber;
+    let {agent} = yield (adminPromise);
+    yield (agent.put(`${COLLECTION_URL}/${STORY_DENIED1.id}/status/activate`)
+      .expect(200)
+      .expect((res) => {
+        let story = res.body;
+        story.status.should.be.eq(Story.STATUS.ACTIVE);
+      }));
+    let user = yield (User.findByIdRequired(user1.id));
+    user.storiesNumber.should.eq(storiesNumberBefore + 1);
+    yield (returnStatus(STORY_DENIED1.id, Story.STATUS.DENIED));
+    yield (Story.iSyncUser(STORY1.userId));
   });
 });

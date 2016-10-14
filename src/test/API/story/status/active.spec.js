@@ -14,7 +14,7 @@ describe(`/${COLLECTION_URL}/:id/status/active`, function () {
   updateTimeouts(this);
   describe('Article', () => {
     const NEW_STORY = {
-      id: '1a4000000000000000010001',
+      id: '1a4000000000000000010031',
       type: 'article',
       title: "New story for test",
       content: STORY1.content,

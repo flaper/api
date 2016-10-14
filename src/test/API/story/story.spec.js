@@ -135,7 +135,7 @@ describe(`/${COLLECTION_URL}`, function () {
     });
 
     const NEW_STORY = {
-      id: '1a4000000000000000010001',
+      id: '1a4000000000000000010041',
       type: 'article',
       title: "New story for test",
       content: STORY1.content.replace('image_holder', `![](${NEW_IMAGE.id})`),
@@ -143,7 +143,7 @@ describe(`/${COLLECTION_URL}`, function () {
       userId: '1a400000000000000001111'
     };
 
-    const WRONG_STORY = _.merge({}, NEW_STORY, {id: '1a4000000000000000010010', type: 'wrong'});
+    const WRONG_STORY = _.merge({}, NEW_STORY, {id: '1a4000000000000000010050', type: 'wrong'});
 
     it('Anonymous - deny to add', function*() {
       yield (api.post(COLLECTION_URL)

@@ -20,7 +20,7 @@ describe(`/${COLLECTION_URL}/@reviews/update`, function () {
 
   describe('POST', () => {
     const NEW_REVIEW = {
-      id: '1a4000000000000000010001',
+      id: '1a4000000000000000010011',
       type: 'review',
       title: "New story for test",
       content: Sanitize.fakerIncreaseAlphaLength("test review", 256),
@@ -30,9 +30,9 @@ describe(`/${COLLECTION_URL}/@reviews/update`, function () {
       userId: '1a400000000000000001111'
     };
 
-    const NEW_REVIEW2 = _.merge({}, NEW_REVIEW, {id: '1a4000000000000000010002', objectId: PLACE1.id});
+    const NEW_REVIEW2 = _.merge({}, NEW_REVIEW, {id: '1a4000000000000000010012', objectId: PLACE1.id});
     const NEW_STORY = _.merge({}, NEW_REVIEW, {
-      id: '1a4000000000000000010003', type: 'article',
+      id: '1a4000000000000000010013', type: 'article',
       content: Sanitize.fakerIncreaseAlphaLength("test story", 1000)
     });
 

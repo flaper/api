@@ -17,11 +17,11 @@ export function initSyncUser(Story) {
       .then(() => count);
   }
 
-  function syncUser(ctx) {
+  function* syncUser(ctx) {
     if (!(ctx.instance && ctx.isNewInstance)) {
-      return Promise.resolve();
+      return;
     }
     //for new story we sync user
-    return Story.iSyncUser(ctx.instance.userId);
+    return yield (Story.iSyncUser(ctx.instance.userId));
   }
 }

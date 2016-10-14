@@ -14,7 +14,7 @@ describe(`/${COLLECTION_URL}/@tags`, function () {
   updateTimeouts(this);
 
   const NEW_STORY = {
-    id: '1a4000000000000000010001',
+    id: '1a4000000000000000010081',
     type: 'article',
     content: STORY1.content,
     title: STORY1.title,

@@ -8,7 +8,7 @@ let Story = app.models.Story;
 
 describe(`models/story/@markdown`, function () {
   const NEW_STORY = {
-    id: '1a4000000000000000010001',
+    id: '1a4000000000000000010101',
     type: 'article',
     title: "New story for test",
     content: "# Header\n" +

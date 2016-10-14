@@ -14,7 +14,7 @@ describe(`${COLLECTION_URL}/@audit`, function () {
   updateTimeouts(this);
 
   const NEW_STORY = {
-    id: '1a4000000000000000010001',
+    id: '1a4000000000000000010021',
     type: 'article',
     title: "New story for test",
     content: STORY1.content
@@ -103,5 +103,5 @@ describe(`${COLLECTION_URL}/@audit`, function () {
   });
 
 
-  after(function*() { yield ([Story.iDeleteById(NEW_STORY.id)]); })
+  after(function*() { yield Story.iDeleteById(NEW_STORY.id); })
 });
