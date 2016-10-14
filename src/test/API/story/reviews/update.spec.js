@@ -29,9 +29,9 @@ describe(`/${COLLECTION_URL}/@reviews/update`, function () {
       // this userId should be ignored
       userId: '1a400000000000000001111'
     };
-    
+
     const NEW_REVIEW2 = _.merge({}, NEW_REVIEW, {id: '1a4000000000000000010002', objectId: PLACE1.id});
-    const NEW_STORY = _.merge({}, NEW_REVIEW, {id: '1a4000000000000000010003', type: 'article', 
+    const NEW_STORY = _.merge({}, NEW_REVIEW, {id: '1a4000000000000000010003', type: 'article',
       content: Sanitize.fakerIncreaseAlphaLength("test story", 1000)});
 
     it('User - deny to add to short review', function*() {
@@ -92,7 +92,7 @@ describe(`/${COLLECTION_URL}/@reviews/update`, function () {
         .expect(400));
     });
 
-    after(function*() { 
+    after(function*() {
       let ids = [NEW_REVIEW.id, NEW_REVIEW2.id, NEW_STORY.id];
       yield (ids.map(id=>Story.iDeleteById(id)));
     });

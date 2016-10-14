@@ -22,28 +22,26 @@ describe(`/${COLLECTION_URL}/:id/status/active`, function () {
       status: Story.STATUS.DELETED
     };
 
-    it('Add - always active status', () => {
-      return user1Promise.then(({agent}) => {
-        return agent.post(COLLECTION_URL)
-          .send(NEW_STORY)
-          .expect(200)
-          .expect((res) => {
-            let story = res.body;
-            story.status.should.be.eq(Story.STATUS.ACTIVE);
-          })
-      })
+    it('Add - always active status', function*() {
+      let {agent} = yield (user1Promise);
+      yield (agent.post(COLLECTION_URL)
+        .send(NEW_STORY)
+        .expect(200)
+        .expect((res) => {
+          let story = res.body;
+          story.status.should.be.eq(Story.STATUS.ACTIVE);
+        }));
     });
 
-    it('Admin - ignore direct status update', () => {
-      return adminPromise.then(({agent}) => {
-        return agent.put(`${COLLECTION_URL}/${NEW_STORY.id}`)
-          .send({status: Story.STATUS.DENIED})
-          .expect(200)
-          .expect((res) => {
-            let story = res.body;
-            story.status.should.be.eq(Story.STATUS.ACTIVE);
-          })
-      })
+    it('Admin - ignore direct status update', function*() {
+      let {agent} = yield (adminPromise);
+      yield (agent.put(`${COLLECTION_URL}/${NEW_STORY.id}`)
+        .send({status: Story.STATUS.DENIED})
+        .expect(200)
+        .expect((res) => {
+          let story = res.body;
+          story.status.should.be.eq(Story.STATUS.ACTIVE);
+        }));
     });
 
     after(()=> Story.iDeleteById(NEW_STORY.id));

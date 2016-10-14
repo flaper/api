@@ -72,6 +72,7 @@ module.exports = (Story) => {
     viewsRecent: {},
     lastActive: {newDefault: (data) => data.created},
     commentsNumber: {newDefault: 0},
+    auditsNumber: {newDefault: 0},
     flapId: {},
     images: {newDefault: []},
     answer: {}, // официальный ответ, только для объектов

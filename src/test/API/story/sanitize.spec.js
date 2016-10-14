@@ -2,7 +2,6 @@ import {user1, user1Promise} from '../../helpers/api';
 import {updateTimeouts} from '../timeout';
 import app from '../../helpers/app';
 let should = require('chai').should();
-import STORIES from  '../../fixtures/story';
 import {Sanitize} from '@flaper/markdown';
 
 let Story = app.models.Story;

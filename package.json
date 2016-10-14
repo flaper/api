@@ -1,6 +1,6 @@
 {
   "name": "FlaperAPI",
-  "version": "0.6.5",
+  "version": "0.6.6",
   "main": "dist/server/server.js",
   "scripts": {
     "prestart": "rm -fR dist && rsync -av --exclude test src/* dist  && ./node_modules/.bin/babel src --out-dir dist --ignore test/*",
@@ -12,7 +12,7 @@
     "t": "jshint src/. && NODE_ENV=test mocha src/test --opts src/test/mocha.opts",
     "pretest": "jshint src/. && (NODE_ENV=test npm run fixtures & (npm run test-server-stop && npm run test-server) && wait)",
     "test-server-stop": "NODE_ENV=test node_modules/.bin/babel-node src/server/stop.js",
-    "test-server": "NODE_ENV=test DEBUG=loopback:*,strong-remoting:*,-loopback:connector:* node src/server/server.js >src/test/out/app.out 2>src/test/out/app.err &"
+    "test-server": "NODE_ENV=test DEBUG=loopback:*,strong-remoting:*,-loopback:connector:* node src/server/server.js >out/test.out 2>out/test.err &"
   },
   "license": "MIT",
   "dependencies": {
