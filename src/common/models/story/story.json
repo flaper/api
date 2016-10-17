@@ -171,6 +171,22 @@
       "status": 1,
       "created": -1,
       "likes": -1
+    },
+    "object_index": {
+      "objectId": 1,
+      "status": 1,
+      "created": -1
+    },
+    "domain_region_index": {
+      "domain": 1,
+      "region": 1,
+      "status": 1,
+      "created": -1
+    },
+    "domain_index": {
+      "domain": 1,
+      "status": 1,
+      "created": -1
     }
   }
 }

@@ -9,7 +9,7 @@ let Story = app.models.Story;
 
 describe(`models/story/@sanitize`, function () {
   const NEW_STORY = {
-    id: '1a4000000000000000010001',
+    id: '1a4000000000000000010111',
     type: 'article',
     title: "Title 'with' \"quotes\" <a>inside tag</a>",
     content: "# Header\n" +
@@ -28,5 +28,7 @@ describe(`models/story/@sanitize`, function () {
       })
   });
 
-  after(()=> Story.iDeleteById(NEW_STORY.id));
+  after(function*() {
+    yield (Story.iDeleteById(NEW_STORY.id));
+  });
 });

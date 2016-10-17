@@ -27,20 +27,26 @@ export function enableAudit(Model, options) {
       return Promise.resolve();
     let id = ctx.instance.id;
     let type = Model.sharedClass.name;
-    co.wrap(saveDiff)();
+    saveDiff();
     return Promise.resolve();
 
-    function *saveDiff() {
-      let {Audit} = Model.app.models;
-      let count = yield (Audit.count({subjectId: id}));
-      if (!count) {
-        Audit.create({
-          subjectId: id, userId: ctx.hookState.audit.userId, type, fields: oldData,
-          created: ctx.instance.created
-        });
-      }
-      let userId = ctx.hookState.currentUserId;
-      Audit.create({subjectId: id, userId, type, fields: diff, created: new Date()});
+    function saveDiff() {
+      return co(function*() {
+        let {Audit} = Model.app.models;
+        let count = yield (Audit.count({subjectId: id}));
+        var promises = [];
+        if (!count) {
+          promises.push(Audit.create({
+            subjectId: id, userId: ctx.hookState.audit.userId, type, fields: oldData,
+            created: ctx.instance.created
+          }));
+        }
+        let userId = ctx.hookState.currentUserId;
+        promises.push(Audit.create({subjectId: id, userId, type, fields: diff, created: new Date()}));
+        yield promises;
+        let newCount = yield Audit.count({subjectId: id});
+        yield (Model.updateAll({id: id}, {auditsNumber: newCount}, {skipIgnore: {auditsNumber: true}}));
+      });
     }
   }
 

@@ -12,21 +12,21 @@ describe(`Sluggable/Story`, function () {
   const SLUG1 = 'для-теста-slug';
   const TITLE1 = 'Для теста slug';
   const NEW_DENIED_STORY = {
-    id: '1a4000000000000000010001',
+    id: '1a4000000000000000020001',
     type: 'article',
     title: TITLE1,
     content: STORY1.content,
     status: Story.STATUS.DENIED
   };
   const NEW_ACTIVE_STORY1 = {
-    id: '1a4000000000000000010002',
+    id: '1a4000000000000000020002',
     type: 'article',
     title: TITLE1,
     content: STORY1.content,
     status: Story.STATUS.ACTIVE
   };
   const NEW_ACTIVE_STORY2 = {
-    id: '1a4000000000000000010003',
+    id: '1a4000000000000000020003',
     type: 'article',
     title: TITLE1,
     content: STORY1.content,
@@ -34,7 +34,7 @@ describe(`Sluggable/Story`, function () {
   };
 
   const NEW_ACTIVE_STORY3 = {
-    id: '1a4000000000000000010004',
+    id: '1a4000000000000000020004',
     type: 'article',
     title: TITLE1,
     content: STORY1.content,
@@ -42,7 +42,7 @@ describe(`Sluggable/Story`, function () {
   };
 
   const NEW_ACTIVE_STORY4 = {
-    id: '1a4000000000000000010005',
+    id: '1a4000000000000000020005',
     type: 'article',
     title: TITLE1,
     content: STORY1.content,
@@ -50,7 +50,7 @@ describe(`Sluggable/Story`, function () {
   };
 
   const NEW_ACTIVE_STORY5 = {
-    id: '1a4000000000000000010006',
+    id: '1a4000000000000000020006',
     type: 'article',
     title: TITLE1,
     content: STORY1.content,
@@ -58,7 +58,7 @@ describe(`Sluggable/Story`, function () {
   };
 
   const NEW_ACTIVE_STORY10 = {
-    id: '1a4000000000000000010010',
+    id: '1a4000000000000000020010',
     type: 'article',
     title: 'Идеи для   творчества.',
     content: STORY1.content,
@@ -66,7 +66,7 @@ describe(`Sluggable/Story`, function () {
   };
 
   const START_WITH_TILDA = {
-    id: '1a7000000000000000010011',
+    id: '1a7000000000000000020011',
     type: 'article',
     title: '  -хорошее--имя--',
     content: STORY1.content,
@@ -74,7 +74,7 @@ describe(`Sluggable/Story`, function () {
   };
 
   const START_WITH_TILDA2 = {
-    id: '1a7000000000000000010012',
+    id: '1a7000000000000000020012',
     type: 'article',
     title: '--',
     content: STORY1.content,
@@ -82,7 +82,7 @@ describe(`Sluggable/Story`, function () {
   };
 
   const SHORT_SLUG = {
-    id: '1a7000000000000000010013',
+    id: '1a7000000000000000020013',
     type: 'article',
     title: 'ab',
     content: STORY1.content,
@@ -90,7 +90,7 @@ describe(`Sluggable/Story`, function () {
   };
 
   const TITLE_EQ_ID = {
-    id: '1a7000000000000000010014',
+    id: '1a7000000000000000020014',
     type: 'article',
     title: '568223c429f1cff2027d8d4e',
     content: STORY1.content,

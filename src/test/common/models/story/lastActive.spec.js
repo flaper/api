@@ -5,7 +5,7 @@ let Story = app.models.Story;
 
 describe(`models/story/@lastActive`, function () {
   const NEW_STORY = {
-    id: '1a4000000000000000010001',
+    id: '1a4000000000000000010091',
     type: 'article',
     title: "New story for test",
     content: STORIES.test1.content
@@ -19,5 +19,7 @@ describe(`models/story/@lastActive`, function () {
       })
   });
 
-  after(()=> Story.iDeleteById(NEW_STORY.id));
+  after(function*() {
+    yield (Story.iDeleteById(NEW_STORY.id));
+  });
 });

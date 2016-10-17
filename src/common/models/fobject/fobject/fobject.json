@@ -24,6 +24,14 @@
     "mainDomain": {
       "type": "string",
       "required": true
+    },
+    "rating": {
+      "type": "number",
+      "default": 0
+    },
+    "reviewsNumber": {
+      "type": "number",
+      "default": 0
     }
   },
   "hidden": [

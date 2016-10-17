@@ -14,13 +14,13 @@ describe(`${COLLECTION_URL}/@audit`, function () {
   updateTimeouts(this);
 
   const NEW_STORY = {
-    id: '1a4000000000000000010001',
+    id: '1a4000000000000000010021',
     type: 'article',
     title: "New story for test",
     content: STORY1.content
   };
 
-  before(function* () {
+  before(function*() {
     yield Audit.deleteAll({subjectId: NEW_STORY.id});
   });
 
@@ -31,6 +31,8 @@ describe(`${COLLECTION_URL}/@audit`, function () {
       .expect(200));
     let audits = yield (Audit.find({where: {subjectId: NEW_STORY.id}}));
     audits.length.should.eq(0);
+    let story = yield (Story.findById(NEW_STORY.id));
+    story.auditsNumber.should.eq(0);
   });
 
   it('User - update should create 2 audits', function*() {
@@ -50,6 +52,14 @@ describe(`${COLLECTION_URL}/@audit`, function () {
     Object.keys(change).length.should.eq(1);
     should.exist(change.title);
     change.title.should.eq(newTitle);
+    let delay = 0;
+    // audits are async so we will wait
+    while (delay < 1000 && story.auditsNumber !== 2) {
+      story = yield (Story.findById(NEW_STORY.id));
+      delay += 50;
+      yield (wait(50));
+    }
+    story.auditsNumber.should.eq(2);
   });
 
   it('User - second update should create 1 audit', function*() {
@@ -61,6 +71,15 @@ describe(`${COLLECTION_URL}/@audit`, function () {
     // yield wait(100);
     let audits = yield (Audit.find({where: {subjectId: NEW_STORY.id}}));
     audits.length.should.eq(3);
+    let story = yield (Story.findById(NEW_STORY.id));
+    let delay = 0;
+    // audits are async so we will wait
+    while (delay < 1000 && story.auditsNumber !== 3) {
+      story = yield (Story.findById(NEW_STORY.id));
+      delay += 50;
+      yield wait(50);
+    }
+    story.auditsNumber.should.eq(3);
   });
 
   it('Story audit method should return 3 changes', function*() {
@@ -84,7 +103,5 @@ describe(`${COLLECTION_URL}/@audit`, function () {
   });
 
 
-  after(function*() {
-    yield ([Story.iDeleteById(NEW_STORY.id)]);
-  })
+  after(function*() { yield Story.iDeleteById(NEW_STORY.id); })
 });

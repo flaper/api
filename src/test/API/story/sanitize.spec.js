@@ -2,17 +2,17 @@ import {user1, user1Promise} from '../../helpers/api';
 import {updateTimeouts} from '../timeout';
 import app from '../../helpers/app';
 let should = require('chai').should();
-import STORIES from  '../../fixtures/story';
 import {Sanitize} from '@flaper/markdown';
+import co from 'co';
 
-let Story = app.models.Story;
+let {Story} = app.models;
 
 const COLLECTION_URL = 'stories';
 //can be out for API test folder
 describe(`/${COLLECTION_URL}/@sanitize`, function () {
   updateTimeouts(this);
   const NEW_STORY = {
-    id: '1a4000000000000000010001',
+    id: '1a4000000000000000010061',
     type: 'article',
     title: "New story <em>for test",
     content: "Nice <b>content</b> for test"
@@ -62,5 +62,7 @@ describe(`/${COLLECTION_URL}/@sanitize`, function () {
     })
   });
 
-  after(()=> Story.iDeleteById(NEW_STORY.id));
+  after(function*() {
+    yield (Story.iDeleteById(NEW_STORY.id));
+  });
 });

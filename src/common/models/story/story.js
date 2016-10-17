@@ -7,10 +7,13 @@ import {initStatusActions} from './status/status';
 import {initGet} from './get/get.js';
 import {initAuditRest} from './get/audit.js';
 import {enableAudit} from '../../behaviors/auditable.js';
-import {initSyncUser} from './methods/syncUser';
+import {initSyncUser} from './methods/syncUser.js';
+import {initSyncObject} from './methods/syncObject.js';
+import {initSyncAll} from './methods/syncAll.js';
 import {initDelete} from './methods/internalDelete';
 import {ERRORS} from '../../utils/errors';
 import _ from 'lodash';
+import co from 'co';
 
 module.exports = (Story) => {
   Story.commonInit(Story);
@@ -68,10 +71,13 @@ module.exports = (Story) => {
     contentHTML: {},
     shortInline: {},
     shortText: {},
+    domain: {},
+    region: {},
     views: {},
     viewsRecent: {},
     lastActive: {newDefault: (data) => data.created},
     commentsNumber: {newDefault: 0},
+    auditsNumber: {newDefault: 0},
     flapId: {},
     images: {newDefault: []},
     answer: {}, // официальный ответ, только для объектов
@@ -86,6 +92,8 @@ module.exports = (Story) => {
   Story.observe('after save', afterSaveObserver);
 
   initSyncUser(Story);
+  initSyncObject(Story);
+  initSyncAll(Story);
   initStatusActions(Story);
   initGet(Story);
   initAuditRest(Story);
@@ -153,7 +161,10 @@ module.exports = (Story) => {
       if (ctx.instance.type !== Story.TYPE.REVIEW)
         return;
       verifyRating(ctx.instance.rating);
-      yield (verifyFObject(ctx.instance.objectId));
+      let obj = yield verifyFObject(ctx.instance.objectId);
+      ctx.instance.domain = [obj.mainDomain];
+      if (obj.region)
+        ctx.instance.region = obj.region;
       return;
     }
 
@@ -174,13 +185,16 @@ module.exports = (Story) => {
       throw ERRORS.badRequest('Invalid rating');
   }
 
-  function* verifyFObject(objectId) {
-    if (!objectId)
-      throw ERRORS.badRequest('Invalid objectId');
-    let FObject = Story.app.models.FObject;
-    let obj = yield (FObject.findById(objectId));
-    if (!obj)
-      throw ERRORS.badRequest(`Object with id ${objectId} does not exists`);
+  function verifyFObject(objectId) {
+    return co(function*() {
+      if (!objectId)
+        throw ERRORS.badRequest('Invalid objectId');
+      let FObject = Story.app.models.FObject;
+      let obj = yield FObject.findById(objectId);
+      if (!obj)
+        throw ERRORS.badRequest(`Object with id ${objectId} does not exists`);
+      return obj;
+    });
   }
 
   function * articleObserver(ctx) {

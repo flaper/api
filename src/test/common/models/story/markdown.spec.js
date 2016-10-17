@@ -8,7 +8,7 @@ let Story = app.models.Story;
 
 describe(`models/story/@markdown`, function () {
   const NEW_STORY = {
-    id: '1a4000000000000000010001',
+    id: '1a4000000000000000010101',
     type: 'article',
     title: "New story for test",
     content: "# Header\n" +
@@ -38,5 +38,7 @@ describe(`models/story/@markdown`, function () {
       })
   });
 
-  after(()=> Story.iDeleteById(NEW_STORY.id));
+  after(function*() {
+    yield (Story.iDeleteById(NEW_STORY.id));
+  });
 });

@@ -135,7 +135,7 @@ describe(`/${COLLECTION_URL}`, function () {
     });
 
     const NEW_STORY = {
-      id: '1a4000000000000000010001',
+      id: '1a4000000000000000010041',
       type: 'article',
       title: "New story for test",
       content: STORY1.content.replace('image_holder', `![](${NEW_IMAGE.id})`),
@@ -143,26 +143,25 @@ describe(`/${COLLECTION_URL}`, function () {
       userId: '1a400000000000000001111'
     };
 
-    const WRONG_STORY = _.merge({}, NEW_STORY, {id: '1a4000000000000000010010', type: 'wrong'});
+    const WRONG_STORY = _.merge({}, NEW_STORY, {id: '1a4000000000000000010050', type: 'wrong'});
 
     it('Anonymous - deny to add', function*() {
-      yield (api.post(COLLECTION_URL)
+      yield api.post(COLLECTION_URL)
         .send(NEW_STORY)
-        .expect(401));
+        .expect(401);
     });
 
     it('User - error to create with wrong type', function*() {
-      let {agent} = yield (user1Promise);
-      yield (agent.post(COLLECTION_URL)
+      let {agent} = yield user1Promise;
+      yield agent.post(COLLECTION_URL)
         .send(WRONG_STORY)
-        .expect(400));
+        .expect(400);
     });
 
     it('User - allow to add', function*() {
-      let user = yield (User.findByIdRequired(user1.id));
-      let storiesNumberBefore = user.storiesNumber;
-      let {agent} = yield (user1Promise);
-      yield (agent.post(COLLECTION_URL)
+      let oldUser = yield User.findByIdRequired(user1.id);
+      let {agent} = yield user1Promise;
+      yield agent.post(COLLECTION_URL)
         .send(NEW_STORY)
         .expect(200)
         .expect((res) => {
@@ -171,12 +170,13 @@ describe(`/${COLLECTION_URL}`, function () {
           Story.STATUS.ACTIVE.should.equal(story.status);
           story.images.length.should.eq(2);
           story.images[0].should.eq(`${NEW_IMAGE.id}`);
-        }));
-      user = yield (User.findByIdRequired(user1.id));
-      user.storiesNumber.should.eq(storiesNumberBefore + 1);
-      let account = yield (Account.getAccountById(user1.id));
+          should.not.exist(story.domain);
+        });
+      let user = yield User.findByIdRequired(user1.id);
+      user.storiesNumber.should.eq(oldUser.storiesNumber + 1);
+      let account = yield Account.getAccountById(user1.id);
       account.should.eq(moneyBefore + 1);
-      let image = yield (Image.findByIdRequired(NEW_IMAGE.id));
+      let image = yield Image.findByIdRequired(NEW_IMAGE.id);
       image.type.should.eq('Story');
       image.objectId.toString().should.eq(NEW_STORY.id);
     });
