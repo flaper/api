@@ -17,14 +17,14 @@ module.exports = (app) => {
   });
 
   app.get('/feed', (req,res) => {
-    let {region, mainDomain,type} = req.query,
+    let {region, mainDomain,format} = req.query,
         filter = {where:{type:'review',status:'active'}, limit:100};
     if (region) filter.where.region = region;
     if (mainDomain) filter.where.mainDomain = mainDomain;
     Story.find(filter)
     .then(
       result =>   {
-        if (type === "rss") {
+        if (format === "rss") {
           result.forEach(item => {
             let {title,contentHTML,rating,created,id,userId} = item;
                 // author = User.findById(userId);
