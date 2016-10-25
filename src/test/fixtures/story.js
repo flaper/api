@@ -106,12 +106,48 @@ let stories = {
   },
   denied_review1: {
     "type": 'review',
-    "id": "1a4000000000000000002010",
+    "id": "1a4000000000000000002004",
     "status": Story.STATUS.DENIED,
     "userId": "1a1000000000000000001001",
     "title": "Отклоненный отзыв",
     "content": "Отклоненный отзыв для объекта 1",
     "rating": 8,
+    "objectId": '1a7000000000000000001001'
+  },
+  with_location1 : {
+    "type": 'review',
+    "id": "1a4000000000000000002005",
+    "status": Story.STATUS.ACTIVE,
+    "userId": "1a1000000000000000001001",
+    "title": "Отзыв из оренбурга",
+    "region": "оренбург",
+    "mainDomain": "еда",
+    "content": "Отзыв про еду из оренбурга",
+    "rating": 8,
+    "objectId": '1a7000000000000000001001'
+  },
+  with_location2 : {
+    "type": 'review',
+    "id": "1a4000000000000000002006",
+    "status": Story.STATUS.ACTIVE,
+    "userId": "1a1000000000000000001002",
+    "title": "Отзыв из краснодара",
+    "region": "краснодар",
+    "mainDomain": "еда",
+    "content": "Отзыв про еду из краснодара",
+    "rating": 4,
+    "objectId": '1a7000000000000000001001'
+  },
+  with_location3 : {
+    "type": 'review',
+    "id": "1a4000000000000000002007",
+    "status": Story.STATUS.ACTIVE,
+    "userId": "1a1000000000000000001003",
+    "title": "Отзыв из краснодара",
+    "region": "краснодар",
+    "mainDomain": "развлечения",
+    "content": "Отзыв про развлечения из краснодара",
+    "rating": 1,
     "objectId": '1a7000000000000000001001'
   }
 };

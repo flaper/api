@@ -20,7 +20,7 @@ module.exports = (app) => {
     let {region, mainDomain,type} = req.query,
         filter = {where:{type:'review',status:'active'}, limit:100};
     if (region) filter.where.region = region;
-    if (mainDomain) filter.where.region = mainDomain;
+    if (mainDomain) filter.where.mainDomain = mainDomain;
     Story.find(filter)
     .then(
       result =>   {
@@ -31,6 +31,7 @@ module.exports = (app) => {
             feed.item({
                 title:  title,
                 description: contentHTML,
+                guid: id,
                 url: `http://flaper.org/s/${id}`, // link to the item
                 categories: ['review'], // optional - array of item categories
                 date: created, // any format that js Date can parse.
