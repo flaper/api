@@ -28,10 +28,11 @@ module.exports = (app) => {
           result.forEach(item => {
             let {title,contentHTML,rating,created,id,userId} = item;
                 // author = User.findById(userId);
+            if(feed.xml().indexOf(id.toString()) === -1)
             feed.item({
                 title:  title,
                 description: contentHTML,
-                guid: id,
+                guid: id.toString(),
                 url: `http://flaper.org/s/${id}`, // link to the item
                 categories: ['review'], // optional - array of item categories
                 date: created, // any format that js Date can parse.
@@ -39,9 +40,8 @@ module.exports = (app) => {
                   {'rating': rating}
                 ]
             });
-
-            res.send(feed.xml());
           })
+          res.send(feed.xml());
         }
         else {
           res.send(result)
