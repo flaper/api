@@ -18,7 +18,7 @@ let expect = require('chai').expect;
 let Story = app.models.Story;
 let api = supertest(API_URL);
 
-describe.only(`/${COLLECTION_URL}`, function () {
+describe(`/${COLLECTION_URL}`, function () {
   updateTimeouts(this);
 
   describe('getting the feed', () => {
