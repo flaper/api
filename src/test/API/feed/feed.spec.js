@@ -32,7 +32,9 @@ describe(`/${COLLECTION_URL}`, function () {
         .expect(200)
         .expect(res => {
           let stories = res.body;
-          expect(stories[1].created).to.be.at.most(stories[0].created);
+          for (let i = 0; i < stories.length -1 ;i ++) {
+            expect(stories[i + 1].created).to.be.at.most(stories[i].created);
+          }
         });
     })
 
