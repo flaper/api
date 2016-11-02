@@ -1,0 +1,32 @@
+{
+  "name": "Feed",
+  "base": "CommonModel",
+  "plural": "Feed",
+  "idInjection": false,
+  "strict": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+
+  },
+  "hidden": {
+    "id": true
+  },
+  "validations": [],
+  "relations": {
+
+  },
+  "acls": [
+    {
+      "accessType": "READ",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW"
+    }
+  ],
+  "methods": {
+  },
+  "indexes": {
+  }
+}
