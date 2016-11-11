@@ -11,7 +11,7 @@ module.exports = (Feed) => {
 
   let rssfeed = new RSS({
       title: 'Flap feed',
-      description: 'latest stories from flap',
+      description: 'latest reviews from flap',
       feed_url: 'http://api.flaper.org/feed',
       site_url: 'http://flaper.org',
       image_url: 'http://flaper.org/favicon.ico',
@@ -56,7 +56,6 @@ module.exports = (Feed) => {
     }
   );
   function formatFeed(feed,format) {
-    console.log(feed);
     switch (format.trim().toLowerCase()) {
       case "rss":
           let cache = rssfeed.xml();
@@ -89,7 +88,7 @@ module.exports = (Feed) => {
         };
     format = format ? FORMATS.indexOf(format) !== -1 ? format : "json" : "json";
     if (domain)
-      filter.where.domain = [domain];
+      filter.where.domain = {inq:domain};
     if (region)
       filter.where.region = region;
     if (type)

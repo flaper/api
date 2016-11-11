@@ -1,6 +1,7 @@
 import {api, user1, user1Promise, user2, user2Promise, adminPromise} from '../../helpers/api';
 import {updateTimeouts} from '../timeout';
 import app from '../../helpers/app';
+import POLLS from  "../../fixtures/poll";
 let should = require('chai').should();
 let expect = require('chai').expect;
 let Poll = app.models.Poll;
@@ -13,12 +14,12 @@ const NEW_POLL = {
     {text:"ответ 1"},
   ]
 };
-describe.only(`/${COLLECTION_URL}`, function() {
+describe(`/${COLLECTION_URL}`, function() {
   updateTimeouts(this);
 
   describe('READ', () => {
     it('Anonymous should be able to get polls', function*(){
-      let count = yield Poll.count({});
+      let count = yield Poll.count({status:Poll.STATUS.ACTIVE});
       return api.get(COLLECTION_URL)
       .expect(200)
       .expect(res => {
@@ -29,7 +30,7 @@ describe.only(`/${COLLECTION_URL}`, function() {
 
     it('User should be able to get polls', function*() {
       let {agent} = yield user1Promise;
-      let count = yield Poll.count({});
+      let count = yield Poll.count({status:Poll.STATUS.ACTIVE});
       return agent.get(COLLECTION_URL)
       .expect(200)
       .expect(res => {
@@ -39,8 +40,7 @@ describe.only(`/${COLLECTION_URL}`, function() {
     })
 
     it('Should check for existance', function*() {
-      let created = yield Poll.create(NEW_POLL);
-      let existentId = NEW_POLL.id,
+      let existentId = POLLS.pollActive.id,
           nonExistentId="randomid";
       yield api.get(`${COLLECTION_URL}/${existentId}/exists`)
       .expect(200)

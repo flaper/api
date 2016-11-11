@@ -71,7 +71,7 @@ const POLLS = {
     ]
   },
 }
-describe.only(`/${COLLECTION_URL}`, function() {
+describe(`/${COLLECTION_URL}`, function() {
   updateTimeouts(this);
 
   describe('CREATE', () => {
@@ -82,13 +82,12 @@ describe.only(`/${COLLECTION_URL}`, function() {
 
     it('User should be able to create poll', function*() {
       let {agent} = yield user1Promise;
-      let poll = POLLS.pollActive;
       yield agent.post(COLLECTION_URL)
       .send(POLLS.newPoll)
       .expect(200)
       .expect(res => {
         let data =res.body;
-        expect(data.status).to.be.equal()
+        expect(data.status).to.be.equal(Poll.STATUS.ACTIVE);
       });
     })
 
@@ -97,7 +96,7 @@ describe.only(`/${COLLECTION_URL}`, function() {
       let poll = POLLS.pollActive;
       yield agent.post(COLLECTION_URL)
       .send(POLLS.wrongTypePoll)
-      .expect(500)
+      .expect(400)
     })
 
     it('Poll should have at least 2 answers', function*() {
@@ -105,7 +104,7 @@ describe.only(`/${COLLECTION_URL}`, function() {
       let poll = POLLS.pollActive;
       yield agent.post(COLLECTION_URL)
       .send(POLLS.pollWith1Answer)
-      .expect(500);
+      .expect(400);
       yield agent.post(COLLECTION_URL)
       .send(POLLS.pollWith2Answers)
       .expect(200);
@@ -119,13 +118,13 @@ describe.only(`/${COLLECTION_URL}`, function() {
       let poll = POLLS.pollActive;
       yield agent.post(COLLECTION_URL)
       .send(POLLS.questionWith1Answer)
-      .expect(500);
+      .expect(400);
       yield agent.post(COLLECTION_URL)
       .send(POLLS.questionWith2Answers)
       .expect(200);
       yield agent.post(COLLECTION_URL)
       .send(POLLS.questionWith3Answers)
-      .expect(500);
+      .expect(400);
     })
 
   })

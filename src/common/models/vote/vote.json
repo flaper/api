@@ -1,0 +1,58 @@
+{
+	"name": "Vote",
+	"base": "CommonModel",
+	"options": {
+		"validateUpsert": true
+	},
+	"properties": {
+		"value": {
+			"type": "string",
+			"default": "active",
+			"required": true
+		}
+	},
+	"relations": {
+		"user": {
+			"type": "belongsTo",
+			"model": "user"
+		},
+		"poll": {
+			"type": "belongsTo",
+			"model": "Poll"
+		}
+	},
+	"acls": [{
+		"principalType": "ROLE",
+		"principalId": "$everyone",
+		"permission": "DENY"
+	}, {
+		"accessType": "READ",
+		"principalType": "ROLE",
+		"principalId": "$everyone",
+		"permission": "ALLOW"
+	}, {
+		"principalType": "ROLE",
+		"principalId": "$authenticated",
+		"permission": "ALLOW",
+		"property": [
+			"create",
+			"actionCreate",
+			"actionDelete"
+		]
+	}, {
+		"accessType": "WRITE",
+		"principalType": "ROLE",
+		"principalId": "$owner",
+		"permission": "ALLOW"
+	}, {
+		"accessType": "WRITE",
+		"principalType": "ROLE",
+		"principalId": "admin",
+		"permission": "ALLOW"
+	}, {
+		"principalType": "ROLE",
+		"principalId": "$owner",
+		"permission": "ALLOW",
+		"property": "actionDelete"
+	}]
+}

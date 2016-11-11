@@ -37,12 +37,7 @@
     },
     "answers": [
       {
-        "text" : {
           "type": "string"
-        },
-        "count" : {
-          "type": "number"
-        }
       }
     ],
     "tags": [
@@ -75,8 +70,7 @@
     {
       "principalType": "ROLE",
       "principalId": "$authenticated",
-      "permission": "ALLOW",
-      "property": "create"
+      "permission": "ALLOW"
     },
     {
       "accessType": "WRITE",
@@ -88,13 +82,13 @@
       "accessType": "WRITE",
       "principalType": "ROLE",
       "principalId": "admin",
-      "permission": "ALLOW"
+      "permission": "ALLOW",
+      "property" : "update"
     },
     {
       "principalType": "ROLE",
       "principalId": "$owner",
-      "permission": "ALLOW",
-      "property": "actionDelete"
+      "permission": "ALLOW"
     },
     {
       "principalType": "ROLE",

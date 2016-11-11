@@ -16,6 +16,7 @@
       "../common/models/fobject/manage-request",
       "../common/models/like",
       "../common/models/poll",
+      "../common/models/vote",
       "../common/models/feed",
       "../common/models/money/transaction",
       "../common/models/money/account",
@@ -99,6 +100,10 @@
     "public": true
   },
   "Poll": {
+    "dataSource": "mongo",
+    "public": true
+  },
+  "Vote": {
     "dataSource": "mongo",
     "public": true
   },

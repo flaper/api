@@ -13,18 +13,8 @@ let polls = {
       "responseNumber": 0,
       "lastActive": 1450616334311,
       "answers": [
-        {
-          "text": "Первый ответ",
-          "count": 0
-        },
-        {
-          "text": "Второй ответ",
-          "count": 0
-        },
-        {
-          "text": "Третий ответ",
-          "count": 0
-        }
+        "ответ",
+        "ответ 2"
       ],
       "created": 1450616334311,
       "updated": 1450616334311
@@ -40,18 +30,8 @@ let polls = {
       "responseNumber": 0,
       "lastActive": 1450616334311,
       "answers": [
-        {
-          "text": "Первый ответ",
-          "count": 0
-        },
-        {
-          "text": "Второй ответ",
-          "count": 0
-        },
-        {
-          "text": "Третий ответ",
-          "count": 0
-        }
+        "ответ",
+        "ответ 2"
       ],
       "created": 1450616334311,
       "updated": 1450616334311
@@ -67,18 +47,8 @@ let polls = {
       "responseNumber": 0,
       "lastActive": 1450616334311,
       "answers": [
-        {
-          "text": "Первый ответ",
-          "count": 0
-        },
-        {
-          "text": "Второй ответ",
-          "count": 0
-        },
-        {
-          "text": "Третий ответ",
-          "count": 0
-        }
+        "ответ",
+        "ответ 2"
       ],
       "created": 1450616334311,
       "updated": 1450616334311
@@ -94,18 +64,8 @@ let polls = {
       "responseNumber": 0,
       "lastActive": 1450616334311,
       "answers": [
-        {
-          "text": "Первый ответ",
-          "count": 0
-        },
-        {
-          "text": "Второй ответ",
-          "count": 0
-        },
-        {
-          "text": "Третий ответ",
-          "count": 0
-        }
+        "ответ",
+        "ответ 2"
       ],
       "created": 1450616334311,
       "updated": 1450616334311
@@ -121,18 +81,8 @@ let polls = {
       "responseNumber": 0,
       "lastActive": 1450616334311,
       "answers": [
-        {
-          "text": "Первый ответ",
-          "count": 0
-        },
-        {
-          "text": "Второй ответ",
-          "count": 0
-        },
-        {
-          "text": "Третий ответ",
-          "count": 0
-        }
+        "ответ",
+        "ответ 2"
       ],
       "created": 1450616334311,
       "updated": 1450616334311
@@ -148,18 +98,8 @@ let polls = {
       "responseNumber": 0,
       "lastActive": 1450616334311,
       "answers": [
-        {
-          "text": "Первый ответ",
-          "count": 0
-        },
-        {
-          "text": "Второй ответ",
-          "count": 0
-        },
-        {
-          "text": "Третий ответ",
-          "count": 0
-        }
+        "ответ",
+        "ответ 2"
       ],
       "created": 1450616334311,
       "updated": 1450616334311
@@ -175,18 +115,8 @@ let polls = {
       "responseNumber": 0,
       "lastActive": 1450616334311,
       "answers": [
-        {
-          "text": "Первый ответ",
-          "count": 0
-        },
-        {
-          "text": "Второй ответ",
-          "count": 0
-        },
-        {
-          "text": "Третий ответ",
-          "count": 0
-        }
+        "ответ",
+        "ответ 2"
       ],
       "created": 1450616334311,
       "updated": 1450616334311
@@ -202,18 +132,8 @@ let polls = {
       "responseNumber": 0,
       "lastActive": 1450616334311,
       "answers": [
-        {
-          "text": "Первый ответ",
-          "count": 0
-        },
-        {
-          "text": "Второй ответ",
-          "count": 0
-        },
-        {
-          "text": "Третий ответ",
-          "count": 0
-        }
+        "ответ",
+        "ответ 2"
       ],
       "created": 1450616334311,
       "updated": 1450616334311
@@ -229,18 +149,7 @@ let polls = {
       "responseNumber": 0,
       "lastActive": 1450616334311,
       "answers": [
-        {
-          "text": "Первый ответ",
-          "count": 0
-        },
-        {
-          "text": "Второй ответ",
-          "count": 0
-        },
-        {
-          "text": "Третий ответ",
-          "count": 0
-        }
+        "1a1000000000000000001001"
       ],
       "created": 1450616334311,
       "updated": 1450616334311
@@ -256,18 +165,6 @@ let polls = {
       "responseNumber": 0,
       "lastActive": 1450616334311,
       "answers": [
-        {
-          "text": "Первый ответ",
-          "count": 0
-        },
-        {
-          "text": "Второй ответ",
-          "count": 0
-        },
-        {
-          "text": "Третий ответ",
-          "count": 0
-        }
       ],
       "created": 1450616334311,
       "updated": 1450616334311
@@ -283,18 +180,6 @@ let polls = {
       "responseNumber": 0,
       "lastActive": 1450616334311,
       "answers": [
-        {
-          "text": "Первый ответ",
-          "count": 0
-        },
-        {
-          "text": "Второй ответ",
-          "count": 0
-        },
-        {
-          "text": "Третий ответ",
-          "count": 0
-        }
       ],
       "created": 1450616334311,
       "updated": 1450616334311
@@ -310,18 +195,6 @@ let polls = {
       "responseNumber": 0,
       "lastActive": 1450616334311,
       "answers": [
-        {
-          "text": "Первый ответ",
-          "count": 0
-        },
-        {
-          "text": "Второй ответ",
-          "count": 0
-        },
-        {
-          "text": "Третий ответ",
-          "count": 0
-        }
       ],
       "created": 1450616334311,
       "updated": 1450616334311
