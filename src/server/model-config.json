@@ -24,7 +24,8 @@
       "../common/models/subscription",
       "../common/models/supportMessage",
       "../common/models/view/view",
-      "../common/models/view/view-history"
+      "../common/models/view/view-history",
+      "../common/rest/search"
     ],
     "mixins": [
       "loopback/common/mixins",
@@ -146,6 +147,10 @@
     "public": true
   },
   "SupportMessage": {
+    "dataSource": "mongo",
+    "public": true
+  },
+  "Search": {
     "dataSource": "mongo",
     "public": true
   }

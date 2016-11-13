@@ -1,0 +1,21 @@
+{
+  "name": "Search",
+  "base": "Model",
+  "plural": "Search",
+  "idInjection": false,
+  "validations": [],
+  "relations": {
+  },
+  "acls": [
+    {
+      "accessType": "READ",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW"
+    }
+  ],
+  "methods": {
+  },
+  "indexes": {
+  }
+}
