@@ -140,7 +140,7 @@ const POLLS = {
     ]
   }
 }
-describe.only(`/${COLLECTION_URL}`, function() {
+describe(`/${COLLECTION_URL}`, function() {
   updateTimeouts(this);
 
   describe('CREATE', () => {

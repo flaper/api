@@ -23,12 +23,10 @@
       "required": true
     },
     "openDate": {
-      "type": "date",
-      "required": true
+      "type": "date"
     },
     "closeDate": {
-      "type": "date",
-      "required": true
+      "type": "date"
     },
     "responseNumber" : {
       "type": "number"

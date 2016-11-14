@@ -39,10 +39,11 @@ export function initCandidates(Poll) {
   });
 
   function* createCandidate(targetId) {
-    let poll = yield Poll.findOne({id:targetId}),
+    let poll = yield Poll.findByIdRequired(targetId),
         userId = App.getCurrentUserId();
     if (!poll) throw ERRORS.notFound(`Poll does not exist`);
     if (!poll.answers) poll.answers = [];
+    console.log(poll.answers.indexOf(userId));
     if (poll.answers.indexOf(userId) !== -1) throw ERRORS.badRequest(`Candidate already registered`)
     poll.answers.push(userId);
     yield poll.save({});
