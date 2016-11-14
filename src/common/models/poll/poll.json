@@ -19,7 +19,16 @@
       "required": true
     },
     "title": {
-      "type": "string"
+      "type": "string",
+      "required": true
+    },
+    "openDate": {
+      "type": "date",
+      "required": true
+    },
+    "closeDate": {
+      "type": "date",
+      "required": true
     },
     "responseNumber" : {
       "type": "number"

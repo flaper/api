@@ -39,6 +39,8 @@ module.exports = (Poll) => {
     // answers: {newDefault: []},
   }));
   Poll.observe('before save', typeObserver);
+  Poll.observe('before save', titleObserver);
+  Poll.observe('before save', dateObserver);
   Poll.observe('before save', answerObserver);
 
   initGet(Poll);
@@ -64,6 +66,27 @@ module.exports = (Poll) => {
       }
     }
   }
+  function* titleObserver(ctx) {
+    if (ctx.instance && ctx.instance.title) {
+      let title = ctx.instance.title;
+      if (title.replace(" ","").length <= 11) {
+          throw ERRORS.badRequest(`Title is too short (min 10 characters)`);
+      }
+      if (title.replace(" ","").length >= 128) {
+          throw ERRORS.badRequest(`Title is too long (max 128 characters)`);
+      }
+    }
+  }
+  function* dateObserver(ctx) {
+    if (ctx.instance && ctx.instance.openDate && ctx.instance.closeDate) {
+      let openDate = ctx.instance.openDate,
+          closeDate = ctx.instance.closeDate;
+      if (openDate >= closeDate) {
+        throw ERRORS.badRequest(`Close date must be after the open date`);
+      }
+    }
+  }
+
   function* typeObserver(ctx) {
     if (ctx.isNewInstance) {
       let type = ctx.instance.type;

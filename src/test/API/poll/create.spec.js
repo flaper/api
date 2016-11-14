@@ -8,70 +8,139 @@ const COLLECTION_URL = "Polls";
 const POLLS = {
   newPoll : {
     type: "poll",
-    id: "1a4000000000000000020061",
+    title: "Новый заголовок",
+    openDate: new Date(2016,10,1),
+    closeDate: new Date(2016,10,2),
     answers: [
-      {text:"ответ 1"},
-      {text:"ответ 1"},
+      "ответ 1",
+      "ответ 1",
     ]
   },
   wrongTypePoll: {
     type: "shamballa",
-    id: "1a4000000000000000020062",
+    title: "Новый заголовок",
+    openDate: new Date(2016,10,1),
+    closeDate: new Date(2016,10,2),
     answers: [
-      {text:"ответ 1"},
-      {text:"ответ 1"},
+      "ответ 1",
+      "ответ 1",
     ]
   },
   questionWith1Answer : {
     type: "question",
-    id: "1a4000000000000000020063",
+    title: "Новый заголовок",
+    openDate: new Date(2016,10,1),
+    closeDate: new Date(2016,10,2),
     answers: [
-      {text:"ответ 1"},
+      "ответ 1",
     ]
   },
   questionWith2Answers : {
     type: "question",
-    id: "1a4000000000000000020064",
+    title: "Новый заголовок",
+    openDate: new Date(2016,10,1),
+    closeDate: new Date(2016,10,2),
     answers: [
-      {text:"ответ 1"},
-      {text:"ответ 1"},
+      "ответ 1",
+      "ответ 1",
     ]
   },
   questionWith3Answers : {
     type: "question",
-    id: "1a4000000000000000020065",
+    title: "Новый заголовок",
+    openDate: new Date(2016,10,1),
+    closeDate: new Date(2016,10,2),
     answers: [
-      {text:"ответ 1"},
-      {text:"ответ 1"},
-      {text:"ответ 1"},
+      "ответ 1",
+      "ответ 1",
+      "ответ 1",
     ]
   },
   pollWith1Answer : {
     type: "poll",
-    id: "1a4000000000000000020066",
+    title: "Новый заголовок",
+    openDate: new Date(2016,10,1),
+    closeDate: new Date(2016,10,2),
     answers: [
-      {text:"ответ 1"},
+      "ответ 1",
     ]
   },
   pollWith2Answers : {
     type: "poll",
-    id: "1a4000000000000000020067",
+    title: "Новый заголовок",
+    openDate: new Date(2016,10,1),
+    closeDate: new Date(2016,10,2),
     answers: [
-      {text:"ответ 1"},
-      {text:"ответ 1"},
+      "ответ 1",
+      "ответ 1",
     ]
   },
   pollWith3Answers : {
     type: "poll",
-    id: "1a4000000000000000020068",
+      title: "Новый заголовок",
+    openDate: new Date(2016,10,1),
+    closeDate: new Date(2016,10,2),
     answers: [
-      {text:"ответ 1"},
-      {text:"ответ 1"},
-      {text:"ответ 1"},
+      "ответ 1",
+      "ответ 1",
+      "ответ 1",
     ]
   },
+  withoutTitle : {
+    type: "poll",
+    title: "",
+    openDate: new Date(2016,10,1),
+    closeDate: new Date(2016,10,2),
+    answers : [
+      "ответ 1",
+      "ответ 2"
+    ]
+  },
+  withShortTitle: {
+    type: "poll",
+    title: "Title",
+    openDate: new Date(2016,10,1),
+    closeDate: new Date(2016,10,2),
+    answers : [
+      "ответ 1",
+      "ответ 2"
+    ]
+  },
+  withLongTitle: {
+    type: "poll",
+    title: `Title Title Title Title Title Title Title Title Title Title Title Title
+    Title Title Title Title Title Title Title Title Title Title`,
+    openDate: new Date(2016,10,1),
+    closeDate: new Date(2016,10,2),
+    answers : [
+      "ответ 1",
+      "ответ 2"
+    ]
+  },
+  withoutDates: {
+    type: "poll",
+    title: "Новый заголовок",
+    openDate: null,
+    closeDate: null,
+    answers: [
+      "ответ 1",
+      "ответ 1",
+      "ответ 1",
+    ]
+  },
+  withWrongDates: {
+    type: "poll",
+    title: "Новый заголовок",
+    openDate: new Date(2016,10,2),
+    closeDate: new Date(2016,10,1),
+    answers: [
+      "ответ 1",
+      "ответ 1",
+      "ответ 1",
+    ]
+  }
 }
-describe(`/${COLLECTION_URL}`, function() {
+describe.only(`/${COLLECTION_URL}`, function() {
   updateTimeouts(this);
 
   describe('CREATE', () => {
@@ -79,6 +148,41 @@ describe(`/${COLLECTION_URL}`, function() {
       return api.post(COLLECTION_URL)
       .expect(401);
     });
+
+    it('Can not create poll without title', function*() {
+      let {agent} = yield user1Promise;
+      yield agent.post(COLLECTION_URL)
+      .send(POLLS.withoutTitle)
+      .expect(422);
+    })
+
+    it('Can not create poll with title under 10 chars', function*() {
+      let {agent} = yield user1Promise;
+      yield agent.post(COLLECTION_URL)
+      .send(POLLS.withShortTitle)
+      .expect(400);
+    })
+
+    it('Can not create poll with title over 128 chars', function*() {
+      let {agent} = yield user1Promise;
+      yield agent.post(COLLECTION_URL)
+      .send(POLLS.withLongTitle)
+      .expect(400);
+    })
+
+    it('Can not create poll without open and close dates', function*() {
+      let {agent} = yield user1Promise;
+      yield agent.post(COLLECTION_URL)
+      .send(POLLS.withoutDates)
+      .expect(422);
+    })
+
+    it('Can not create poll with wrong open and close dates', function*() {
+      let {agent} = yield user1Promise;
+      yield agent.post(COLLECTION_URL)
+      .send(POLLS.withWrongDates)
+      .expect(400)
+    })
 
     it('User should be able to create poll', function*() {
       let {agent} = yield user1Promise;
