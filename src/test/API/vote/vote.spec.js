@@ -30,17 +30,27 @@ describe(`/${COLLECTION_URL}`, function() {
     });
   });
   describe('CREATE/DELETE', () => {
+    before(function*() {
+      let Vote = app.models.Vote;
+      yield Vote.create({
+        userId:user1.id,
+        targetId:POLLS.voteActive.id,
+        answer:"1a1000000000000000001001"
+      });
+    })
+
     it("Anonymous cant vote", function*(){
       let id = POLLS.voteActive.id;
       yield api.post(`${COLLECTION_URL}/${id}`)
       .send({answer:"ответ"})
       .expect(401);
     })
+
     it("Users can vote", function*(){
-      let id = POLLS.pollActive.id,
+      let id = POLLS.voteActive.id,
           {agent} = yield user1Promise;
       yield agent.post(`${COLLECTION_URL}/${id}`)
-      .send({answer:"ответ"})
+      .send({answer:"1a1000000000000000001001"})
       .expect(200);
     })
 

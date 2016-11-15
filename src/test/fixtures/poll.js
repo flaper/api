@@ -12,8 +12,8 @@ let polls = {
     "commentsNumber": 0,
     "responseNumber": 0,
     "lastActive": 1450616334311,
-    "openDate": 1450616334311,
-    "closeDate": 1450626334311,
+    "openDate": new Date().getTime(),
+    "closeDate": new Date(2020,11,30).getTime(),
     "answers": [
       "ответ",
       "ответ 2"
@@ -164,8 +164,8 @@ let polls = {
     "commentsNumber": 0,
     "responseNumber": 0,
     "lastActive": 1450616334311,
-    "openDate": 1450616334311,
-    "closeDate": 1450626334311,
+    "openDate": new Date().getTime(),
+    "closeDate": new Date(2020,11,30).getTime(),
     "answers": [
       "1a1000000000000000001001"
     ],

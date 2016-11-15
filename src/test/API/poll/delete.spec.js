@@ -30,7 +30,7 @@ describe(`/${COLLECTION_URL}`, function() {
 
     it('Users should not be able to remove foreign poll',function*(){
       let id = POLLS.pollActive.id,
-          {agent} = yield user1Promise;
+          {agent} = yield user2Promise;
       yield agent.put(`${COLLECTION_URL}/${id}/status/delete`)
       .expect(403);
     })

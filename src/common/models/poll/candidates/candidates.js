@@ -45,6 +45,7 @@ export function initCandidates(Poll) {
     if (!poll) throw ERRORS.notFound(`Poll does not exist`);
     if (!poll.answers) poll.answers = [];
     if (poll.answers.indexOf(user.id) !== -1) throw ERRORS.badRequest(`Candidate already registered`);
+    console.log(poll);
     if (poll.status !== Poll.STATUS.ACTIVE) throw ERRORS.badRequest(`You can not be added to inactive poll`);
     if (poll.closeDate < now) throw ERRORS.badRequest(`You can not be added to closed Poll`);
     if (user.storiesNumber < 10) throw ERRORS.badRequest(`You need at least 10 reviews to join as candidate`);

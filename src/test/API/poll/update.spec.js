@@ -32,7 +32,7 @@ describe(`/${COLLECTION_URL}`, function() {
     })
 
     it('Users should be able to add his candidancy to election',function*() {
-      let id = POLLS.pollActive.id,
+      let id = POLLS.voteActive.id,
           {agent} = yield user1Promise;
       yield agent.post(`${COLLECTION_URL}/${id}/candidate`)
       .expect(200);
