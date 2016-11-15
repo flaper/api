@@ -40,12 +40,16 @@ export function initCandidates(Poll) {
 
   function* createCandidate(targetId) {
     let poll = yield Poll.findByIdRequired(targetId),
-        userId = App.getCurrentUserId();
+        user = yield App.getCurrentUser(),
+        now = new Date();
     if (!poll) throw ERRORS.notFound(`Poll does not exist`);
     if (!poll.answers) poll.answers = [];
-    console.log(poll.answers.indexOf(userId));
-    if (poll.answers.indexOf(userId) !== -1) throw ERRORS.badRequest(`Candidate already registered`)
-    poll.answers.push(userId);
+    if (poll.answers.indexOf(user.id) !== -1) throw ERRORS.badRequest(`Candidate already registered`);
+    if (poll.status !== POLL.STATUS.ACTIVE) throw ERRORS.badRequest(`You can not be added to inactive poll`);
+    if (poll.closeDate < now) throw ERRORS.badRequest(`You can not be added to closed Poll`);
+    if (user.storiesNumber < 10) throw ERRORS.badRequest(`You need at least 10 reviews to join as candidate`);
+    if (user.id === undefined) throw ERRORS.badRequest(`Can not add undefined as option`);
+    poll.answers.push(user.id);
     yield poll.save({});
     return poll;
   }
