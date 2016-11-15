@@ -2,7 +2,6 @@ import RSS from "rss";
 import _ from 'lodash';
 
 module.exports = (Feed) => {
-  const ALLOWED_MODELS = ['Story'];
   const MAX_FEED_LENGTH = 100;
   const FORMATS = ['rss','json'];
   Feed.commonInit(Feed);
@@ -34,7 +33,7 @@ module.exports = (Feed) => {
         {
           arg: 'domain',
           type: 'string',
-          description: 'mainDomain name for object related to reviews'
+          description: 'domain name for object related to reviews'
         },
         {
           arg: 'region',
@@ -56,7 +55,6 @@ module.exports = (Feed) => {
     }
   );
   function formatFeed(feed,format) {
-    console.log(feed);
     switch (format.trim().toLowerCase()) {
       case "rss":
           let cache = rssfeed.xml();
@@ -74,7 +72,7 @@ module.exports = (Feed) => {
                   {'rating': rating}
                 ]
             });
-          })
+          });
         return rssfeed.xml();
       default:
         return feed;
