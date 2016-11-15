@@ -11,11 +11,12 @@ let Story = app.models.Story;
 describe(`/${COLLECTION_URL}`, function () {
   updateTimeouts(this);
 
-  describe('getting the feed', () => {
+  describe('GET', () => {
 
     it('Anonymous should be able to get the feed', function* () {
-      let query = {type:"review",status:"active"},
-          count = yield Story.count(query);
+      let query = {},
+          countQuery = {status:'active'},
+          count = yield Story.count(countQuery);
       return api.get(COLLECTION_URL)
         .query(query)
         .expect(200)
@@ -24,9 +25,11 @@ describe(`/${COLLECTION_URL}`, function () {
           expect(stories.length).to.be.equal(count);
         });
     });
+
     it('Stories should be sorted by creation date', function* () {
-      let query = {type:"review",status:"active"},
-          count = yield Story.count(query);
+      let query = {},
+          countQuery = {status:'active'},
+          count = yield Story.count(countQuery);
       return api.get(COLLECTION_URL)
         .query(query)
         .expect(200)
@@ -39,8 +42,9 @@ describe(`/${COLLECTION_URL}`, function () {
     })
 
     it('user should be able to get reviews from selected location', function*(){
-      let query = {region:"оренбург",type:"review",status:"active"},
-          count = yield Story.count(query);
+      let query = {region:"оренбург"},
+          countQuery = {status:'active',region:query.region},
+          count = yield Story.count(countQuery);
       return api.get(COLLECTION_URL)
       .query(query)
       .expect(res => {
@@ -50,8 +54,9 @@ describe(`/${COLLECTION_URL}`, function () {
     })
 
     it('user should be able to get reviews from selected domain', function*(){
-      let query = {mainDomain:"еда",type:"review",status:"active",domain:"еда"},
-          count = yield Story.count(query);
+      let query = {domain:"еда"},
+          countQuery = {status:'active',mainDomain:"еда"},
+          count = yield Story.count(countQuery);
       return api.get(COLLECTION_URL)
       .query(query)
       .expect(res => {

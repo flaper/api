@@ -87,8 +87,10 @@ module.exports = (Feed) => {
           where: {}
         };
     format = format ? FORMATS.indexOf(format) !== -1 ? format : "json" : "json";
-    if (domain)
-      filter.where.domain = {inq:domain};
+
+    if (domain) {
+      filter.where.mainDomain = domain;
+    }
     if (region)
       filter.where.region = region;
     if (type)
