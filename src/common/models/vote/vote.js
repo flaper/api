@@ -65,21 +65,25 @@ module.exports = (Vote) => {
   );
   function* actionCreate(targetId, answer) {
     let Poll = Vote.app.models.Poll;
-    let userId = App.getCurrentUserId(),
+    let user = yield App.getCurrentUser(),
+        userId = user.id,
         poll = yield Poll.findByIdRequired(targetId),
-        vote = yield Vote.findOne({targetId,userId});
+        vote = yield Vote.findOne({where:{targetId,userId}});
     if(!poll) {
       throw ERRORS.notFound(`Poll does not exist`);
     }
     if (!poll.answers || !poll.answers.some(option => option ===  answer )) {
       throw ERRORS.notFound(`No such answer in this poll`);
     }
+    if (user.storiesNumber < 5) {
+      throw ERRORS.badRequest(`You can not vote unless you have 5 stories`);
+    }
     return yield Vote.create({targetId,answer,userId});
   }
   function* actionDelete(targetId) {
     let Poll = Vote.app.models.Poll;
     let userId = App.getCurrentUserId(),
-        vote = yield Vote.findOne({targetId,userId}),
+        vote = yield Vote.findOne({where:{targetId,userId}}),
         poll = yield Poll.findByIdRequired(targetId);
     if(!poll) {
       throw ERRORS.notFound(`Poll does not exist`);
@@ -91,27 +95,33 @@ module.exports = (Vote) => {
   }
   function* actionExists(targetId) {
     let userId = App.getCurrentUserId(),
-        vote = yield Vote.findOne({targetId,userId});
+        vote = yield Vote.findOne({where:{targetId,userId}});
     return vote ? yield {voted:true} : yield {voted:false};
   }
   function* actionResults(targetId) {
     let Poll = Vote.app.models.Poll;
-    let results = yield Vote.find({targetId}),
-        poll = yield Poll.findOne({id:targetId});
+    let results = yield Vote.find({where:{targetId}}),
+        poll = yield Poll.findByIdRequired(targetId);
     if(!poll) {
       throw ERRORS.notFound(`Poll does not exist`);
     }
-    let answers = poll.answers.map(answer => answer.text),
-        output = answers.map(answer => results.filter(result => result.text === answer));
-    return yield output;
+    let answers = poll.answers,
+        output = {};
+        answers.forEach(answer => output[answer] = results.filter(result => result.answer === answer)
+        );
+    return output;
   }
 
   function* pollObserver(ctx) {
     if (ctx && ctx.instance) {
-      let Poll = Vote.app.models.Poll;
-      let poll = yield Poll.findByIdRequired(ctx.instance.targetId);
+      let Poll = Vote.app.models.Poll,
+          poll = yield Poll.findByIdRequired(ctx.instance.targetId),
+          now = new Date();
       let answer = ctx.instance.answer;
       if (!poll) throw ERRORS.notFound(`Poll does not exist`);
+      if (poll.openDate > now) throw ERRORS.badRequest(`You can not vote on poll that has not started yet`);
+      if (poll.closeDate < now) throw ERRORS.badRequest(`You can not vote on closed poll`);
+      if (poll.status === Poll.STATUS.CLOSED) throw ERRORS.badRequest(`You can not vote on closed poll`);
       if (poll.answers.indexOf(answer) === -1) throw ERRORS.notFound(`No such option in this poll`);
     }
   }
