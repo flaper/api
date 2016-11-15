@@ -25,8 +25,7 @@ describe(`/${COLLECTION_URL}`, function () {
         });
     });
     it('Stories should be sorted by creation date', function* () {
-      let query = {type:"review",status:"active"},
-          count = yield Story.count(query);
+      let query = {type:"review",status:"active"};
       return api.get(COLLECTION_URL)
         .query(query)
         .expect(200)
@@ -36,7 +35,7 @@ describe(`/${COLLECTION_URL}`, function () {
             expect(stories[i + 1].created).to.be.at.most(stories[i].created);
           }
         });
-    })
+    });
 
     it('user should be able to get reviews from selected location', function*(){
       let query = {region:"оренбург",type:"review",status:"active"},
@@ -47,7 +46,7 @@ describe(`/${COLLECTION_URL}`, function () {
         let stories = res.body;
         expect(stories.length).to.be.equal(count);
       });
-    })
+    });
 
     it('user should be able to get reviews from selected domain', function*(){
       let query = {mainDomain:"еда",type:"review",status:"active",domain:"еда"},

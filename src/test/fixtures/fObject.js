@@ -54,13 +54,14 @@ let fobjects = {
   obj3: {
     "id": "1a7000000000000000001003",
     "title": "Тестовый объект3",
+    "region": 'краснодар',
     "mainDomain": FObject.DOMAINS.PLACES,
     "created": 1450616334311,
     "updated": 1450616334311
   },
   obj_without_region: {
     "id": "1a7000000000000000001004",
-    "title": "Тестовый объект3",
+    "title": "Тестовый объект4",
     "mainDomain": FObject.DOMAINS.PLACES,
     "created": 1450616334311,
     "updated": 1450616334311

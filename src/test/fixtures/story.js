@@ -120,11 +120,9 @@ let stories = {
     "status": Story.STATUS.ACTIVE,
     "userId": "1a1000000000000000001001",
     "title": "Отзыв из оренбурга",
-    "region": "оренбург",
-    "mainDomain": "еда",
     "content": "Отзыв про еду из оренбурга",
     "rating": 8,
-    "objectId": '1a7000000000000000001001'
+    "objectId": '1a7000000000000000001002'
   },
   with_location2 : {
     "type": 'review',
@@ -132,11 +130,9 @@ let stories = {
     "status": Story.STATUS.ACTIVE,
     "userId": "1a1000000000000000001002",
     "title": "Отзыв из краснодара",
-    "region": "краснодар",
-    "mainDomain": "еда",
     "content": "Отзыв про еду из краснодара",
     "rating": 4,
-    "objectId": '1a7000000000000000001001'
+    "objectId": '1a7000000000000000001003'
   },
   with_location3 : {
     "type": 'review',
@@ -144,11 +140,9 @@ let stories = {
     "status": Story.STATUS.ACTIVE,
     "userId": "1a1000000000000000001003",
     "title": "Отзыв из краснодара",
-    "region": "краснодар",
-    "mainDomain": "развлечения",
     "content": "Отзыв про развлечения из краснодара",
     "rating": 1,
-    "objectId": '1a7000000000000000001001'
+    "objectId": '1a7000000000000000001003'
   }
 };
 
