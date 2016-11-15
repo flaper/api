@@ -1,0 +1,152 @@
+{
+  "name": "Poll",
+  "base": "CommonModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "mixins": {
+    "Likable": {}
+  },
+  "properties": {
+    "status": {
+      "type": "string",
+      "default": "active",
+      "required": true
+    },
+    "type": {
+      "type": "string",
+      "required": true
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "openDate": {
+      "type": "date",
+      "required": true
+    },
+    "closeDate": {
+      "type": "date",
+      "required": true
+    },
+    "responseNumber" : {
+      "type": "number"
+    },
+    "lastActive": {
+      "type": "date"
+    },
+    "commentsNumber": {
+      "type": "number",
+      "default": 0
+    },
+    "views": {
+      "type": "number",
+      "default": 0
+    },
+    "answers": [
+      {
+          "type": "string"
+      }
+    ],
+    "tags": [
+      {
+        "type": "string",
+        "length": 3,
+        "comment": "actually length not working by default"
+      }
+    ]
+  },
+  "validations": [],
+  "relations": {
+    "user": {
+      "type": "belongsTo",
+      "model": "user"
+    }
+  },
+  "acls": [
+    {
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "DENY"
+    },
+    {
+      "accessType": "READ",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW"
+    },
+    {
+      "principalType": "ROLE",
+      "principalId": "$authenticated",
+      "permission": "ALLOW"
+    },
+    {
+      "accessType": "WRITE",
+      "principalType": "ROLE",
+      "principalId": "$owner",
+      "permission": "ALLOW"
+    },
+    {
+      "accessType": "WRITE",
+      "principalType": "ROLE",
+      "principalId": "admin",
+      "permission": "ALLOW",
+      "property" : "update"
+    },
+    {
+      "principalType": "ROLE",
+      "principalId": "$owner",
+      "permission": "ALLOW"
+    },
+    {
+      "principalType": "ROLE",
+      "principalId": "admin",
+      "permission": "ALLOW",
+      "property": [
+        "actionDelete",
+        "actionDeny",
+        "actionActivate"
+      ]
+    }
+  ],
+  "scopes": {
+    "scopePublic": {
+      "where": {
+        "or": [
+          {
+            "status": "active"
+          },
+          {
+            "status": "denied"
+          },
+          {
+            "status": "closed"
+          }
+        ]
+      }
+    },
+    "scopeActive": {
+      "where": {
+        "status": "active"
+      }
+    }
+  },
+  "methods": {},
+  "indexes": {
+    "status_created_index": {
+      "status": 1,
+      "created": -1
+    },
+    "tag_status_created_index": {
+      "tag": 1,
+      "status": 1,
+      "created": -1
+    },
+    "userId_status_created_index": {
+      "userId": 1,
+      "status": 1,
+      "created": -1
+    }
+  }
+}
