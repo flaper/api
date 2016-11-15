@@ -13,7 +13,7 @@ import {OBJECT_PERMISSIONS} from '@flaper/consts';
 import _ from 'lodash';
 
 module.exports = (Comment) => {
-  const ALLOWED_MODELS = ['Story', 'Image'];
+  const ALLOWED_MODELS = ['Story', 'Image', 'Poll'];
   Comment.commonInit(Comment);
   applyIdToType(Comment);
 
