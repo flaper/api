@@ -1,6 +1,6 @@
 import app from '../../server/server';
 
-let Poll = app.models.Poll;
+let {Poll} = app.models;
 let polls = {
   pollActive: {
     "id": "1ac000000000000000000001",
@@ -8,10 +8,6 @@ let polls = {
     "title": "Тестовый опрос",
     "type": Poll.TYPE.POLL,
     "status": Poll.STATUS.ACTIVE,
-    "views": 0,
-    "commentsNumber": 0,
-    "responseNumber": 0,
-    "lastActive": 1450616334311,
     "openDate": new Date().getTime(),
     "closeDate": new Date(2020,11,30).getTime(),
     "answers": [
@@ -27,10 +23,6 @@ let polls = {
     "title": "Тестовый опрос",
     "type": Poll.TYPE.POLL,
     "status": Poll.STATUS.DENIED,
-    "views": 0,
-    "commentsNumber": 0,
-    "responseNumber": 0,
-    "lastActive": 1450616334311,
     "openDate": 1450616334311,
     "closeDate": 1450626334311,
     "answers": [
@@ -46,10 +38,6 @@ let polls = {
     "title": "Тестовый опрос",
     "type": Poll.TYPE.POLL,
     "status": Poll.STATUS.CLOSED,
-    "views": 0,
-    "commentsNumber": 0,
-    "responseNumber": 0,
-    "lastActive": 1450616334311,
     "openDate": 1450616334311,
     "closeDate": 1450626334311,
     "answers": [
@@ -65,10 +53,6 @@ let polls = {
     "title": "Тестовый опрос",
     "type": Poll.TYPE.POLL,
     "status": Poll.STATUS.DELETED,
-    "views": 0,
-    "commentsNumber": 0,
-    "responseNumber": 0,
-    "lastActive": 1450616334311,
     "openDate": 1450616334311,
     "closeDate": 1450626334311,
     "answers": [
@@ -84,10 +68,6 @@ let polls = {
     "title": "Тестовый опрос",
     "type": Poll.TYPE.QUESTION,
     "status": Poll.STATUS.ACTIVE,
-    "views": 0,
-    "commentsNumber": 0,
-    "responseNumber": 0,
-    "lastActive": 1450616334311,
     "openDate": 1450616334311,
     "closeDate": 1450626334311,
     "answers": [
@@ -103,10 +83,6 @@ let polls = {
     "title": "Тестовый опрос",
     "type": Poll.TYPE.QUESTION,
     "status": Poll.STATUS.DENIED,
-    "views": 0,
-    "commentsNumber": 0,
-    "responseNumber": 0,
-    "lastActive": 1450616334311,
     "openDate": 1450616334311,
     "closeDate": 1450626334311,
     "answers": [
@@ -122,10 +98,6 @@ let polls = {
     "title": "Тестовый опрос",
     "type": Poll.TYPE.QUESTION,
     "status": Poll.STATUS.CLOSED,
-    "views": 0,
-    "commentsNumber": 0,
-    "responseNumber": 0,
-    "lastActive": 1450616334311,
     "openDate": 1450616334311,
     "closeDate": 1450626334311,
     "answers": [
@@ -141,10 +113,6 @@ let polls = {
     "title": "Тестовый опрос",
     "type": Poll.TYPE.QUESTION,
     "status": Poll.STATUS.DELETED,
-    "views": 0,
-    "commentsNumber": 0,
-    "responseNumber": 0,
-    "lastActive": 1450616334311,
     "openDate": 1450616334311,
     "closeDate": 1450626334311,
     "answers": [
@@ -160,10 +128,6 @@ let polls = {
     "title": "Тестовый опрос",
     "type": Poll.TYPE.VOTING,
     "status": Poll.STATUS.ACTIVE,
-    "views": 0,
-    "commentsNumber": 0,
-    "responseNumber": 0,
-    "lastActive": 1450616334311,
     "openDate": new Date().getTime(),
     "closeDate": new Date(2020,11,30).getTime(),
     "answers": [
@@ -178,10 +142,6 @@ let polls = {
     "title": "Тестовый опрос",
     "type": Poll.TYPE.VOTING,
     "status": Poll.STATUS.DENIED,
-    "views": 0,
-    "commentsNumber": 0,
-    "responseNumber": 0,
-    "lastActive": 1450616334311,
     "openDate": 1450616334311,
     "closeDate": 1450626334311,
     "answers": [],
@@ -194,10 +154,6 @@ let polls = {
     "title": "Тестовый опрос",
     "type": Poll.TYPE.VOTING,
     "status": Poll.STATUS.CLOSED,
-    "views": 0,
-    "commentsNumber": 0,
-    "responseNumber": 0,
-    "lastActive": 1450616334311,
     "openDate": 1450616334311,
     "closeDate": 1450626334311,
     "answers": [],
@@ -210,10 +166,6 @@ let polls = {
     "title": "Тестовый опрос",
     "type": Poll.TYPE.VOTING,
     "status": Poll.STATUS.DELETED,
-    "views": 0,
-    "commentsNumber": 0,
-    "responseNumber": 0,
-    "lastActive": 1450616334311,
     "openDate": 1450616334311,
     "closeDate": 1450626334311,
     "answers": [],
