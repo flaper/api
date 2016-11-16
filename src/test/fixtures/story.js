@@ -150,9 +150,9 @@ let stories = {
     "status": Story.STATUS.ACTIVE,
     "userId": "1a1000000000000000001001",
     "title": "Отзыв из оренбурга",
-    "content": "Отзыв про еду из оренбурга",
+    "content": "Отзыв про еду из оренбурга1",
     "rating": 8,
-    "objectId": '1a7000000000000000001001'
+    "objectId": '1a7000000000000000001002'
   },
   with_location5 : {
     "type": 'review',
@@ -160,9 +160,9 @@ let stories = {
     "status": Story.STATUS.ACTIVE,
     "userId": "1a1000000000000000001001",
     "title": "Отзыв из оренбурга",
-    "content": "Отзыв про еду из оренбурга",
+    "content": "Отзыв про еду из оренбурга2",
     "rating": 8,
-    "objectId": '1a7000000000000000001001'
+    "objectId": '1a7000000000000000001002'
   },
   with_location6 : {
     "type": 'review',
@@ -170,9 +170,9 @@ let stories = {
     "status": Story.STATUS.ACTIVE,
     "userId": "1a1000000000000000001001",
     "title": "Отзыв из оренбурга",
-    "content": "Отзыв про еду из оренбурга",
+    "content": "Отзыв про еду из оренбурга3",
     "rating": 8,
-    "objectId": '1a7000000000000000001001'
+    "objectId": '1a7000000000000000001002'
   },
   with_location7 : {
     "type": 'review',
@@ -180,9 +180,9 @@ let stories = {
     "status": Story.STATUS.ACTIVE,
     "userId": "1a1000000000000000001001",
     "title": "Отзыв из оренбурга",
-    "content": "Отзыв про еду из оренбурга",
+    "content": "Отзыв про еду из оренбурга4",
     "rating": 8,
-    "objectId": '1a7000000000000000001001'
+    "objectId": '1a7000000000000000001002'
   }
 };
 
