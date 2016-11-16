@@ -150,8 +150,6 @@ let stories = {
     "status": Story.STATUS.ACTIVE,
     "userId": "1a1000000000000000001001",
     "title": "Отзыв из оренбурга",
-    "region": "оренбург",
-    "mainDomain": "еда",
     "content": "Отзыв про еду из оренбурга",
     "rating": 8,
     "objectId": '1a7000000000000000001001'
@@ -162,8 +160,6 @@ let stories = {
     "status": Story.STATUS.ACTIVE,
     "userId": "1a1000000000000000001001",
     "title": "Отзыв из оренбурга",
-    "region": "оренбург",
-    "mainDomain": "еда",
     "content": "Отзыв про еду из оренбурга",
     "rating": 8,
     "objectId": '1a7000000000000000001001'
@@ -174,8 +170,6 @@ let stories = {
     "status": Story.STATUS.ACTIVE,
     "userId": "1a1000000000000000001001",
     "title": "Отзыв из оренбурга",
-    "region": "оренбург",
-    "mainDomain": "еда",
     "content": "Отзыв про еду из оренбурга",
     "rating": 8,
     "objectId": '1a7000000000000000001001'
@@ -186,8 +180,6 @@ let stories = {
     "status": Story.STATUS.ACTIVE,
     "userId": "1a1000000000000000001001",
     "title": "Отзыв из оренбурга",
-    "region": "оренбург",
-    "mainDomain": "еда",
     "content": "Отзыв про еду из оренбурга",
     "rating": 8,
     "objectId": '1a7000000000000000001001'
