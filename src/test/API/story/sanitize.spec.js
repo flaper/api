@@ -1,9 +1,8 @@
-import {user1, user1Promise} from '../../helpers/api';
+import {user1Promise} from '../../helpers/api';
 import {updateTimeouts} from '../timeout';
 import app from '../../helpers/app';
 let should = require('chai').should();
 import {Sanitize} from '@flaper/markdown';
-import co from 'co';
 
 let {Story} = app.models;
 
@@ -63,6 +62,6 @@ describe(`/${COLLECTION_URL}/@sanitize`, function () {
   });
 
   after(function*() {
-    yield (Story.iDeleteById(NEW_STORY.id));
+    yield Story.iDeleteById(NEW_STORY.id);
   });
 });

@@ -81,6 +81,7 @@ module.exports = (Story) => {
     flapId: {},
     images: {newDefault: []},
     answer: {}, // официальный ответ, только для объектов
+    flagCp: {}, // флаг на дополнительную проверку copyright
   }));
   Story.observe('before save', typeObserver);
   Story.observe('before save', SanitizeHelper.observer('title', Sanitize.text));
@@ -124,24 +125,27 @@ module.exports = (Story) => {
   function* contentObserver(ctx) {
     let sanitizeContent = SanitizeHelper.observer('content', Sanitize.html);
 
-    let value = yield (sanitizeContent(ctx));
-    if (!value)
+    let content = yield (sanitizeContent(ctx));
+    if (!content)
       return;
-    ctx.hookState.content = value;
-    let html = FlaperMark.toHTML(value);
-    let shortInline = FlaperMark.shortInline(value);
+    ctx.hookState.content = content;
+    let html = FlaperMark.toHTML(content);
+    let shortInline = FlaperMark.shortInline(content);
     let shortText = Sanitize.text(shortInline);
-    let images = FlaperMark.getImages(value);
+    let images = FlaperMark.getImages(content);
 
     setProperty(ctx, 'contentHTML', html);
     setProperty(ctx, 'shortInline', shortInline);
     setProperty(ctx, 'shortText', shortText);
     setProperty(ctx, 'images', images);
+    if (isFlagCp(content))
+      setProperty(ctx, 'flagCp', true);
   }
 
   function* afterSaveObserver(ctx) {
     let content = ctx.hookState.content;
     if (content) {
+      // если изменяли content
       const Image = Story.app.models.Image;
       let images = FlaperMark.getImages(content);
       Image.updateObject({ids: images, objectId: ctx.instance.id, type: Image.TYPE.STORY});
@@ -165,6 +169,8 @@ module.exports = (Story) => {
       ctx.instance.domain = [obj.mainDomain];
       if (obj.region)
         ctx.instance.region = obj.region;
+      if (obj.mainDomain === 'кино')
+        setProperty(ctx, 'flagCp', true);
       return;
     }
 
@@ -205,5 +211,14 @@ module.exports = (Story) => {
         throw ERRORS.badRequest(`Title is required for article`);
     }
     // update existing instance
+  }
+
+  function isFlagCp(content) {
+    let words = ['кино', 'фильм'];
+    for (let word of words) {
+      if (content.includes(word))
+        return true;
+    }
+    return false;
   }
 };
