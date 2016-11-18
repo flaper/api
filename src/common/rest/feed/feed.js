@@ -79,7 +79,7 @@ module.exports = (Feed) => {
     }
   }
   function* getFeed(domain,region,type,format) {
-    let Story = Feed.app.models.Story,
+    let {Story} = Feed.app.models,
         filter = {
           order: "created DESC",
           limit: MAX_FEED_LENGTH,
@@ -88,7 +88,7 @@ module.exports = (Feed) => {
     format = format ? FORMATS.indexOf(format) !== -1 ? format : "json" : "json";
 
     if (domain) {
-      filter.where.domain = domain;
+      filter.where.domains = domain;
     }
     if (region)
       filter.where.region = region;

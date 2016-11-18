@@ -65,6 +65,11 @@
         "comment": "actually length not working by default"
       }
     ],
+    "domains": [
+      {
+        "type": "string"
+      }
+    ],
     "flapId": {
       "type": "number"
     }
@@ -178,13 +183,13 @@
       "created": -1
     },
     "domain_region_index": {
-      "domain": 1,
+      "domains": 1,
       "region": 1,
       "status": 1,
       "created": -1
     },
     "domain_index": {
-      "domain": 1,
+      "domains": 1,
       "status": 1,
       "created": -1
     }

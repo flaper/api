@@ -27,8 +27,8 @@ describe(`/${COLLECTION_URL}/@reviews/get`, function () {
             review.type.should.eq('review');
             review.status.should.eq('active');
             review.objectId.should.eq(OBJ1.id);
-            review.domain.should.include(OBJ1.mainDomain);
-            // should.not.exist(review.region);
+            review.domains.should.include(OBJ1.mainDomain);
+            should.not.exist(review.region);
           }
         });
     });
@@ -44,7 +44,7 @@ describe(`/${COLLECTION_URL}/@reviews/get`, function () {
             review.type.should.eq('review');
             review.status.should.eq('active');
             review.objectId.should.eq(PLACE1.id);
-            review.domain.should.include(PLACE1.mainDomain);
+            review.domains.should.include(PLACE1.mainDomain);
             review.region.should.eq(PLACE1.region);
           }
         });

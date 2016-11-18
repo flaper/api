@@ -71,7 +71,7 @@ module.exports = (Story) => {
     contentHTML: {},
     shortInline: {},
     shortText: {},
-    domain: {},
+    domains: {},
     region: {},
     views: {},
     viewsRecent: {},
@@ -166,7 +166,7 @@ module.exports = (Story) => {
         return;
       verifyRating(ctx.instance.rating);
       let obj = yield verifyFObject(ctx.instance.objectId);
-      ctx.instance.domain = [obj.mainDomain];
+      ctx.instance.domains = [obj.mainDomain];
       if (obj.region)
         ctx.instance.region = obj.region;
       if (obj.mainDomain === 'кино')

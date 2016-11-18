@@ -37,28 +37,28 @@ describe(`/${COLLECTION_URL}`, function () {
         });
     });
 
-    it('user should be able to get reviews from selected location', function*() {
+    it('Anonymous should be able to get reviews from selected location', function*() {
       let query = {region: "оренбург", type: "review", status: "active"},
         count = yield Story.count(query);
       return api.get(COLLECTION_URL)
-      .query(query)
-      .expect(res => {
-        let stories = res.body;
-        expect(stories.length).to.be.equal(count);
-      });
-  });
+        .query(query)
+        .expect(res => {
+          let stories = res.body;
+          expect(stories.length).to.be.equal(count);
+        });
+    });
 
 
-    it('user should be able to get reviews from selected domain', function*() {
+    it('Аноним получение фида по домену', function*() {
       let query = {type: "review", status: "active", domain: "кино"},
-        count = yield Story.count(query);
+        count = yield Story.count({type: "review", status: "active", domains: 'кино'});
       return api.get(COLLECTION_URL)
 
-      .query(query)
-      .expect(res => {
-        let stories = res.body;
-        expect(stories.length).to.be.equal(count);
-      });
-  })
-});
+        .query(query)
+        .expect(res => {
+          let stories = res.body;
+          expect(stories.length).to.be.equal(count);
+        });
+    })
+  });
 });

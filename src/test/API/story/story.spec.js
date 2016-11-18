@@ -170,7 +170,7 @@ describe(`/${COLLECTION_URL}`, function () {
           Story.STATUS.ACTIVE.should.equal(story.status);
           story.images.length.should.eq(2);
           story.images[0].should.eq(`${NEW_IMAGE.id}`);
-          should.not.exist(story.domain);
+          should.not.exist(story.domains);
         });
       let user = yield User.findByIdRequired(user1.id);
       user.storiesNumber.should.eq(oldUser.storiesNumber + 1);
