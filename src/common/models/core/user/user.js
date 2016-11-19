@@ -10,6 +10,7 @@ import {initSettings} from './settings/settings';
 import {initExtra} from './extra/extra';
 import {initObjects} from './objects/objects';
 import {initSubscriptions} from './subscriptions/subscriptions';
+import {initLevels} from './level/level';
 import {disableAllRemotesExcept, disableRemoteScope} from '../common.js';
 
 module.exports = (User) => {
@@ -23,8 +24,9 @@ module.exports = (User) => {
   disableRemoteScope(User, 'identities', false);
 
   User.observe('before save', ignoreProperties({
-    commentsNumber: {newDefault: 0},
-    likesNumber: {newDefault: 0}
+    storiesNumber: {newDefault: 0},
+    likesNumber: {newDefault: 0},
+    level: {newDefault: 0},
   }));
 
   initIdentities(User);
@@ -34,4 +36,5 @@ module.exports = (User) => {
   initExtra(User);
   initObjects(User);
   initSubscriptions(User);
+  initLevels(User);
 };

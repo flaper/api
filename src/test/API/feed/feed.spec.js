@@ -12,7 +12,6 @@ describe(`/${COLLECTION_URL}`, function () {
   updateTimeouts(this);
 
   describe('GET', () => {
-
     it('Anonymous should be able to get the feed', function*() {
       let query = {type: "review", status: "active"},
         count = yield Story.count(query);
@@ -53,7 +52,6 @@ describe(`/${COLLECTION_URL}`, function () {
       let query = {type: "review", status: "active", domain: "кино"},
         count = yield Story.count({type: "review", status: "active", domains: 'кино'});
       return api.get(COLLECTION_URL)
-
         .query(query)
         .expect(res => {
           let stories = res.body;

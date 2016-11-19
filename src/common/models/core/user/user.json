@@ -24,6 +24,10 @@
       "type": "number",
       "default": 0
     },
+    "level": {
+      "type": "number",
+      "default": 0
+    },
     "created": {
       "type": "date"
     },

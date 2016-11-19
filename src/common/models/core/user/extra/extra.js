@@ -1,5 +1,3 @@
-import {App} from '../../../../services/App.js';
-import {ERRORS} from '../../../../utils/errors.js';
 import _ from 'lodash';
 
 export function initExtra(User) {

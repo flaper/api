@@ -20,6 +20,13 @@
     "password": "test",
     "displayName": "Test User3"
   },
+  "user_without_stories": {
+    "id": "1a1000000000000000001004",
+    "username": "user without stories",
+    "email": "user_without_stories@test.com",
+    "password": "test",
+    "displayName": "User Without Stories"
+  },
   "testAdmin": {
     "id": "1a1000000000000000001010",
     "username": "test-admin",
