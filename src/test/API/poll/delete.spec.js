@@ -16,7 +16,6 @@ describe(`/${COLLECTION_URL}`, function() {
     it('User should be able to remove his candidancy',function*(){
       let id = POLLS.voteActive.id,
           {agent} = yield user1Promise;
-          console.log(id);
       yield agent.delete(`${COLLECTION_URL}/${id}/candidate`)
       .expect(200);
     })
