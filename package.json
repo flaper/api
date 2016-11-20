@@ -1,6 +1,6 @@
 {
   "name": "FlaperAPI",
-  "version": "0.7.4",
+  "version": "0.7.5",
   "main": "dist/server/server.js",
   "scripts": {
     "prestart": "rm -fR dist && rsync -av --exclude test src/* dist  && ./node_modules/.bin/babel src --out-dir dist --ignore test/*",
@@ -28,6 +28,7 @@
     "babel-plugin-transform-es2015-object-super": "^6.1.18",
     "babel-plugin-transform-es2015-parameters": "^6.1.18",
     "co": "^4.6.0",
+    "co-sleep": "0.0.1",
     "compression": "^1.0.3",
     "cookie-parser": "^1.4.3",
     "cors": "^2.5.2",
