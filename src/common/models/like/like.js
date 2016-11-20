@@ -1,13 +1,10 @@
 import {App} from '../../services/App';
-import {ignoreProperties} from '../../behaviors/propertiesHelper'
 import {ERRORS} from '../../utils/errors';
-import {propertiesFilter} from '../../utils/object';
 import {initSyncUser} from './methods/syncUser';
-
-import _ from 'lodash';
+import co from 'co';
 
 module.exports = (Like) => {
-  const ALLOWED_MODELS = ['Story', 'Comment','Image'];
+  const ALLOWED_MODELS = ['Story', 'Comment', 'Image'];
   Like.commonInit(Like);
   Like.disableAllRemotesExcept(Like, ['count', 'find']);
 
@@ -22,14 +19,12 @@ module.exports = (Like) => {
   };
 
   Like.iSyncSubject = (subjectType, id) => {
-    let Model = Like.app.models[subjectType];
-    let count;
-    return Like.count({subjectId: id})
-      .then((c) => {
-        count = c;
-        return Model.updateAll({id: id}, {likesNumber: count}, {skipIgnore: {likesNumber: true}})
-      })
-      .then(() => count);
+    return co(function*() {
+      let Model = Like.app.models[subjectType];
+      let count = yield Like.count({subjectId: id});
+      yield Model.updateAll({id: id}, {likesNumber: count}, {skipIgnore: {likesNumber: true}});
+      return count;
+    });
   };
 
   Like.actionToggle = actionToggle;
@@ -75,32 +70,38 @@ module.exports = (Like) => {
   function* actionToggle(subjectId) {
     //userId should exist
     let userId = App.getCurrentUserId();
-    //findOne works without implicit and
-    let like = yield (Like.findOne({where: {subjectId, userId}}));
-    return like ? yield (actionInternalDelete(subjectId, userId)) : yield (actionInternalCreate(subjectId, userId));
+    let like = yield Like.findOne({where: {subjectId, userId}});
+    return like ? yield actionInternalDelete(subjectId, userId) : yield actionInternalCreate(subjectId, userId);
   }
 
   function * actionCreate(subjectId) {
     //userId should exist
     let userId = App.getCurrentUserId();
-    //findOne works without implicit and
-    let like = yield (Like.findOne({where: {subjectId, userId}}));
+    let like = yield Like.findOne({where: {subjectId, userId}});
     if (like) {
       throw ERRORS.badRequest('Like already exists.');
     }
-    return yield (actionInternalCreate(subjectId, userId));
+    return yield actionInternalCreate(subjectId, userId);
   }
 
   function * actionInternalCreate(subjectId, userId) {
-    let IdToType = Like.app.models.IdToType;
+    let {IdToType, User} = Like.app.models;
     let idToType = yield (IdToType.findByIdRequired(subjectId));
     let subjectType = idToType.type;
     if (!ALLOWED_MODELS.includes(subjectType)) {
       throw ERRORS.badRequest(`Likes are not allowed for type '${subjectType}'.`)
     }
+    if (subjectType === 'Story') {
+      let user = yield User.findByIdRequired(userId);
+      let dayAgo = new Date(new Date() - 24 * 60 * 60 * 1000);
+      let count = yield Like.count({subjectType: 'Story', userId, created: {gt: dayAgo}});
+      console.log('likes number', count);
+      if (count >= user.level + 2)
+        throw ERRORS.forbidden("Пишите отзывы, чтобы увеличить лимит", "likes_limit");
+    }
     let subject = yield (idToType.findSubject());
     if (subject.userId.toString() === userId.toString()) {
-      throw ERRORS.badRequest('Cannot like own subject.')
+      throw ERRORS.badRequest('Нельзя лайкать свое')
     }
     let subjectUserId = subject.userId;
     yield (Like.create({subjectId, userId, subjectType, subjectUserId}));
@@ -117,19 +118,17 @@ module.exports = (Like) => {
   function * actionDelete(subjectId) {
     //userId should exist
     let userId = App.getCurrentUserId();
-    //findOne works without implicit and
     let like = yield (Like.findOne({where: {subjectId, userId}}));
     if (!like) throw  ERRORS.notFound('No such like');
-    return yield (actionInternalDelete(subjectId, userId));
+    return yield actionInternalDelete(subjectId, userId);
   }
 
   function * actionInternalDelete(subjectId, userId) {
-    let IdToType = Like.app.models.IdToType;
+    let {IdToType} = Like.app.models;
 
-    //delete works without implicit and
-    yield (Like.deleteAll({subjectId, userId}));
-    let idToType = yield (IdToType.findByIdRequired(subjectId));
-    let count = yield (Like.iSyncSubject(idToType.type, subjectId));
+    yield Like.deleteAll({subjectId, userId});
+    let idToType = yield IdToType.findByIdRequired(subjectId);
+    let count = yield Like.iSyncSubject(idToType.type, subjectId);
     if (idToType.type === 'Story') {
       Like.syncUserFromStory(subjectId);
     }

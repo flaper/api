@@ -1,9 +1,9 @@
 export let ERRORS = {
-  badRequest: (message = "Bad request") => {
-    return ERRORS.error(message, 400);
+  badRequest: (message = "Bad request", code = null) => {
+    return ERRORS.error(message, 400, code);
   },
-  forbidden: (message = "Action not allowed") => {
-    return ERRORS.error(message, 403);
+  forbidden: (message = "Action not allowed", code = null) => {
+    return ERRORS.error(message, 403, code);
   },
   notFound: (message = "Not found", code = null) => {
     return ERRORS.error(message, 404, code);
