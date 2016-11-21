@@ -121,6 +121,11 @@
   "scope": {
     "limit": 100
   },
+  "scopes": {
+    "scopeAll": {
+      "where": {}
+    }
+  },
   "methods": {},
   "indexes": {
     "email_index": {

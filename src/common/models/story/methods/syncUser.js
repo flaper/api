@@ -10,9 +10,7 @@ export function initSyncUser(Story) {
         return;
       let User = Story.app.models.user;
       let storiesNumber = yield Story.count({userId: userId, status: Story.STATUS.ACTIVE});
-      let monthAgo = new Date(new Date() - 30 * 24 * 60 * 60 * 1000);
-      let storiesLastMonth = yield Story.count({userId: userId, status: Story.STATUS.ACTIVE, created: {gt: monthAgo}});
-      let level = User.calcLevel({storiesNumber, storiesLastMonth});
+      let level = yield User.calcLevel({userId, storiesNumber});
       yield User.updateAll({id: userId}, {storiesNumber, level},
         {skipIgnore: {storiesNumber: true, level: true}});
     });
