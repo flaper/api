@@ -4,30 +4,32 @@ import co from 'co';
 const User = app.models.user;
 
 let main = co.wrap(function*() {
-  let total = 0;
-  let bunch = 0;
-  do {
-    let users = yield User.find({offset: total});
-    console.log('next group', users.length);
-    bunch = users.length;
-    total += users.length;
-    let i = 0;
-    for (let user of users) {
-      let level = yield User.calcLevel({userId: user.id});
-      i++;
-      if (user.level != level) {
-        console.log(`for user ${user.id} set level ${level}`);
-        user.level = level;
-        try {
-          yield user.save();
-        }
-        catch (e) {
-          console.log('exception', e);
-        }
-      }
+  // simple query to establish mongodb connection
+  yield (User.count());
 
+  let collection = User.dataSource.connector.collection('user');
+  let users = yield collection.find().toArray();
+  console.log('total', users.length);
+  let i = 0;
+  for (let u of users) {
+    let level = yield User.calcLevel({userId: u._id});
+    let currentLevel = +u.level;
+    i++;
+    if (currentLevel != level) {
+      let user = yield User.findByIdRequired(u._id);
+      user.level = level;
+      console.log(`for user ${user.id} set level ${level}`);
+      try {
+        yield user.save();
+      }
+      catch (e) {
+        console.log('exception', e);
+      }
     }
-  } while (bunch > 0);
+    if (i % 100 === 0)
+      console.log(`${i} processed`);
+
+  }
   process.exit();
 });
 main().then((res, err)=> {
