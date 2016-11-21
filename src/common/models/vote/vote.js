@@ -75,8 +75,8 @@ module.exports = (Vote) => {
     if (!poll.answers || !poll.answers.some(option => option ===  answer )) {
       throw ERRORS.notFound(`No such answer in this poll`);
     }
-    if (user.storiesNumber < 5) {
-      throw ERRORS.badRequest(`You can not vote unless you have 5 stories`);
+    if (user.storiesNumber < Poll.RESTRICTIONS.STORIES_TO_VOTE.MIN) {
+      throw ERRORS.badRequest(`You can not vote unless you have ${Poll.RESTRICTIONS.STORIES_TO_VOTE.MIN} stories`);
     }
     return yield Vote.create({targetId,answer,userId});
   }
