@@ -15,7 +15,7 @@ let main = co.wrap(function*() {
     let level = yield User.calcLevel({userId: u._id});
     let currentLevel = +u.level;
     i++;
-    if (currentLevel != level) {
+    if (currentLevel !== level) {
       let user = yield User.findByIdRequired(u._id);
       user.level = level;
       console.log(`for user ${user.id} set level ${level}`);
