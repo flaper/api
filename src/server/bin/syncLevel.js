@@ -16,7 +16,7 @@ co(function*() {
   let stories = yield storyCollection.find({created: {$gt: monthAgoLeft, $lt: monthAgo}}).toArray();
   console.log('stories', stories.length);
   let userIds = _.uniq(stories.map(s=>s.userId.toString()));
-  userIds = userIds.map(id=>ObjectId(id));
+  userIds = userIds.map(id=> new ObjectId(id));
   console.log('users', userIds.length);
 
   let collection = User.dataSource.connector.collection('user');
@@ -27,7 +27,7 @@ co(function*() {
     let level = yield User.calcLevel({userId: u._id});
     let currentLevel = +u.level;
     i++;
-    if (currentLevel != level) {
+    if (currentLevel !== level) {
       let user = yield User.findByIdRequired(u._id);
       user.level = level;
       console.log(`for user ${user.id} set level ${level}`);
