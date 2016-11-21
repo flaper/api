@@ -144,46 +144,6 @@ let stories = {
     "rating": 1,
     "objectId": '1a7000000000000000001003'
   },
-  with_location4: {
-    "type": 'review',
-    "id": "1a4000000000000000002008",
-    "status": Story.STATUS.ACTIVE,
-    "userId": "1a1000000000000000001001",
-    "title": "Отзыв из оренбурга",
-    "content": "Отзыв про еду из оренбурга1",
-    "rating": 8,
-    "objectId": '1a7000000000000000001007'
-  },
-  with_location5: {
-    "type": 'review',
-    "id": "1a4000000000000000002009",
-    "status": Story.STATUS.ACTIVE,
-    "userId": "1a1000000000000000001002",
-    "title": "Отзыв из оренбурга",
-    "content": "Отзыв про еду из оренбурга2",
-    "rating": 8,
-    "objectId": '1a7000000000000000001007'
-  },
-  with_location6: {
-    "type": 'review',
-    "id": "1a4000000000000000002010",
-    "status": Story.STATUS.ACTIVE,
-    "userId": "1a1000000000000000001001",
-    "title": "Отзыв из оренбурга",
-    "content": "Отзыв про еду из оренбурга3",
-    "rating": 8,
-    "objectId": '1a7000000000000000001007'
-  },
-  with_location7: {
-    "type": 'review',
-    "id": "1a4000000000000000002011",
-    "status": Story.STATUS.ACTIVE,
-    "userId": "1a1000000000000000001001",
-    "title": "Отзыв из оренбурга",
-    "content": "Отзыв про еду из оренбурга4",
-    "rating": 8,
-    "objectId": '1a7000000000000000001007'
-  },
   story_flag_cp: {
     "id": "1a4000000000000000002012",
     "type": 'article',
