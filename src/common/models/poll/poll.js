@@ -11,9 +11,29 @@ module.exports = (Poll) => {
   Poll.commonInit(Poll);
   applyIdToType(Poll);
   Poll.disableAllRemotesExcept(Poll, ['find', 'findById', 'updateAttributes', 'count', 'exists', 'create']);
+  Poll.RESTRICTIONS = {
+    TITLE_LENGTH : {
+      MIN : 10,
+      MAX : 128
+    },
+    STORIES_TO_CANDIDATE: {
+      MIN:10
+    },
+    STORIES_TO_VOTE: {
+      MIN:5
+    },
+    LEVEL_TO_VOTE: {
+      MIN:1
+    },
+    ANSWERS: {
+      POLL: {
+        MIN:2,
+        MAX:15
+      }
+    }
+  }
 
-
-  Poll.STATUS = Poll.STATUSES = {
+  Poll.STATUS = {
     ACTIVE: "active",
     DELETED: "deleted",
     DENIED: "denied",
@@ -56,10 +76,12 @@ module.exports = (Poll) => {
       }
       switch (ctx.instance.type) {
         case 'question':
-            if (answers.length !== 2) throw ERRORS.badRequest(`Question must have exactly 2 answers`);
+            if (answers.length !== Poll.RESTRICTIONS.ANSWERS.POLL.MIN)
+            throw ERRORS.badRequest(`Question must have exactly ${Poll.RESTRICTIONS.ANSWERS.POLL.MIN} answers`);
           return;
         case 'poll':
-            if (answers.length < 2) throw ERRORS.badRequest(`Poll must have at least 2 answers`);
+            if (answers.length < Poll.RESTRICTIONS.ANSWERS.POLL.MIN)
+            throw ERRORS.badRequest(`Poll must have at least ${Poll.RESTRICTIONS.ANSWERS.POLL.MIN} answers`);
           return;
         default:
           break;
@@ -69,11 +91,15 @@ module.exports = (Poll) => {
   function* titleObserver(ctx) {
     if (ctx.instance && ctx.instance.title) {
       let title = ctx.instance.title;
-      if (title.replace(" ","").length <= 11) {
-          throw ERRORS.badRequest(`Title is too short (min 10 characters)`);
+      if (title.replace(" ","").length < Poll.RESTRICTIONS.TITLE_LENGTH.MIN) {
+          throw ERRORS.badRequest(
+            `Title is too short (min ${Poll.RESTRICTIONS.TITLE_LENGTH.MIN} characters)`
+        );
       }
-      if (title.replace(" ","").length >= 128) {
-          throw ERRORS.badRequest(`Title is too long (max 128 characters)`);
+      if (title.replace(" ","").length > Poll.RESTRICTIONS.TITLE_LENGTH.MAX) {
+          throw ERRORS.badRequest(
+            `Title is too long (max ${Poll.RESTRICTIONS.TITLE_LENGTH.MAX} characters)`
+          );
       }
     }
   }

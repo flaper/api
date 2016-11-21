@@ -47,7 +47,10 @@ export function initCandidates(Poll) {
     if (poll.answers.indexOf(user.id) !== -1) throw ERRORS.badRequest(`Candidate already registered`);
     if (poll.status !== Poll.STATUS.ACTIVE) throw ERRORS.badRequest(`You can not be added to inactive poll`);
     if (poll.closeDate < now) throw ERRORS.badRequest(`You can not be added to closed Poll`);
-    if (user.storiesNumber < 10) throw ERRORS.badRequest(`You need at least 10 reviews to join as candidate`);
+    if (user.storiesNumber < Poll.RESTRICTIONS.TORIES_TO_CANDIDATE.MIN)
+      throw ERRORS.badRequest(
+        `You need at least ${Poll.RESTRICTIONS.STORIES_TO_CANDIDATE.MIN} reviews to join as candidate`
+      );
     if (user.id === undefined) throw ERRORS.badRequest(`Can not add undefined as option`);
     poll.answers.push(user.id);
     yield poll.save({});
