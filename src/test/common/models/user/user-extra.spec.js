@@ -8,18 +8,16 @@ describe(`models/UserExtra`, function () {
   const userId = USERS.user1.id;
   const PREMIUM_SUPPORT = UserExtra.PROPERTIES.premiumSupport;
   const FLAP_ID = UserExtra.PROPERTIES.flapId;
-  it("Should be able to set premium support and flapId", () => {
+  it("Should be able to set premium support and flapId", function*() {
     let date = moment().add(30, 'days').toDate();
     let flapId = 1;
-    return UserExtra.updateValue(userId, PREMIUM_SUPPORT, date)
-      .then(() => UserExtra.updateValue(userId, FLAP_ID, flapId))
-      .then(() => UserExtra.findOne({userId}))
-      .then(userExtra => {
-        should.exist(userExtra);
-        should.exist(userExtra[PREMIUM_SUPPORT]);
-        should.exist(userExtra[FLAP_ID]);
-        userExtra[PREMIUM_SUPPORT].getTime().should.eq(date.getTime());
-        userExtra[FLAP_ID].should.eq(flapId);
-      })
+    yield UserExtra.updateValue(userId, PREMIUM_SUPPORT, date);
+    yield UserExtra.updateValue(userId, FLAP_ID, flapId);
+    let userExtra = yield UserExtra.findOne({userId});
+    should.exist(userExtra);
+    should.exist(userExtra[PREMIUM_SUPPORT]);
+    should.exist(userExtra[FLAP_ID]);
+    userExtra[PREMIUM_SUPPORT].getTime().should.eq(date.getTime());
+    userExtra[FLAP_ID].should.eq(flapId);
   });
 });
