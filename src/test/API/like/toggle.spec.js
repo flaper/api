@@ -19,30 +19,27 @@ describe(`/${COLLECTION_URL}/toggle`, function () {
       .expect(401)
   });
 
-  it('Wrong subjectId should be not found', () => {
-    return user1Promise.then(({agent}) => {
+  it('Wrong subjectId should be not found', function*() {
+    let {agent} = yield user1Promise;
       return agent.post(`${COLLECTION_URL}/toggle/wrong_id`)
         .expect(404)
-    })
   });
 
-  it('User - deny to toggle like for user model', () => {
-    return user1Promise.then(({agent}) => {
+  it('User - deny to toggle like for user model', function*() {
+    let {agent} = yield user1Promise;
       return agent.post(`${COLLECTION_URL}/toggle/${user1.id}`)
         .expect(400)
-    })
   });
 
-  it('User - deny to toggle own story', () => {
-    return user3Promise.then(({agent}) => {
+  it('User - deny to toggle own story', function*() {
+    let {agent} = yield user3Promise;
       return agent.post(`${COLLECTION_URL}/toggle/${STORY_WITHOUT_LIKES_USER3.id}`)
         .expect(400)
-    })
   });
 
-  it('Users - allow to create 2 likes for a story then toggle them back', () => {
-    function toggleLike(userPromise, expectedNumber, status) {
-      return userPromise.then(({agent}) => {
+  it('Users - allow to create 2 likes for a story then toggle them back', function*() {
+    function* toggleLike(userPromise, expectedNumber, status) {
+      let {agent} = yield userPromise;
         return agent.post(`${COLLECTION_URL}/toggle/${STORY_WITHOUT_LIKES_USER3.id}`)
           .expect(200)
           .expect(response => {
@@ -50,27 +47,24 @@ describe(`/${COLLECTION_URL}/toggle`, function () {
             res.count.should.eq(expectedNumber);
             res.status.should.eq(status);
           })
-      })
     }
 
-    let userLikesNumber;
-    return Story.findById(STORY_WITHOUT_LIKES_USER3.id)
-      .then(story => story.likesNumber.should.eq(0))
-      .then(() => User.findByIdRequired(STORY_WITHOUT_LIKES_USER3.userId))
-      .then((user) => userLikesNumber = user.likesNumber)
-      .then(() => toggleLike(user1Promise, 1, Like.RETURN_STATUS.CREATED))
-      .then(() => toggleLike(user2Promise, 2, Like.RETURN_STATUS.CREATED))
-      .then(() => Story.findById(STORY_WITHOUT_LIKES_USER3.id))
-      .then(story => story.likesNumber.should.eq(2))
-      .then(() => new Promise((resolve, reject) => setTimeout(resolve, 100)))// to wait async syncUser
-      .then(() => User.findById(STORY_WITHOUT_LIKES_USER3.userId))
-      .then((user) => user.likesNumber.should.eq(userLikesNumber + 2))
-      .then(() => toggleLike(user1Promise, 1, Like.RETURN_STATUS.DELETED))
-      .then(() => toggleLike(user2Promise, 0, Like.RETURN_STATUS.DELETED))
-      .then(() => Story.findById(STORY_WITHOUT_LIKES_USER3.id))
-      .then(story => story.likesNumber.should.eq(0))
-      .then(() => new Promise((resolve, reject) => setTimeout(resolve, 100)))
-      .then(() => User.findById(STORY_WITHOUT_LIKES_USER3.userId))
-      .then((user) => user.likesNumber.should.eq(userLikesNumber))
+    let story = yield Story.findById(STORY_WITHOUT_LIKES_USER3.id);
+    story.likesNumber.should.eq(0);
+    let {likesNumber} = yield User.findByIdRequired(STORY_WITHOUT_LIKES_USER3.userId);
+    yield toggleLike(user1Promise, 1, Like.RETURN_STATUS.CREATED);
+    yield toggleLike(user2Promise, 2, Like.RETURN_STATUS.CREATED);
+    story = yield Story.findById(STORY_WITHOUT_LIKES_USER3.id);
+    yield new Promise( (resolve,reject) => setTimeout(resolve,100));
+    story.likesNumber.should.eq(2);
+    let user = yield User.findById(STORY_WITHOUT_LIKES_USER3.userId);
+    user.likesNumber.should.eq(likesNumber + 2);
+    yield toggleLike(user1Promise, 1, Like.RETURN_STATUS.DELETED);
+    yield toggleLike(user2Promise, 0, Like.RETURN_STATUS.DELETED);
+    story = yield Story.findById(STORY_WITHOUT_LIKES_USER3.id);
+    yield new Promise( (resolve,reject) => setTimeout(resolve,100));
+    story.likesNumber.should.eq(0);
+    user = yield User.findById(STORY_WITHOUT_LIKES_USER3.userId);
+    return user.likesNumber.should.eq(likesNumber);
   });
 });
