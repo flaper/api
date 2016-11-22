@@ -16,7 +16,7 @@ let Comment = app.models.Comment;
 
 const COLLECTION_URL = 'comments';
 
-describe.only(`/${COLLECTION_URL}/DELETE`, function () {
+describe(`/${COLLECTION_URL}/DELETE`, function () {
   updateTimeouts(this);
   it('Anonymous - deny to delete', function* () {
     return api.delete(`${COLLECTION_URL}/${COMMENT1.id}`)
