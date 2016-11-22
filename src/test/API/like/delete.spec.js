@@ -10,7 +10,7 @@ let STORY_WITHOUT_LIKES_USER3 = STORIES.withoutLikesUser3;
 
 const COLLECTION_URL = 'likes';
 
-describe.only(`/${COLLECTION_URL}/delete`, function () {
+describe(`/${COLLECTION_URL}/delete`, function () {
   updateTimeouts(this);
   it('Anonymous - no allow delete by id', () => {
     return api.del(`${COLLECTION_URL}/${STORY_WITHOUT_LIKES_USER3.id}`)
