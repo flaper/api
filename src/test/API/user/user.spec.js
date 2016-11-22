@@ -86,20 +86,18 @@ describe(`/${COLLECTION_URL}/`, function () {
       'password': 'newUser'
     };
 
-    it('User - deny to add', () => {
-      return user1Promise.then(({agent}) => {
+    it('User - deny to add', function*() {
+      let {agent} = yield user1Promise;
         return agent.post(COLLECTION_URL)
           .send(NEW_USER)
           .expect(401)
-      })
     });
 
-    it('Admin - allow to add', () => {
-      return superPromise.then(({agent}) => {
+    it('Admin - allow to add', function*() {
+      let {agent} = yield superPromise;
         return agent.post(COLLECTION_URL)
           .send(NEW_USER)
           .expect(200)
-      })
     });
 
     after(()=> User.deleteById(NEW_USER.id));
