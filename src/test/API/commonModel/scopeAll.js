@@ -11,25 +11,24 @@ const COLLECTION_URL = 'comments';
 describe(`CommonModel/scopeAll`, function () {
   updateTimeouts(this);
 
-  it('get should not exist', () => {
+  it('get should not exist', function*() {
     return api.get(`${COLLECTION_URL}/scopeAll`)
       .expect(404)
   });
 
-  it('post should not exist', () => {
+  it('post should not exist', function*(){
     return api.post(`${COLLECTION_URL}/scopeAll`)
       .expect(404)
   });
 
-  it('del should not exist', () => {
-    return adminPromise.then(({agent}) => {
-      return api.del(`${COLLECTION_URL}/scopeAll`)
-        //why 401 unknown
-        .expect(401)
-    });
+  it('del should not exist', function*(){
+    let {agent} = yield adminPromise;
+    return agent.delete(`${COLLECTION_URL}/scopeAll`)
+      //why 401 unknown
+      .expect(404)
   });
 
-  it('count should not exist', () => {
+  it('count should not exist', function*() {
     return api.get(`${COLLECTION_URL}/scopeAll/count`)
       .expect(404)
   });
