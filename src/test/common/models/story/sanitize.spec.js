@@ -21,11 +21,9 @@ describe(`models/story/@sanitize`, function () {
     return Story.create(NEW_STORY);
   });
 
-  it("Should allow quotes in title", () => {
-    return Story.findByIdRequired(NEW_STORY.id)
-      .then(story => {
-        story.title.should.eq("Title 'with' \"quotes\" inside tag");
-      })
+  it("Should allow quotes in title", function*() {
+    let story = yield Story.findByIdRequired(NEW_STORY.id)
+    story.title.should.eq("Title 'with' \"quotes\" inside tag");
   });
 
   after(function*() {

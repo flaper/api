@@ -11,12 +11,10 @@ describe(`models/story/@lastActive`, function () {
     content: STORIES.test1.content
   };
 
-  it("Last active should be now", () => {
-    return Story.create(NEW_STORY)
-      .then((s) => {
-        should.exist(s.lastActive);
-        s.created.getTime().should.eq(s.lastActive.getTime());
-      })
+  it("Last active should be now", function*() {
+    let s = yield Story.create(NEW_STORY)
+    should.exist(s.lastActive);
+    s.created.getTime().should.eq(s.lastActive.getTime());
   });
 
   after(function*() {
