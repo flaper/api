@@ -88,55 +88,41 @@ describe(`Sluggable/FObject/@places`, function () {
     return p;
   });
 
-  it('Company without region', () => {
-    return FObject.findById(PLACE_NO_REGION.id)
-      .then((obj) => {
-        obj.slugLowerCase.should.eq(SLUG1);
-        should.exist(obj.region);
-        obj.region.should.eq('');
-      })
+  it('Company without region', function*() {
+    let obj = yield FObject.findById(PLACE_NO_REGION.id);
+    obj.slugLowerCase.should.eq(SLUG1);
+    should.exist(obj.region);
+    obj.region.should.eq('');
   });
 
-  it('Company without region2', () => {
-    return FObject.findById(PLACE_NO_REGION2.id)
-      .then((obj) => {
-        obj.slugLowerCase.should.eq(`${SLUG1}-2`);
-      })
+  it('Company without region2', function*() {
+    let obj = yield FObject.findById(PLACE_NO_REGION2.id);
+    obj.slugLowerCase.should.eq(`${SLUG1}-2`);
   });
 
-  it('Company without region3', () => {
-    return FObject.findById(PLACE_NO_REGION3.id)
-      .then((obj) => {
-        obj.slugLowerCase.should.eq(`${SLUG1}-${SLUGS.street}`);
-      })
+  it('Company without region3', function*() {
+    let obj = yield FObject.findById(PLACE_NO_REGION3.id);
+    obj.slugLowerCase.should.eq(`${SLUG1}-${SLUGS.street}`);
   });
 
-  it('Company without region4', () => {
-    return FObject.findById(PLACE_NO_REGION4.id)
-      .then((obj) => {
-        obj.slugLowerCase.should.eq(`${SLUG1}-${SLUGS.street}-${SLUGS.houseNumber}`);
-      })
+  it('Company without region4', function*() {
+    let obj = yield FObject.findById(PLACE_NO_REGION4.id);
+    obj.slugLowerCase.should.eq(`${SLUG1}-${SLUGS.street}-${SLUGS.houseNumber}`);
   });
 
-  it('Company without region5', () => {
-    return FObject.findById(PLACE_NO_REGION5.id)
-      .then((obj) => {
-        obj.slugLowerCase.should.eq(`${SLUG1}-${SLUGS.street}-${SLUGS.houseNumber}-2`);
-      })
+  it('Company without region5', function*() {
+    let obj = yield FObject.findById(PLACE_NO_REGION5.id)
+    obj.slugLowerCase.should.eq(`${SLUG1}-${SLUGS.street}-${SLUGS.houseNumber}-2`);
   });
 
-  it('Company with region1', () => {
-    return FObject.findById(PLACE1_REGION1.id)
-      .then((obj) => {
-        obj.slugLowerCase.should.eq(SLUG1);
-      })
+  it('Company with region1', function*() {
+    let obj = yield FObject.findById(PLACE1_REGION1.id)
+    obj.slugLowerCase.should.eq(SLUG1);
   });
 
-  it('Company with region2', () => {
-    return FObject.findById(PLACE1_REGION2.id)
-      .then((obj) => {
-        obj.slugLowerCase.should.eq(SLUG1);
-      })
+  it('Company with region2', function*() {
+    let obj = yield FObject.findById(PLACE1_REGION2.id)
+    obj.slugLowerCase.should.eq(SLUG1);
   });
 
   after(()=> FObject.deleteAll({id: {inq: _.map(models, 'id')}}));
