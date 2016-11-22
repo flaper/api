@@ -18,7 +18,7 @@ describe(`/${COLLECTION_URL}`, function () {
     ID_CLOSED: 21920
   };
 
-  it('Anonymous - sync company', () => {
+  it('Anonymous - sync company', function*() {
     const ID = FLAP_IDS.ID1;
     return api.post(COLLECTION_URL)
       .send({id: ID})
@@ -40,7 +40,7 @@ describe(`/${COLLECTION_URL}`, function () {
       })
   });
 
-  it('Anonymous - sync film', () => {
+  it('Anonymous - sync film', function*() {
     const ID = FLAP_IDS.ID2;//Фильм Время
     return api.post(COLLECTION_URL)
       .send({id: ID})
@@ -92,13 +92,13 @@ describe(`/${COLLECTION_URL}`, function () {
       }));
   });
 
-  it('Wrong ID', () => {
+  it('Wrong ID', function*() {
     return api.post(COLLECTION_URL)
       .send({id: 1})
       .expect(400)
   });
 
-  it('Closed ID', () => {
+  it('Closed ID', function*() {
     return api.post(COLLECTION_URL)
       .send({id: FLAP_IDS.ID_CLOSED})
       .expect(400)
