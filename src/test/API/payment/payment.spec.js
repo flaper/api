@@ -18,11 +18,10 @@ describe(`/${COLLECTION_URL}`, function () {
       .expect(401)
   });
 
-  it.skip('User should be able to make payment', () => {
-    return user1Promise.then(({agent}) => {
-      return agent.post(COLLECTION_URL)
-        .expect(200)
-    });
+  it.skip('User should be able to make payment', function*() {
+    let {agent} = yield user1Promise;
+    return agent.post(COLLECTION_URL)
+      .expect(200)
   });
 
 });
