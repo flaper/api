@@ -15,7 +15,7 @@ const COLLECTION_URL = 'users';
 describe(`/users/:id/roles`, function () {
   updateTimeouts(this);
   describe('GET', () => {
-    it('Anonymous - allow access to the list', () => {
+    it('Anonymous - allow access to the list', function*() {
       return api.get(`${COLLECTION_URL}/${ADMIN.id}/roles`)
         .expect(200)
         .expect((res) => {
@@ -27,7 +27,7 @@ describe(`/users/:id/roles`, function () {
   });
 
   describe('GET', () => {
-    it('Anonymous - include roles for user', () => {
+    it('Anonymous - include roles for user', function*() {
       return api.get(`${COLLECTION_URL}/${ADMIN.id}`)
         .query({filter: {include: 'roles'}})
         .expect(200)
@@ -42,84 +42,68 @@ describe(`/users/:id/roles`, function () {
   });
 
   describe('POST', () => {
-    it('User - deny to link new role for him', () => {
-      return user1Promise.then(({agent}) => {
+    it('User - deny to link new role for him', function*() {
+      let {agent} = yield user1Promise;
         return agent.post(`${COLLECTION_URL}/${USER1.id}/roles`)
           .send({role: 'admin'})
           .expect(401)
-      })
     });
 
-    it('Admin - deny to link new role for him', () => {
-      return adminPromise.then(({agent}) => {
-        return agent.post(`${COLLECTION_URL}/${ADMIN.id}/roles`)
-          .send({role: 'super'})
-          .expect(401)
-      })
+    it('Admin - deny to link new role for him', function*() {
+      let {agent} = yield adminPromise;
+      return agent.post(`${COLLECTION_URL}/${ADMIN.id}/roles`)
+        .send({role: 'super'})
+        .expect(401);
     });
 
-    it('Duplicated roles should be ignored', () => {
-      return superPromise.then(({agent}) => {
-          return agent.post(`${COLLECTION_URL}/${USER1.id}/roles`)
-            .send({role: 'super'})
-            .expect(200)
-        })
-        .then(() => {
-          return superPromise.then(({agent}) => {
-            return agent.get(`${COLLECTION_URL}/${USER1.id}/roles/count`)
-              .expect(200)
-              .expect(res => res.body.count.should.eq(1));
-          });
-        })
+    it('Duplicated roles should be ignored', function*() {
+      let {agent} = yield superPromise;
+      yield agent.post(`${COLLECTION_URL}/${USER1.id}/roles`)
+        .send({role: 'super'})
+        .expect(200);
+      yield agent.get(`${COLLECTION_URL}/${USER1.id}/roles/count`)
+        .expect(200)
+        .expect(res => res.body.count.should.eq(1));
     });
 
-    it('Super - allow to link new role', () => {
-      return superPromise.then(({agent}) => {
-          return agent.post(`${COLLECTION_URL}/${USER1.id}/roles`)
-            .send({role: 'super'})
-            .expect(200)
-        })
-        .then(() => {
-          //Former regular user now can update his role
-          return user1Promise.then(({agent}) => {
-            return agent.post(`${COLLECTION_URL}/${USER1.id}/roles`)
-              .send({role: 'admin'})
-              .expect(200)
-          })
-        })
+    it('Super - allow to link new role', function*() {
+      let {agent} = yield superPromise;
+      yield agent.post(`${COLLECTION_URL}/${USER1.id}/roles`)
+        .send({role: 'super'})
+        .expect(200);
+      yield agent.post(`${COLLECTION_URL}/${USER1.id}/roles`)
+        .send({role: 'admin'})
+        .expect(200);
+
     });
 
-    it('Super - deny to link not existed role', () => {
-      return superPromise.then(({agent}) => {
-        return agent.post(`${COLLECTION_URL}/${USER1.id}/roles`)
-          .send({role: 'not_exists'})
-          .expect(404)
-      })
+    it('Super - deny to link not existed role', function*() {
+      let {agent} = yield superPromise;
+      return agent.post(`${COLLECTION_URL}/${USER1.id}/roles`)
+        .send({role: 'not_exists'})
+        .expect(404);
     });
 
-    it('Super - deny to link role for not existed user', () => {
-      return superPromise.then(({agent}) => {
-        return agent.post(`${COLLECTION_URL}/b333/roles`)
-          .send({role: 'admin'})
-          .expect(404)
-      })
+    it('Super - deny to link role for not existed user', function*() {
+      let {agent} = yield superPromise;
+      return agent.post(`${COLLECTION_URL}/b333/roles`)
+        .send({role: 'admin'})
+        .expect(404)
     });
 
   });
 
   describe('DELETE', () => {
-    it('Admin - deny to delete', () => {
-      return adminPromise.then(({agent}) => {
-        return agent.del(`${COLLECTION_URL}/${USER1.id}/roles`)
-          .expect(401)
-      })
+    it('Admin - deny to delete', function*() {
+      let {agent} = yield adminPromise;
+      return agent.del(`${COLLECTION_URL}/${USER1.id}/roles`)
+        .expect(401)
     });
 
-    it('Super - allow to delete', () => {
-      return superPromise.then(({agent}) => {
-        return agent.del(`${COLLECTION_URL}/${USER1.id}/roles`)
-          .expect(204)
-      })
+    it('Super - allow to delete', function*() {
+      let {agent} = yield superPromise;
+      return agent.del(`${COLLECTION_URL}/${USER1.id}/roles`)
+        .expect(204)
     });
   });
 });
