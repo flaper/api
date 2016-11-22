@@ -15,7 +15,7 @@ const COLLECTION_URL = 'comments';
 describe(`/${COLLECTION_URL}/GET&HEAD`, function () {
   updateTimeouts(this);
 
-  it('Anonymous - allow access to the list (only active)', () => {
+  it('Anonymous - allow access to the list (only active)', function* () {
     return api.get(COLLECTION_URL)
       .expect(200)
       .expect((res) => {
@@ -34,7 +34,7 @@ describe(`/${COLLECTION_URL}/GET&HEAD`, function () {
       })
   });
 
-  it('Anonymous - count deleted should return 0', () => {
+  it('Anonymous - count deleted should return 0', function* () {
     return api.get(`${COLLECTION_URL}/count`)
       .query({where: {status: Comment.STATUS.DELETED}})
       .expect(200)
@@ -44,15 +44,14 @@ describe(`/${COLLECTION_URL}/GET&HEAD`, function () {
       })
   });
 
-  it('Anonymous - allow access to active by id', () => {
+  it('Anonymous - allow access to active by id', function* () {
     return api.get(`${COLLECTION_URL}/${COMMENT1.id}`)
       .expect(200)
   });
 
-  it('Admin - cannot read deleted comment', () => {
-    return adminPromise.then(({agent}) => {
+  it('Admin - cannot read deleted comment', function* () {
+    let {agent} = yield adminPromise;
       return agent.get(`${COLLECTION_URL}/${COMMENT_DELETED1.id}`)
         .expect(404)
-    })
   })
 });

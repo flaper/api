@@ -11,7 +11,7 @@ const COLLECTION_URL = 'comments';
 describe(`/${COLLECTION_URL}/last`, function () {
   updateTimeouts(this);
 
-  it('Return last comments for each subject ID', () => {
+  it('Return last comments for each subject ID', function* () {
     return api.get(`${COLLECTION_URL}/last`)
       .query({ids: JSON.stringify([STORY1.id, STORY2.id])})
       .expect(200)
