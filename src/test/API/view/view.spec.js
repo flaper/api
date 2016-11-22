@@ -13,11 +13,9 @@ describe(`/${COLLECTION_URL}`, function () {
 
   describe('Adding 2 views', () => {
     let viewsRecent = 0;
-    before(() => {
-      return Story.findByIdRequired(STORY1.id)
-        .then(story => {
-          viewsRecent = story.viewsRecent ? story.viewsRecent : 0;
-        });
+    before(function*() {
+      let story = yield Story.findByIdRequired(STORY1.id);
+      viewsRecent = story.viewsRecent ? story.viewsRecent : 0;
     });
 
     it('Anonymous should be able to register a view', () => {
@@ -26,19 +24,16 @@ describe(`/${COLLECTION_URL}`, function () {
         .expect(200)
     });
 
-    it('User should be able to register a view', () => {
-      return user1Promise.then(({agent}) => {
+    it('User should be able to register a view', function*() {
+      let {agent} = yield user1Promise;
         return agent.post(COLLECTION_URL)
           .send({id: STORY1.id})
           .expect(200)
-      });
     });
 
-    after(() => {
-      return Story.findByIdRequired(STORY1.id)
-        .then(story => {
-          story.viewsRecent.should.eq(viewsRecent + 2);
-        });
+    after(function*() {
+      let story = yield Story.findByIdRequired(STORY1.id);
+      return story.viewsRecent.should.eq(viewsRecent + 2);
     })
   })
 });
