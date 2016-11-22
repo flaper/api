@@ -19,11 +19,10 @@ const COLLECTION_URL = 'stories';
 describe(`/${COLLECTION_URL}/:id/status/deny`, function () {
   updateTimeouts(this);
 
-  it('User not allowed to deny story', ()=> {
-    return user1Promise.then(({agent}) => {
+  it('User not allowed to deny story', function*() {
+    let {agent} = yield user1Promise;
       return agent.put(`${COLLECTION_URL}/${STORY1.id}/status/deny`)
         .expect(401)
-    })
   });
 
   it('Admin can deny active story', function*() {
@@ -41,18 +40,16 @@ describe(`/${COLLECTION_URL}/:id/status/deny`, function () {
     yield Story.iSyncAll(STORY1);
   });
 
-  it('Admin cannot deny already denied story', () => {
-    return adminPromise.then(({agent}) => {
+  it('Admin cannot deny already denied story', function*() {
+    let {agent} = yield adminPromise;
       return agent.put(`${COLLECTION_URL}/${STORY_DENIED1.id}/status/deny`)
         .expect(403)
-    })
   });
 
 
-  it('Admin cannot deny deleted story', ()=> {
-    return adminPromise.then(({agent}) => {
+  it('Admin cannot deny deleted story', function*() {
+    let {agent} = yield adminPromise;
       return agent.put(`${COLLECTION_URL}/${STORY_DELETED1.id}/status/deny`)
         .expect(403)
-    })
   });
 });
