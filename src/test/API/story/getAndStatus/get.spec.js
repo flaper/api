@@ -59,70 +59,61 @@ describe(`/${COLLECTION_URL}/@get`, function () {
         })
     });
 
-    it('User - should not return deleted stories', () => {
-      return user1Promise.then(({agent}) => {
-        return agent.get(COLLECTION_URL)
-          .query({filter: {where: {status: Story.STATUS.DELETED}}})
-          .expect(200)
-          .expect((res) => {
-            let stories = res.body;
-            stories.length.should.eq(0);
-          })
-      })
+    it('User - should not return deleted stories', function*() {
+      let {agent} = yield user1Promise;
+      return agent.get(COLLECTION_URL)
+        .query({filter: {where: {status: Story.STATUS.DELETED}}})
+        .expect(200)
+        .expect((res) => {
+          let stories = res.body;
+          stories.length.should.eq(0);
+        })
     });
   });
 
   describe('COUNT', () => {
-    it('User - count should not return deleted stories', () => {
-      return user1Promise.then(({agent}) => {
-        return agent.get(`${COLLECTION_URL}/count`)
-          .query({where: {status: Story.STATUS.DELETED}})
-          .expect(200)
-          .expect((res) => {
-            let data = res.body;
-            should.exist(data.count);
-            data.count.should.eq(0);
-          })
-      })
+    it('User - count should not return deleted stories', function*() {
+      let {agent} = yield user1Promise;
+      return agent.get(`${COLLECTION_URL}/count`)
+        .query({where: {status: Story.STATUS.DELETED}})
+        .expect(200)
+        .expect((res) => {
+          let data = res.body;
+          should.exist(data.count);
+          data.count.should.eq(0);
+        });
     });
 
-    it('Should return active, than denied, than both, then check sum', () => {
+    it('Should return active, than denied, than both, then check sum', function*() {
       let activeCount = 0;
       let deniedCount = 0;
       let totalCount = 0;
-      return user1Promise.then(({agent}) => {
-          return agent.get(`${COLLECTION_URL}/count`)
-            .expect(200)
-            .expect((res) => {
-              let data = res.body;
-              activeCount = data.count;
-              activeCount.should.be.least(1);
-            })
+      let {agent} = yield user1Promise;
+      yield agent.get(`${COLLECTION_URL}/count`)
+        .expect(200)
+        .expect((res) => {
+          let data = res.body;
+          activeCount = data.count;
+          activeCount.should.be.least(1);
+        });
+      yield agent.get(`${COLLECTION_URL}/count`)
+        .query({where: {status: Story.STATUS.DENIED}})
+        .expect(200)
+        .expect((res) => {
+          let data = res.body;
+          deniedCount = data.count;
+          deniedCount.should.be.least(1);
+        });
+
+      yield agent.get(`${COLLECTION_URL}/count`)
+        .query({where: {or: {0: {status: Story.STATUS.ACTIVE}, 1: {status: Story.STATUS.DENIED}}}})
+        .expect(200)
+        .expect((res) => {
+          let data = res.body;
+          totalCount = data.count;
+          totalCount.should.be.eq(activeCount + deniedCount);
         })
-        .then(() => {
-          return user1Promise.then(({agent}) => {
-            return agent.get(`${COLLECTION_URL}/count`)
-              .query({where: {status: Story.STATUS.DENIED}})
-              .expect(200)
-              .expect((res) => {
-                let data = res.body;
-                deniedCount = data.count;
-                deniedCount.should.be.least(1);
-              })
-          })
-        })
-        .then(() => {
-          return user1Promise.then(({agent}) => {
-            return agent.get(`${COLLECTION_URL}/count`)
-              .query({where: {or: {0: {status: Story.STATUS.ACTIVE}, 1: {status: Story.STATUS.DENIED}}}})
-              .expect(200)
-              .expect((res) => {
-                let data = res.body;
-                totalCount = data.count;
-                totalCount.should.be.eq(activeCount + deniedCount);
-              })
-          })
-        })
+
     })
   })
 });
