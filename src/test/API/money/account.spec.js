@@ -12,15 +12,14 @@ describe(`/${COLLECTION_URL}`, function () {
       .expect(401)
   });
 
-  it('User should be able to get points', () => {
-    return user1Promise.then(({agent}) => {
-      return agent.get(`${COLLECTION_URL}/${user1.id}`)
-        .expect(200)
-        .expect(res => {
-          let data = res.body;
-          should.exist(data.amount);
-        })
-    });
+  it('User should be able to get points', function*() {
+    let {agent} = yield user1Promise;
+    return agent.get(`${COLLECTION_URL}/${user1.id}`)
+      .expect(200)
+      .expect(res => {
+        let data = res.body;
+        should.exist(data.amount);
+      });
   });
 
   describe('Payment', () => {
@@ -31,26 +30,23 @@ describe(`/${COLLECTION_URL}`, function () {
         .expect(401)
     });
 
-    it('User1 - deny', () => {
-      return user1Promise.then(({agent}) => {
-        return agent.post(`${COLLECTION_URL}/payment`)
-          .expect(401)
-      });
+    it('User1 - deny', function*() {
+      let {agent} = yield user1Promise;
+      return agent.post(`${COLLECTION_URL}/payment`)
+        .expect(401)
     });
 
-    it('Admin - deny', () => {
-      return adminPromise.then(({agent}) => {
+    it('Admin - deny', function*() {
+      let {agent} = yield adminPromise;
         return agent.post(`${COLLECTION_URL}/payment`)
           .expect(401)
-      });
     });
 
-    it('Super - allow', () => {
-      return superPromise.then(({agent}) => {
-        return agent.post(`${COLLECTION_URL}/payment`)
-          .send(data)
-          .expect(200)
-      });
+    it('Super - allow', function*() {
+      let {agent} = yield superPromise;
+      return agent.post(`${COLLECTION_URL}/payment`)
+        .send(data)
+        .expect(200)
     })
   });
 
@@ -61,35 +57,32 @@ describe(`/${COLLECTION_URL}`, function () {
         .expect(401)
     });
 
-    it('User - deny foreign', () => {
-      return user2Promise.then(({agent}) => {
+    it('User - deny foreign', function*() {
+      let {agent} = yield user2Promise;
         return agent.get(url)
           .expect(403)
-      });
     });
 
-    it('User - allow his data', () => {
-      return user1Promise.then(({agent}) => {
-        return agent.get(url)
-          .expect(200)
-          .expect(res => {
-            let transactions = res.body;
-            should.exist(transactions);
-            transactions.length.should.least(2);
-          })
-      });
+    it('User - allow his data', function*() {
+      let {agent} = yield user1Promise;
+      return agent.get(url)
+        .expect(200)
+        .expect(res => {
+          let transactions = res.body;
+          should.exist(transactions);
+          transactions.length.should.least(2);
+        });
     });
 
-    it('Super - allow', () => {
-      return superPromise.then(({agent}) => {
-        return agent.get(url)
-          .expect(200)
-          .expect(res => {
-            let transactions = res.body;
-            should.exist(transactions);
-            transactions.length.should.least(2);
-          })
-      });
+    it('Super - allow', function*() {
+      let {agent} = yield superPromise;
+      return agent.get(url)
+        .expect(200)
+        .expect(res => {
+          let transactions = res.body;
+          should.exist(transactions);
+          transactions.length.should.least(2);
+        })
     });
   })
 });
