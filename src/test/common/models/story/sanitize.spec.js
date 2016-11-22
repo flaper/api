@@ -22,7 +22,7 @@ describe(`models/story/@sanitize`, function () {
   });
 
   it("Should allow quotes in title", function*() {
-    let story = yield Story.findByIdRequired(NEW_STORY.id)
+    let story = yield Story.findByIdRequired(NEW_STORY.id);
     story.title.should.eq("Title 'with' \"quotes\" inside tag");
   });
 

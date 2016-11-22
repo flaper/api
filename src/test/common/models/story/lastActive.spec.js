@@ -12,7 +12,7 @@ describe(`models/story/@lastActive`, function () {
   };
 
   it("Last active should be now", function*() {
-    let s = yield Story.create(NEW_STORY)
+    let s = yield Story.create(NEW_STORY);
     should.exist(s.lastActive);
     s.created.getTime().should.eq(s.lastActive.getTime());
   });
