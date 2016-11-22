@@ -21,26 +21,24 @@ describe(`/${COLLECTION_URL}`, function () {
         .expect(401)
     });
 
-    it('User - deny', () => {
-      return user1Promise.then(({agent}) => {
+    it('User - deny', function*() {
+      let {agent} = yield user1Promise;
         return agent.get(url)
           .expect(401);
-      });
     });
 
-    it('Super - allow', () => {
-      return superPromise.then(({agent}) => {
-        return agent.get(url)
-          .expect(200)
-          .expect(res => {
-            let dialogs = res.body;
-            dialogs.length.should.least(2);
-            let dialogsIds = dialogs.map(message => message.dialog);
-            dialogsIds = _.uniq(dialogsIds);
-            //so all dialogs are unique actually
-            dialogsIds.length.should.eq(dialogs.length);
-          })
-      });
+    it('Super - allow', function*() {
+      let {agent} = yield superPromise;
+      return agent.get(url)
+        .expect(200)
+        .expect(res => {
+          let dialogs = res.body;
+          dialogs.length.should.least(2);
+          let dialogsIds = dialogs.map(message => message.dialog);
+          dialogsIds = _.uniq(dialogsIds);
+          //so all dialogs are unique actually
+          dialogsIds.length.should.eq(dialogs.length);
+        })
     })
   });
 
@@ -51,44 +49,37 @@ describe(`/${COLLECTION_URL}`, function () {
         .expect(401)
     });
 
-    it('Regular user - deny', () => {
-      let premiumSupport = null;
-      return User.getExtra(user2.id)
-        .then(extra => premiumSupport => extra.premiumSupport)
-        .then(() => User.updateExtraValue(user2.id, 'premiumSupport', null))
-        .then(() => {
-          return user2Promise.then(({agent}) => {
-            return agent.get(url)
-              .expect(403);
-          });
+    it('Regular user - deny', function*() {
+      let {premiumSupport} = yield User.getExtra(user2.id);
+      yield User.updateExtraValue(user2.id, 'premiumSupport', null);
+      let {agent} = yield user2Promise;
+      yield agent.get(url)
+        .expect(403);
+      return User.updateExtraValue(user2.id, 'premiumSupport', premiumSupport);
+    });
+
+    it('User with premiumSupport - allow', function*() {
+      let {agent} = yield user1Promise;
+      return agent.get(url)
+        .expect(res => {
+          let messages = res.body;
+          messages.length.should.least(2);
+          messages.forEach(message => {
+            true.should.eq(message.toId === user1.id || message.fromId === user1.id);
+          })
         })
-        .then(() => User.updateExtraValue(user2.id, 'premiumSupport', premiumSupport))
     });
 
-    it('User with premiumSupport - allow', () => {
-      return user1Promise.then(({agent}) => {
-        return agent.get(url)
-          .expect(res => {
-            let messages = res.body;
-            messages.length.should.least(2);
-            messages.forEach(message => {
-              true.should.eq(message.toId === user1.id || message.fromId === user1.id);
-            })
+    it('Super - allow', function*() {
+      let {agent} = yield superPromise;
+      return agent.get(url)
+        .expect(res => {
+          let messages = res.body;
+          messages.length.should.least(2);
+          messages.forEach(message => {
+            true.should.eq(message.toId === user1.id || message.fromId === user1.id);
           })
-      });
-    });
-
-    it('Super - allow', () => {
-      return superPromise.then(({agent}) => {
-        return agent.get(url)
-          .expect(res => {
-            let messages = res.body;
-            messages.length.should.least(2);
-            messages.forEach(message => {
-              true.should.eq(message.toId === user1.id || message.fromId === user1.id);
-            })
-          })
-      });
+        })
     })
   });
 
@@ -101,48 +92,41 @@ describe(`/${COLLECTION_URL}`, function () {
         .expect(401)
     });
 
-    it('Regular user - deny', () => {
-      let premiumSupport = null;
-      return User.getExtra(user2.id)
-        .then(extra => premiumSupport => extra.premiumSupport)
-        .then(() => User.updateExtraValue(user2.id, 'premiumSupport', null))
-        .then(() => {
-          return user2Promise.then(({agent}) => {
-            return agent.post(COLLECTION_URL)
-              .send(toSupport)
-              .expect(403);
-          });
-        })
-        .then(() => User.updateExtraValue(user2.id, 'premiumSupport', premiumSupport))
+    it('Regular user - deny', function*() {
+      let {premiumSupport} = yield User.getExtra(user2.id);
+      yield User.updateExtraValue(user2.id, 'premiumSupport', null);
+      let {agent} = yield user2Promise;
+      yield agent.post(COLLECTION_URL)
+        .send(toSupport)
+        .expect(403);
+      return User.updateExtraValue(user2.id, 'premiumSupport', premiumSupport);
     });
 
-    it('User with premiumSupport access - allow', () => {
-      return user1Promise.then(({agent}) => {
-        return agent.post(COLLECTION_URL)
-          .send(toSupport)
-          .expect(200)
-          .expect(res => {
-            let message = res.body;
-            message.toId.should.eq('0');
-            message.fromId.should.eq(user1.id);
-            message.dialog.should.eq(user1.id);
-            message.message.should.eq(toSupport.message);
-          })
-      });
+    it('User with premiumSupport access - allow', function*() {
+      let {agent} = yield user1Promise;
+      return agent.post(COLLECTION_URL)
+        .send(toSupport)
+        .expect(200)
+        .expect(res => {
+          let message = res.body;
+          message.toId.should.eq('0');
+          message.fromId.should.eq(user1.id);
+          message.dialog.should.eq(user1.id);
+          message.message.should.eq(toSupport.message);
+        });
     });
 
-    it('Admin can answer', () => {
-      return superPromise.then(({agent}) => {
-        return agent.post(COLLECTION_URL)
-          .send(fromSupport)
-          .expect(200)
-          .expect(res => {
-            let message = res.body;
-            message.toId.should.eq(user1.id);
-            message.fromId.should.eq(superUser.id);
-            message.dialog.should.eq(user1.id);
-          })
-      });
+    it('Admin can answer', function*() {
+      let {agent} = yield superPromise;
+      return agent.post(COLLECTION_URL)
+        .send(fromSupport)
+        .expect(200)
+        .expect(res => {
+          let message = res.body;
+          message.toId.should.eq(user1.id);
+          message.fromId.should.eq(superUser.id);
+          message.dialog.should.eq(user1.id);
+        });
     });
   });
 
@@ -154,22 +138,18 @@ describe(`/${COLLECTION_URL}`, function () {
         .expect(401)
     });
 
-    it('Another user - deny', () => {
-      return user2Promise.then(({agent}) => {
-        return agent.del(url)
-          .expect(403)
-      });
+    it('Another user - deny', function*() {
+      let {agent} = yield user2Promise;
+      return agent.del(url)
+        .expect(403)
     });
 
-    it('Allow for own message', () => {
-      return user1Promise.then(({agent}) => {
-          return agent.del(url)
-            .expect(200)
-        })
-        .then(() => SupportMessage.findByIdRequired(MESSAGE1.id))
-        .then(message => {
-          message.status.should.eq('deleted');
-        });
+    it('Allow for own message', function*() {
+      let {agent} = yield user1Promise;
+      yield agent.del(url)
+        .expect(200);
+      let message = yield SupportMessage.findByIdRequired(MESSAGE1.id)
+      return message.status.should.eq('deleted');
     });
 
     after(() => returnProperties(SupportMessage, MESSAGE1.id, {status: 'active'}))
