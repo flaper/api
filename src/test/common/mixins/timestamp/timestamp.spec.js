@@ -8,16 +8,12 @@ let Story = app.models.Story;
 const STORY1 = STORIES.test1;
 
 describe(`Timestamp`, function () {
-  it('save() - Created should be ignored when', () => {
+  it('save() - Created should be ignored when', function*() {
     let created;
-    return Story.findByIdRequired(STORY1.id)
-      .then(story => {
-        created = story.created;
-        return story.updateAttributes({created: (new Date()).getTime()});
-      })
-      .then(story => {
-        created.should.eq(story.created);
-      })
+    let story = yield  Story.findByIdRequired(STORY1.id)
+    created = story.created;
+    story = yield story.updateAttributes({created: (new Date()).getTime()});
+    created.should.eq(story.created);
 
   });
 });
