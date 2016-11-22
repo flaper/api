@@ -10,18 +10,17 @@ let STORY_WITHOUT_LIKES_USER3 = STORIES.withoutLikesUser3;
 
 const COLLECTION_URL = 'likes';
 
-describe(`/${COLLECTION_URL}/delete`, function () {
+describe.only(`/${COLLECTION_URL}/delete`, function () {
   updateTimeouts(this);
   it('Anonymous - no allow delete by id', () => {
     return api.del(`${COLLECTION_URL}/${STORY_WITHOUT_LIKES_USER3.id}`)
       .expect(401)
   });
 
-  it('User - deny delete if like not exist', () => {
-    return user1Promise.then(({agent}) => {
+  it('User - deny delete if like not exist', function*() {
+    let {agent} = yield user1Promise;
       return agent.del(`${COLLECTION_URL}/${STORY_WITHOUT_LIKES_USER3.id}`)
         .expect(404)
-    })
   });
 
   describe("Sample like created", () => {
@@ -33,29 +32,25 @@ describe(`/${COLLECTION_URL}/delete`, function () {
     };
     before(() => Like.create(NEW_LIKE));
 
-    it("User - deny delete foreign like", () => {
-      return user2Promise.then(({agent}) => {
+    it("User - deny delete foreign like", function*() {
+      let {agent} = yield user2Promise;
         return agent.del(`${COLLECTION_URL}/${STORY_WITHOUT_LIKES_USER3.id}`)
           .expect(404)
-      })
     });
 
-    it("User - allow delete", () => {
-      return user1Promise.then(({agent}) => {
-          return agent.del(`${COLLECTION_URL}/${STORY_WITHOUT_LIKES_USER3.id}`)
-            .expect(200)
-            .expect(response => {
-              let res = response.body;
-              res.count.should.eq(0);
-              res.status.should.eq(Like.RETURN_STATUS.DELETED);
-            })
-        })
-        .then(() => Like.findOne({where: NEW_LIKE}))
-        .then((like) => {
-          should.not.exist(like);
-          return Story.findById(STORY_WITHOUT_LIKES_USER3.id);
-        })
-        .then(story => story.likesNumber.should.eq(0))
+    it("User - allow delete", function*() {
+      let {agent} = yield user1Promise;
+      yield agent.del(`${COLLECTION_URL}/${STORY_WITHOUT_LIKES_USER3.id}`)
+        .expect(200)
+        .expect(response => {
+          let res = response.body;
+          res.count.should.eq(0);
+          res.status.should.eq(Like.RETURN_STATUS.DELETED);
+        });
+      let like = yield Like.findOne({where: NEW_LIKE});
+      should.not.exist(like);
+      let story = yield Story.findById(STORY_WITHOUT_LIKES_USER3.id);
+      return story.likesNumber.should.eq(0);
     })
   })
 });
