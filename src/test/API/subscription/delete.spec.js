@@ -15,11 +15,10 @@ describe(`/${COLLECTION_URL}/delete`, function () {
       .expect(401)
   });
 
-  it('User - deny delete if subscription not exist', () => {
-    return user1Promise.then(({agent}) => {
-      return agent.del(`${COLLECTION_URL}/${user1.id}`)
-        .expect(404)
-    })
+  it('User - deny delete if subscription not exist', function*() {
+    let {agent} = yield user1Promise;
+    return agent.del(`${COLLECTION_URL}/${user1.id}`)
+      .expect(404)
   });
 
   describe("Sample subscription created", () => {
@@ -29,17 +28,15 @@ describe(`/${COLLECTION_URL}/delete`, function () {
     };
     before(() => Subscription.create(NEW_SUBSCRIPTION));
 
-    it("User - deny delete foreign subscription", () => {
-      return user2Promise.then(({agent}) => {
-        return agent.del(`${COLLECTION_URL}/${user2.id}`)
-          .expect(404)
-      })
+    it("User - deny delete foreign subscription", function*() {
+      let {agent} = yield user2Promise;
+      return agent.del(`${COLLECTION_URL}/${user2.id}`)
+        .expect(404)
     });
-    it("User - allow delete", () => {
-      return user1Promise.then(({agent}) => {
-          return agent.del(`${COLLECTION_URL}/${user2.id}`)
-            .expect(200)
-        })
+    it("User - allow delete", function*() {
+      let {agent} = yield user1Promise;
+      return agent.del(`${COLLECTION_URL}/${user2.id}`)
+        .expect(200)
     })
   })
 });
