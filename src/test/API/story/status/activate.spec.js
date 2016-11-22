@@ -17,25 +17,22 @@ const COLLECTION_URL = 'stories';
 describe(`/${COLLECTION_URL}/:id/status/activate`, function () {
   updateTimeouts(this);
 
-  it('User not allowed to activate story', ()=> {
-    return user1Promise.then(({agent}) => {
-      return agent.put(`${COLLECTION_URL}/${STORY1.id}/status/activate`)
-        .expect(401)
-    })
+  it('User not allowed to activate story', function*() {
+    let {agent} = yield user1Promise;
+    return agent.put(`${COLLECTION_URL}/${STORY1.id}/status/activate`)
+      .expect(401)
   });
 
-  it('Admin cannot activate already active story', () => {
-    return adminPromise.then(({agent}) => {
-      return agent.put(`${COLLECTION_URL}/${STORY1.id}/status/activate`)
-        .expect(403)
-    })
+  it('Admin cannot activate already active story', function*() {
+    let {agent} = yield adminPromise;
+    return agent.put(`${COLLECTION_URL}/${STORY1.id}/status/activate`)
+      .expect(403)
   });
 
-  it('Admin cannot activate deleted story', () => {
-    return adminPromise.then(({agent}) => {
-      return agent.put(`${COLLECTION_URL}/${STORY_DELETED1.id}/status/activate`)
-        .expect(403)
-    })
+  it('Admin cannot activate deleted story', function*() {
+    let {agent} = yield adminPromise;
+    return agent.put(`${COLLECTION_URL}/${STORY_DELETED1.id}/status/activate`)
+      .expect(403)
   });
 
   it('Admin can activate denied story', function*() {
