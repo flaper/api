@@ -1,6 +1,7 @@
 import {initGet} from "./get/get";
 import {initCandidates} from "./candidates/candidates";
 import {initStatusActions} from "./status/status";
+import {App} from '../../services/App';
 import {applyIdToType} from '../../behaviors/idToType';
 import {setCurrentUserId} from '../../behaviors/currentUser';
 import {ignoreUpdatedIfNoChanges, ignoreProperties, setProperty} from '../../behaviors/propertiesHelper.js';
@@ -12,23 +13,29 @@ module.exports = (Poll) => {
   applyIdToType(Poll);
   Poll.disableAllRemotesExcept(Poll, ['find', 'findById', 'updateAttributes', 'count', 'exists', 'create']);
   Poll.RESTRICTIONS = {
-    TITLE_LENGTH : {
-      MIN : 10,
-      MAX : 128
+    LENGTH: {
+      TITLE: {
+        MIN: 10,
+        MAX: 128
+      }
     },
-    STORIES_TO_CANDIDATE: {
-      MIN:10
+    LEVEL : {
+      CREATE : {
+        PROPOSAL: 2
+      },
+      VOTE : 1
     },
-    STORIES_TO_VOTE: {
-      MIN:5
-    },
-    LEVEL_TO_VOTE: {
-      MIN:1
+    STORIES: {
+      CREATE : {
+        CANDIDATE : 10
+      },
+      VOTE : 5
     },
     ANSWERS: {
-      POLL: {
-        MIN:2,
-        MAX:15
+      CREATE: {
+        POLL : 2,
+        PROPOSAL: 1,
+        VOTING: 0
       }
     }
   }
@@ -41,7 +48,7 @@ module.exports = (Poll) => {
   }
   Poll.TYPE = {
     POLL : "poll",
-    QUESTION: "question",
+    PROPOSAL: "proposal",
     VOTING: "voting"
   }
   Poll.TYPES = _.values(Poll.TYPE);
@@ -61,6 +68,7 @@ module.exports = (Poll) => {
   Poll.observe('before save', typeObserver);
   Poll.observe('before save', titleObserver);
   Poll.observe('before save', dateObserver);
+  Poll.observe('before save', permissionObserver);
   Poll.observe('before save', answerObserver);
 
   initGet(Poll);
@@ -75,13 +83,13 @@ module.exports = (Poll) => {
         throw ERRORS.badRequest(`Answers has wrong type: ${typeof answers}`)
       }
       switch (ctx.instance.type) {
-        case 'question':
-            if (answers.length !== Poll.RESTRICTIONS.ANSWERS.POLL.MIN)
-            throw ERRORS.badRequest(`Question must have exactly ${Poll.RESTRICTIONS.ANSWERS.POLL.MIN} answers`);
+        case 'proposal':
+            if (answers.length !== Poll.RESTRICTIONS.ANSWERS.CREATE.PROPOSAL)
+            throw ERRORS.badRequest(`Proposal must have exactly ${Poll.RESTRICTIONS.ANSWERS.CREATE.PROPOSAL} answers`);
           return;
         case 'poll':
-            if (answers.length < Poll.RESTRICTIONS.ANSWERS.POLL.MIN)
-            throw ERRORS.badRequest(`Poll must have at least ${Poll.RESTRICTIONS.ANSWERS.POLL.MIN} answers`);
+            if (answers.length < Poll.RESTRICTIONS.ANSWERS.CREATE.POLL)
+            throw ERRORS.badRequest(`Poll must have at least ${Poll.RESTRICTIONS.ANSWERS.CREATE.POLL} answers`);
           return;
         default:
           break;
@@ -91,14 +99,14 @@ module.exports = (Poll) => {
   function* titleObserver(ctx) {
     if (ctx.instance && ctx.instance.title) {
       let title = ctx.instance.title;
-      if (title.replace(" ","").length < Poll.RESTRICTIONS.TITLE_LENGTH.MIN) {
+      if (title.replace(" ","").length < Poll.RESTRICTIONS.LENGTH.TITLE.MIN) {
           throw ERRORS.badRequest(
-            `Title is too short (min ${Poll.RESTRICTIONS.TITLE_LENGTH.MIN} characters)`
+            `Title is too short (min ${Poll.RESTRICTIONS.LENGTH.TITLE.MIN} characters)`
         );
       }
-      if (title.replace(" ","").length > Poll.RESTRICTIONS.TITLE_LENGTH.MAX) {
+      if (title.replace(" ","").length > Poll.RESTRICTIONS.LENGTH.TITLE.MAX) {
           throw ERRORS.badRequest(
-            `Title is too long (max ${Poll.RESTRICTIONS.TITLE_LENGTH.MAX} characters)`
+            `Title is too long (max ${Poll.RESTRICTIONS.LENGTH.TITLE.MAX} characters)`
           );
       }
     }
@@ -112,7 +120,27 @@ module.exports = (Poll) => {
       }
     }
   }
-
+  function* permissionObserver(ctx) {
+    let user = App.getCurrentUser();
+    let isAdmin = yield App.isAdmin();
+    if (ctx.isNewInstance) {
+      let poll = ctx.instance;
+      switch (poll.type) {
+        case 'poll':
+          break;
+        case 'proposal':
+          if (user.level < 2)
+            throw ERRORS.forbidden(
+              `You need to be at least level ${Poll.RESTRICTIONS.LEVEL.CREATE.PROPOSAL}`
+            );
+          break;
+        case 'voting':
+            // if (!isAdmin)
+            //   throw ERRORS.forbidden(`Only administrator is able to create voting`);
+          break;
+      }
+    }
+  }
   function* typeObserver(ctx) {
     if (ctx.isNewInstance) {
       let type = ctx.instance.type;
