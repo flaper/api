@@ -75,8 +75,15 @@ module.exports = (Vote) => {
     if (!poll.answers || !poll.answers.some(option => option ===  answer )) {
       throw ERRORS.notFound(`No such answer in this poll`);
     }
-    if (user.storiesNumber < Poll.RESTRICTIONS.STORIES.VOTE.MIN) {
-      throw ERRORS.badRequest(`You can not vote unless you have ${Poll.RESTRICTIONS.STORIES.VOTE.MIN} stories`);
+    if (poll.type === 'poll' || poll.type === 'voting') {
+      if (user.storiesNumber < Poll.RESTRICTIONS.STORIES.VOTE) {
+        throw ERRORS.badRequest(`You can not vote unless you have ${Poll.RESTRICTIONS.STORIES.VOTE} stories`);
+      }
+    }
+    if (poll.type === 'proposal') {
+      if (user.level < Poll.RESTRICTIONS.LEVEL.VOTE) {
+        throw ERRORS.badRequest(`You can not vote unless you have ${Poll.RESTRICTIONS.LEVEL.VOTE} stories`);
+      }
     }
     return yield Vote.create({targetId,answer,userId});
   }
