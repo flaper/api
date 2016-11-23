@@ -10,16 +10,6 @@ describe(`/${COLLECTION_URL}`, function() {
   updateTimeouts(this);
 
   describe('DELETE', () => {
-    before(function*() {
-
-    })
-    it('User should be able to remove his candidancy',function*(){
-      let id = POLLS.voteActive.id,
-          {agent} = yield user1Promise;
-      yield agent.delete(`${COLLECTION_URL}/${id}/candidate`)
-      .expect(200);
-    })
-
     it('Users should be able to remove his poll',function*(){
       let id = POLLS.pollActive.id,
           {agent} = yield user1Promise;

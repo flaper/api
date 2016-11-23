@@ -26,8 +26,8 @@ const POLLS = {
       "ответ 1",
     ]
   },
-  questionWith1Answer : {
-    type: "question",
+  proposalWith1Answer : {
+    type: "proposal",
     title: "Новый заголовок",
     openDate: new Date(2016,10,1),
     closeDate: new Date(2016,10,2),
@@ -35,8 +35,8 @@ const POLLS = {
       "ответ 1",
     ]
   },
-  questionWith2Answers : {
-    type: "question",
+  proposalWith2Answers : {
+    type: "proposal",
     title: "Новый заголовок",
     openDate: new Date(2016,10,1),
     closeDate: new Date(2016,10,2),
@@ -45,8 +45,8 @@ const POLLS = {
       "ответ 1",
     ]
   },
-  questionWith3Answers : {
-    type: "question",
+  proposalWith3Answers : {
+    type: "proposal",
     title: "Новый заголовок",
     openDate: new Date(2016,10,1),
     closeDate: new Date(2016,10,2),
@@ -217,17 +217,17 @@ describe(`/${COLLECTION_URL}`, function() {
       .expect(200);
     })
 
-    it('Question should have exactly 2 answers', function*() {
+    it('Proposal should have exactly 2 answers', function*() {
       let {agent} = yield user1Promise;
       let poll = POLLS.pollActive;
       yield agent.post(COLLECTION_URL)
-      .send(POLLS.questionWith1Answer)
-      .expect(400);
-      yield agent.post(COLLECTION_URL)
-      .send(POLLS.questionWith2Answers)
+      .send(POLLS.proposalWith1Answer)
       .expect(200);
       yield agent.post(COLLECTION_URL)
-      .send(POLLS.questionWith3Answers)
+      .send(POLLS.proposalWith2Answers)
+      .expect(400);
+      yield agent.post(COLLECTION_URL)
+      .send(POLLS.proposalWith3Answers)
       .expect(400);
     })
 
