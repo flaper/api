@@ -64,17 +64,21 @@ module.exports = (Vote) => {
     }
   );
   function* actionCreate(targetId, answer) {
-    let Poll = Vote.app.models.Poll;
-    let user = yield App.getCurrentUser(),
-        userId = user.id,
+    let Poll = Vote.app.models.Poll,
+        User = Vote.app.models.User,
+        userId = App.getCurrentUserId(),
         poll = yield Poll.findByIdRequired(targetId),
         vote = yield Vote.findOne({where:{targetId,userId}});
+    if(vote) {
+      throw ERRORS.forbidden(`You have already voted`);
+    }
     if(!poll) {
       throw ERRORS.notFound(`Poll does not exist`);
     }
     if (!poll.answers || !poll.answers.some(option => option ===  answer )) {
       throw ERRORS.notFound(`No such answer in this poll`);
     }
+    let user = yield User.findById(userId);
     if (poll.type === 'poll' || poll.type === 'voting') {
       if (user.storiesNumber < Poll.RESTRICTIONS.STORIES.VOTE) {
         throw ERRORS.badRequest(`You can not vote unless you have ${Poll.RESTRICTIONS.STORIES.VOTE} stories`);
@@ -103,7 +107,7 @@ module.exports = (Vote) => {
   function* actionExists(targetId) {
     let userId = App.getCurrentUserId(),
         vote = yield Vote.findOne({where:{targetId,userId}});
-    return vote ? yield {voted:true} : yield {voted:false};
+    return vote ? {voted:true} : {voted:false};
   }
   function* actionResults(targetId) {
     let Poll = Vote.app.models.Poll;
