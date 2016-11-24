@@ -34,7 +34,9 @@ module.exports = (Search) => {
       q.filter.push({term: {region: region}});
     if (domain)
       q.filter.push({term: {mainDomain: domain}});
-    q = {query: {bool: q}};
+    q = {query: {bool: q}, size: filter.limit||10};
+    if (filter.offset)
+      q.from = filter.offset;
     let options = {
       method: 'GET',
       uri: URL,
