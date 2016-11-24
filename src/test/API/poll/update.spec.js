@@ -1,6 +1,6 @@
 import {api, user1, user1Promise, user2, user2Promise,user3,user3Promise, adminPromise} from '../../helpers/api';
 import {updateTimeouts} from '../timeout';
-import {returnProperties} from '../commonModel/helper'
+import {returnProperties} from '../commonModel/helper';
 import app from '../../helpers/app';
 let should = require('chai').should();
 let expect = require('chai').expect;
