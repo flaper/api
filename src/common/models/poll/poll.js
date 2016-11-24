@@ -21,15 +21,24 @@ module.exports = (Poll) => {
     },
     LEVEL : {
       CREATE : {
-        PROPOSAL: 2
+        PROPOSAL: 2,
+        CANDIDATE: 4
       },
-      VOTE : 1
+      VOTE :  {
+        VOTING: 3,
+        PROPOSAL: 2,
+        POLL: 0
+      }
     },
     STORIES: {
       CREATE : {
         CANDIDATE : 10
       },
-      VOTE : 5
+      VOTE : {
+        VOTING: 5,
+        PROPOSAL: 5,
+        POLL: 5
+      }
     },
     ANSWERS: {
       CREATE: {
