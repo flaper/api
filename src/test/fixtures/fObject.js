@@ -76,6 +76,16 @@ let fobjects = {
     "title": "Объект без владельцев",
     "mainDomain": FObject.DOMAINS.PLACES
   },
+  place_orenburg: {
+    "id": "1a7000000000000000001007",
+    "title": "Армада",
+    "mainDomain": FObject.DOMAINS.PLACES,
+    "region": 'оренбург',
+    "slugLowerCase": 'армада',
+    "fields": {
+      address: 'Шарлыкское шоссе 1',
+    },
+  },
   deleted1: {
     "id": "1a7000000000000000001020",
     "mainDomain": FObject.DOMAINS.PLACES,
