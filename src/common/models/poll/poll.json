@@ -30,16 +30,18 @@
       "type": "date",
       "required": true
     },
-    "responseNumber" : {
-      "type": "number"
-    },
     "lastActive": {
       "type": "date"
     },
     "commentsNumber": {
       "type": "number",
       "default": 0
-    }
+    },
+    "answers": [
+      {
+          "type": "string"
+      }
+    ]
   },
   "validations": [],
   "relations": {
