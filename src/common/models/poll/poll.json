@@ -39,23 +39,7 @@
     "commentsNumber": {
       "type": "number",
       "default": 0
-    },
-    "views": {
-      "type": "number",
-      "default": 0
-    },
-    "answers": [
-      {
-          "type": "string"
-      }
-    ],
-    "tags": [
-      {
-        "type": "string",
-        "length": 3,
-        "comment": "actually length not working by default"
-      }
-    ]
+    }
   },
   "validations": [],
   "relations": {
