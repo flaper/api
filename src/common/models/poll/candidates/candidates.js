@@ -44,7 +44,7 @@ export function initCandidates(Poll) {
         now = new Date();
     if (!poll) throw ERRORS.notFound(`Poll does not exist`);
     if (!poll.answers) poll.answers = [];
-    if (poll.answers.indexOf(user.id) !== -1) throw ERRORS.badRequest(`Candidate already registered`);
+    if (poll.answers.includes(user.id.toString())) throw ERRORS.badRequest(`Candidate already registered`);
     if (poll.status !== Poll.STATUS.ACTIVE) throw ERRORS.badRequest(`You can not be added to inactive poll`);
     if (poll.closeDate < now) throw ERRORS.badRequest(`You can not be added to closed Poll`);
     if (user.level < Poll.RESTRICTIONS.LEVEL.CREATE.CANDIDATE)
@@ -62,8 +62,8 @@ export function initCandidates(Poll) {
         userId = App.getCurrentUserId();
     if (!poll) throw ERRORS.notFound(`Poll does not exist`);
     if (!poll.answers) poll.answers = [];
-    if (poll.answers.indexOf(userId) === -1) throw ERRORS.notFound(`Candidate not registered`);
-    poll.answers.filter(val => val !== userId);
+    if (poll.answers.includes(userId)) throw ERRORS.notFound(`Candidate not registered`);
+    poll.answers = poll.answers.filter(val => val !== userId);
     yield poll.save();
     return poll;
   }
