@@ -1,7 +1,5 @@
 import {App} from '../../../services/App';
-import {objectHasDeepKey} from '../../../utils/object';
 import {ERRORS} from '../../../utils/errors'
-import _ from 'lodash';
 
 export function initCandidates(Poll) {
   Poll.disableRemoteMethod('find', true);
@@ -39,12 +37,13 @@ export function initCandidates(Poll) {
   });
 
   function* createCandidate(targetId) {
+    let userId = App.getCurrentUserId();
+    let user = yield App.getCurrentUser();
     let poll = yield Poll.findByIdRequired(targetId),
-        user = yield App.getCurrentUser(),
         now = new Date();
     if (!poll) throw ERRORS.notFound(`Poll does not exist`);
     if (!poll.answers) poll.answers = [];
-    if (poll.answers.includes(user.id.toString())) throw ERRORS.badRequest(`Candidate already registered`);
+    if (poll.answers.includes(userId)) throw ERRORS.badRequest(`Candidate already registered`);
     if (poll.status !== Poll.STATUS.ACTIVE) throw ERRORS.badRequest(`You can not be added to inactive poll`);
     if (poll.closeDate < now) throw ERRORS.badRequest(`You can not be added to closed Poll`);
     if (user.level < Poll.RESTRICTIONS.LEVEL.CREATE.CANDIDATE)
@@ -58,11 +57,11 @@ export function initCandidates(Poll) {
   }
 
   function* removeCandidate(targetId) {
-    let poll = yield Poll.findByIdRequired(targetId),
-        userId = App.getCurrentUserId();
+    let userId = App.getCurrentUserId();
+    let poll = yield Poll.findByIdRequired(targetId);
     if (!poll) throw ERRORS.notFound(`Poll does not exist`);
     if (!poll.answers) poll.answers = [];
-    if (poll.answers.includes(userId)) throw ERRORS.notFound(`Candidate not registered`);
+    if (!poll.answers.includes(userId)) throw ERRORS.notFound(`Candidate not registered`);
     poll.answers = poll.answers.filter(val => val !== userId);
     yield poll.save();
     return poll;
