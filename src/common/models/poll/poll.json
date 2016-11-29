@@ -65,20 +65,8 @@
     {
       "principalType": "ROLE",
       "principalId": "$authenticated",
-      "permission": "ALLOW"
-    },
-    {
-      "accessType": "WRITE",
-      "principalType": "ROLE",
-      "principalId": "$owner",
-      "permission": "ALLOW"
-    },
-    {
-      "accessType": "WRITE",
-      "principalType": "ROLE",
-      "principalId": "admin",
       "permission": "ALLOW",
-      "property" : "update"
+      "property": ["create", "createCandidate", "removeCandidate"]
     },
     {
       "principalType": "ROLE",
@@ -90,6 +78,7 @@
       "principalId": "admin",
       "permission": "ALLOW",
       "property": [
+        "updateAttributes",
         "actionDelete",
         "actionDeny",
         "actionActivate"

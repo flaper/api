@@ -30,7 +30,7 @@ describe(`/${COLLECTION_URL}`, function () {
         .expect(401);
     });
 
-    it.skip('User should not be able to edit another user\'s poll', function*() {
+    it('User should not be able to edit another user\'s poll', function*() {
       let {agent} = yield user3Promise;
       yield agent.put(`${COLLECTION_URL}/${pollId}`)
         .send({})

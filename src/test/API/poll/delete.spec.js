@@ -21,7 +21,7 @@ describe(`/${COLLECTION_URL}`, function() {
       let id = POLLS.pollActive.id,
           {agent} = yield user2Promise;
       yield agent.put(`${COLLECTION_URL}/${id}/status/delete`)
-      .expect(403);
+      .expect(401);
     })
 
   })
