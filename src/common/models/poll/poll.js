@@ -3,7 +3,6 @@ import {initCandidates} from "./candidates/candidates";
 import {initStatusActions} from "./status/status";
 import {App} from '../../services/App';
 import {applyIdToType} from '../../behaviors/idToType';
-import {setCurrentUserId} from '../../behaviors/currentUser';
 import {ignoreUpdatedIfNoChanges, ignoreProperties, setProperty} from '../../behaviors/propertiesHelper.js';
 import {ERRORS} from '../../utils/errors';
 import _ from "lodash";
@@ -64,7 +63,6 @@ module.exports = (Poll) => {
   Poll.STATUSES = _.values(Poll.STATUS);
 
   Poll.observe('before save', ignoreUpdatedIfNoChanges(['title','answers']));
-  Poll.observe('before save', setCurrentUserId);
   Poll.observe('before save', ignoreProperties({
     status: {newDefault: Poll.STATUS.ACTIVE},
     id: {},

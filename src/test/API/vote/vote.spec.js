@@ -4,9 +4,7 @@ import {returnProperties} from '../commonModel/helper';
 import app from '../../helpers/app';
 import POLLS from  "../../fixtures/poll";
 let should = require('chai').should();
-let expect = require('chai').expect;
-let User = app.models.User,
-    Poll = app.models.Poll;
+let {Poll, User} = app.models;
 const COLLECTION_URL = "Votes";
 
 describe(`/${COLLECTION_URL}`, function() {
@@ -46,7 +44,7 @@ describe(`/${COLLECTION_URL}`, function() {
       .expect(401);
     })
 
-    it.skip("Users can vote/unvote", function*(){ //skipped due to currentUser.js issues
+    it("Users can vote/unvote", function*(){
       let id = POLLS.voteActive.id,
           {agent} = yield user2Promise;
       yield agent.post(`${COLLECTION_URL}/${id}`)

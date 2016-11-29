@@ -27,6 +27,10 @@ export class App {
     return isWebServer;
   }
 
+  static setWebServer(value) {
+    isWebServer = true;
+  }
+
   static getCurrentUserId() {
     const LoopBackContext = require('loopback-context');
     let ctx = LoopBackContext.getCurrentContext();

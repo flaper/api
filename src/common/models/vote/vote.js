@@ -3,14 +3,12 @@ import {App} from '../../services/App';
 import {setCurrentUserId} from '../../behaviors/currentUser';
 import {ignoreUpdatedIfNoChanges, ignoreProperties, setProperty} from '../../behaviors/propertiesHelper.js';
 import {ERRORS} from '../../utils/errors';
-import _ from "lodash";
 
 module.exports = (Vote) => {
   Vote.commonInit(Vote);
   applyIdToType(Vote);
   Vote.disableAllRemotesExcept(Vote, []);
 
-  Vote.observe('before save', setCurrentUserId);
   Vote.observe('before save', pollObserver);
 
   Vote.actionCreate = actionCreate;
@@ -64,18 +62,18 @@ module.exports = (Vote) => {
     }
   );
   function* actionCreate(targetId, answer) {
+    let userId = App.getCurrentUserId();
     let Poll = Vote.app.models.Poll,
-        User = Vote.app.models.User,
-        userId = App.getCurrentUserId(),
-        poll = yield Poll.findByIdRequired(targetId),
-        vote = yield Vote.findOne({where:{targetId,userId}});
-    if(vote) {
+      User = Vote.app.models.User,
+      poll = yield Poll.findByIdRequired(targetId),
+      vote = yield Vote.findOne({where: {targetId, userId}});
+    if (vote) {
       throw ERRORS.forbidden(`You have already voted`);
     }
-    if(!poll) {
+    if (!poll) {
       throw ERRORS.notFound(`Poll does not exist`);
     }
-    if (!poll.answers || !poll.answers.some(option => option ===  answer )) {
+    if (!poll.answers || !poll.answers.some(option => option === answer)) {
       throw ERRORS.notFound(`No such answer in this poll`);
     }
     let user = yield User.findById(userId);
@@ -85,46 +83,49 @@ module.exports = (Vote) => {
         `You can not vote unless you have level ${Poll.RESTRICTIONS.LEVEL.VOTE[poll.type.toUpperCase()]}`
       );
     }
-
-    return yield Vote.create({targetId,answer});
+    return yield Vote.create({targetId, answer, userId});
   }
+
   function* actionDelete(targetId) {
+    let userId = App.getCurrentUserId();
     let Poll = Vote.app.models.Poll;
-    let userId = App.getCurrentUserId(),
-        vote = yield Vote.findOne({where:{targetId,userId}}),
-        poll = yield Poll.findByIdRequired(targetId);
-    if(!poll) {
+    let vote = yield Vote.findOne({where: {targetId, userId}});
+    console.log('vote', vote);
+    let poll = yield Poll.findByIdRequired(targetId);
+    if (!poll) {
       throw ERRORS.notFound(`Poll does not exist`);
     }
     if (!vote) {
       throw ERRORS.notFound(`You did not vote in this poll`);
     }
-    return yield Vote.deleteAll({targetId,userId});
+    return yield Vote.deleteAll({targetId, userId});
   }
+
   function* actionExists(targetId) {
     let userId = App.getCurrentUserId(),
-        vote = yield Vote.findOne({where:{targetId,userId}});
-    return vote ? {voted:true} : {voted:false};
+      vote = yield Vote.findOne({where: {targetId, userId}});
+    return vote ? {voted: true} : {voted: false};
   }
+
   function* actionResults(targetId) {
     let Poll = Vote.app.models.Poll;
-    let results = yield Vote.find({where:{targetId}}),
-        poll = yield Poll.findByIdRequired(targetId);
-    if(!poll) {
+    let results = yield Vote.find({where: {targetId}}),
+      poll = yield Poll.findByIdRequired(targetId);
+    if (!poll) {
       throw ERRORS.notFound(`Poll does not exist`);
     }
     let answers = poll.answers,
-        output = {};
-        answers.forEach(answer => output[answer] = results.filter(result => result.answer === answer)
-        );
+      output = {};
+    answers.forEach(answer => output[answer] = results.filter(result => result.answer === answer)
+    );
     return output;
   }
 
   function* pollObserver(ctx) {
     if (ctx && ctx.instance) {
       let Poll = Vote.app.models.Poll,
-          poll = yield Poll.findByIdRequired(ctx.instance.targetId),
-          now = new Date();
+        poll = yield Poll.findByIdRequired(ctx.instance.targetId),
+        now = new Date();
       let answer = ctx.instance.answer;
       if (!poll) throw ERRORS.notFound(`Poll does not exist`);
       if (poll.openDate > now) throw ERRORS.badRequest(`You can not vote on poll that has not started yet`);
@@ -133,7 +134,6 @@ module.exports = (Vote) => {
       if (poll.answers.indexOf(answer) === -1) throw ERRORS.notFound(`No such option in this poll`);
     }
   }
-
 
 
 }
