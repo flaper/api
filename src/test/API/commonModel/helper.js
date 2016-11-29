@@ -14,6 +14,6 @@ export function returnProperties(Model, id, properties) {
       return model.save({skipIgnore: ignores});
     })
     .then((model) => {
-      keys.forEach((key) => model[key].should.eq(properties[key]));
+      keys.forEach((key) => model[key].should.eql(properties[key]));
     })
 }
