@@ -35,7 +35,6 @@
 		"principalId": "$authenticated",
 		"permission": "ALLOW",
 		"property": [
-			"create",
 			"actionCreate",
 			"actionDelete"
 		]
