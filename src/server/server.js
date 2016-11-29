@@ -28,6 +28,9 @@ boot(app, __dirname, function (err) {
   if (err) throw err;
   passportService(app);
   // start the server if `$ node server.js`
-  if (require.main === module)
+  if (require.main === module) {
     app.start();
+    var appModule = require('../common/services/App');
+    appModule.App.setWebServer(true);
+  }
 });
