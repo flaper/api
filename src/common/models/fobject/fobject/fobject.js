@@ -1,5 +1,4 @@
 import {applyIdToType} from '../../../behaviors/idToType'
-import {ignoreUpdatedIfNoChanges, ignoreProperties, setProperty} from '../../../behaviors/propertiesHelper'
 import {initGet} from './get/get.js';
 import {initOwners} from './get/owners.js';
 import {initSlug} from './slug/slug';
@@ -35,7 +34,7 @@ module.exports = (FObject) => {
 
   function domainObserver(ctx) {
     if (ctx.instance && ctx.isNewInstance) {
-      ctx.instance.mainDomain = ctx.instance.mainDomain.toLocaleLowerCase();
+      ctx.instance.mainDomain = ctx.instance.mainDomain.toLocaleLowerCase().replace(/ /g, '-');
     }
     return Promise.resolve();
   }
@@ -45,7 +44,7 @@ module.exports = (FObject) => {
       if (!ctx.instance.region) {
         ctx.instance.region = "";
       } else {
-        ctx.instance.region = ctx.instance.region.toLocaleLowerCase();
+        ctx.instance.region = ctx.instance.region.toLocaleLowerCase().replace(/ /g, '-');
       }
     }
     return Promise.resolve();
