@@ -93,14 +93,7 @@ module.exports = (ViewHistory) => {
   }
 
   function totalMoney(time) {
-    let Story = ViewHistory.app.models.Story;
-    return Story.find({where: {status: Story.STATUS.ACTIVE, created: {lt: new Date(time)}}})
-      .then(stories => 100 * Math.log10(1 + stories.length / 1000));
-    /**
-     * ~ 100 rubles per day for 10000 stories
-     * ~ 30 rubles per day for 1000 stories
-     * ~ 4 rubles per day for 100 stories
-     */
+    return 0;
   }
 
 };
